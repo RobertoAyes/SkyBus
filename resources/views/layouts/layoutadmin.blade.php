@@ -141,7 +141,7 @@
 
         <div class="brand-logo">
             <h2>
-                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
+                <img src="{{ asset('Imagenes/bustrak-logo.jpg') }}"
                      alt="Logo"
                      style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
             </h2>
@@ -168,21 +168,7 @@
             </div>
         </div>
 
-        <!-- Empresa -->
-        <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#empresa">
-                <span><i class="fas fa-building"></i> Empresa</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav" id="empresa">
-                <a href="{{ route('empresas.index') }}" class="{{ request()->routeIs('empresas.index') ? 'active' : '' }}">
-                    Lista de empresas
-                </a>
-                <a href="{{ route('empresa.form') }}" class="{{ request()->routeIs('empresa.form') ? 'active' : '' }}">
-                    Registrar empresa
-                </a>
-            </div>
-        </div>
+
 
         <!-- Empleados -->
         <div class="nav-section">
