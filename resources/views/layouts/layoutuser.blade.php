@@ -253,7 +253,7 @@
         <!-- Logo de la Aplicación -->
         <div class="brand-logo">
             <h2>
-                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
+                <img src="{{ asset('Imagenes/bustrak-logo.jpg') }}"
                      alt="Logo"
                      style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
             </h2>
@@ -336,20 +336,6 @@
         </div>
 
 
-
-        <!-- Empresa -->
-        <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#empresa"
-                    aria-expanded="{{ request()->routeIs('usuario.empresa.form') ? 'true' : 'false' }}">
-                <span><i class="fas fa-building"></i>Mi Empresa</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.empresa.form') ? 'show' : '' }}" id="empresa">
-                <a href="{{ route('usuario.empresa.form') }}">Registrar empresa</a>
-            </div>
-        </div>
-
-
         <!-- Soporte -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#soporte" aria-expanded="{{ request()->routeIs('usuario.soporte*') ? 'true' : 'false' }}">
@@ -376,7 +362,7 @@
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#solicitud"
                     aria-expanded="{{ request()->routeIs('solicitud.empleo.mis-solicitudes') ? 'true' : 'false' }}">
-                <span><i class="fas fa-file-alt"></i> Solicitud</span>
+                <span><i class="fas fa-file-alt"></i> Solicitud de trabajo</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav {{ request()->routeIs('solicitud.empleo.mis-solicitudes') ? 'show' : '' }}" id="solicitud">

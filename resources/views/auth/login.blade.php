@@ -317,7 +317,7 @@
     <div class="login-card">
         <div class="top-logo-wrapper">
             <a href="{{ route('interfaces.principal') }}" class="logo-container">
-                <img src="/Imagenes/bustrak-logo.png" alt="BusTrak">
+                <img src="/Imagenes/bustrak-logo.jpg" alt="BusTrak">
             </a>
         </div>
 
