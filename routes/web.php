@@ -417,6 +417,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
 
+Route::get('/principal', function () {
+    return view('interfaces.principal', [
+        'ciudades' => Ciudad::all()
+    ]);
+});
+
+Route::get('/cliente/reserva', [ReservaController::class, 'create'])
+    ->name('cliente.reserva.create');
+
+Route::post('/cliente/reserva/buscar', [ReservaController::class, 'buscar'])
+    ->name('cliente.reserva.buscar');
+
+Route::get('/cliente/reserva/asientos/{id}', [ReservaController::class, 'asientos'])
+    ->name('cliente.reserva.asientos');
+
+Route::post('/cliente/reserva/store', [ReservaController::class, 'store'])
+    ->name('cliente.reserva.store');
+
+
+Route::get('/', function () {
+    return view('interfaces.principal');
+})->name('interfaces.principal');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/reserva', [ReservaController::class, 'create'])->name('cliente.reserva.create');
+    Route::post('/reserva/buscar', [ReservaController::class, 'buscar'])->name('cliente.reserva.buscar');
+    Route::post('/reserva/store', [ReservaController::class, 'store'])->name('cliente.reserva.store');
+    Route::get('/historial', [ReservaController::class, 'historial'])->name('cliente.historial'); // si tienes historial
+});
+
+
+Route::get('/register', [RegisteredUserController::class, 'create'])
+    ->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
+=======
 
 Route::post('/empleado/incidentes', [\App\Http\Controllers\IncidenteController::class, 'store'])
     ->name('empleado.incidentes.store');
@@ -427,4 +463,3 @@ Route::get('/rutas/create', [RutaController::class, 'create'])->name('rutas.crea
 Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
-
