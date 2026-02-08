@@ -35,5 +35,15 @@ class User extends Authenticatable
     protected $attributes = [
         'estado' => 'activo',
     ];
+
+    public function extras()
+    {
+        return $this->hasMany(Extra::class);
+    }
+
+    public function reservas()
+    {
+        return $this->hasMany(Reserva::class);
+    }
 }
 
