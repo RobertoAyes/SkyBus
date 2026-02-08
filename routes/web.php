@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Controladores
+use App\Http\Controllers\RutaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HomeEditorController;
 use App\Http\Controllers\Api\DestinosController;
@@ -410,5 +411,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
 
+
 Route::post('/empleado/incidentes', [\App\Http\Controllers\IncidenteController::class, 'store'])
     ->name('empleado.incidentes.store');
+
+// registrar y editar rutas (Francis)
+Route::get('/rutas', [RutaController::class, 'index'])->name('rutas.index');
+Route::get('/rutas/create', [RutaController::class, 'create'])->name('rutas.create');
+Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
+Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
+Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
+
