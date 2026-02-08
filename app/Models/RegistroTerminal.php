@@ -22,4 +22,9 @@ class RegistroTerminal extends Model
         'latitud',    // ✅ Asegúrate que esté
         'longitud',   // ✅ Asegúrate que esté
     ];
+
+    public function extras()
+    {
+        return $this->hasOne(Servicio::class);
+    }
 }

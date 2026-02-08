@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Controladores
+use App\Http\Controllers\RutaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HomeEditorController;
 use App\Http\Controllers\Api\DestinosController;
@@ -36,6 +37,8 @@ use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\DocumentoBusController;
 use App\Http\Controllers\CalificacionChoferController;
 use App\Http\Controllers\Cliente\FacturaController;
+use App\Http\Controllers\ExtraController;
+use App\Http\Controllers\ServicioController;
 
 
 // Toggle activar/inactivar
@@ -209,6 +212,10 @@ Route::prefix('empleado')->middleware(['auth', 'user.active'])->group(function()
 
     // Perfil
     Route::get('/perfil', [EmpleadoController::class, 'perfil'])->name('empleado.perfil');
+
+    Route::get('/incidentes/create', [\App\Http\Controllers\IncidenteController::class, 'create'])
+        ->name('empleado.incidentes.create');
+
 });
 
 // Usuario
@@ -296,6 +303,10 @@ Route::post('admin/update-password', [AuthController::class, 'updateAdminPasswor
 // Usuario
 Route::get('usuario/cambiar-password', [AuthController::class, 'showUserChangePasswordForm'])->name('usuario.change-password');
 Route::post('usuario/update-password', [AuthController::class, 'updateUserPassword'])->name('usuario.update-password');
+
+//Servicios adicionales
+Route::resource('(/servicios_adicionales', ExtraController::class );
+Route::resource('/servicios', ServicioController::class);
 
 // Solicitudes de constancia
 Route::middleware(['auth'])->group(function () {
@@ -406,8 +417,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
 
-use App\Models\Ciudad;
-
 Route::get('/principal', function () {
     return view('interfaces.principal', [
         'ciudades' => Ciudad::all()
@@ -443,3 +452,14 @@ Route::middleware('auth')->group(function () {
 Route::get('/register', [RegisteredUserController::class, 'create'])
     ->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
+=======
+
+Route::post('/empleado/incidentes', [\App\Http\Controllers\IncidenteController::class, 'store'])
+    ->name('empleado.incidentes.store');
+
+// registrar y editar rutas (Francis)
+Route::get('/rutas', [RutaController::class, 'index'])->name('rutas.index');
+Route::get('/rutas/create', [RutaController::class, 'create'])->name('rutas.create');
+Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
+Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
+Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
