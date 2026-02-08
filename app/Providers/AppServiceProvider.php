@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Providers;
+use App\Models\Ciudad;
+
 
 use Illuminate\Support\ServiceProvider;
 
@@ -17,8 +19,10 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+
     public function boot(): void
     {
-        //
+        view()->share('ciudades', Ciudad::all());
     }
+
 }

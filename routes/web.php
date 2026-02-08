@@ -405,3 +405,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
+
+use App\Models\Ciudad;
+
+Route::get('/principal', function () {
+    return view('interfaces.principal', [
+        'ciudades' => Ciudad::all()
+    ]);
+});
+
+Route::get('/cliente/reserva', [ReservaController::class, 'create'])
+    ->name('cliente.reserva.create');
+
+Route::post('/cliente/reserva/buscar', [ReservaController::class, 'buscar'])
+    ->name('cliente.reserva.buscar');
+
+Route::get('/cliente/reserva/asientos/{id}', [ReservaController::class, 'asientos'])
+    ->name('cliente.reserva.asientos');
+
+Route::post('/cliente/reserva/store', [ReservaController::class, 'store'])
+    ->name('cliente.reserva.store');
+
+
+Route::get('/', function () {
+    return view('interfaces.principal');
+})->name('interfaces.principal');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/reserva', [ReservaController::class, 'create'])->name('cliente.reserva.create');
+    Route::post('/reserva/buscar', [ReservaController::class, 'buscar'])->name('cliente.reserva.buscar');
+    Route::post('/reserva/store', [ReservaController::class, 'store'])->name('cliente.reserva.store');
+    Route::get('/historial', [ReservaController::class, 'historial'])->name('cliente.historial'); // si tienes historial
+});
+
+
+Route::get('/register', [RegisteredUserController::class, 'create'])
+    ->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
