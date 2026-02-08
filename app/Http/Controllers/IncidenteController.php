@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-// Este controlador se va a usar para mostrar el formulario
-// y para guardar los incidentes en la base de datos.
+// Aqui se valida y se guarda el incidente.
 
 use App\Models\Incidente;
 use Illuminate\Http\Request;
@@ -28,11 +27,13 @@ class IncidenteController extends Controller
         $conductorNombre = auth()->user()->name ?? 'Conductor';
 
         // Aquí le digo a Laravel que muestre la vista
-        // empleados/incidentes/create.blade.php
+        // incidentes/create.blade.php
         return view(
-            'empleados.incidentes.create',
+            'empleados.incidentes.create_incidente',
             compact('tipos', 'conductorNombre')
         );
+
+
     }
 
     // Esta función se ejecuta cuando el formulario se envía

@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-// Este archivo representa la tabla "incidentes" de la base de datos.
-// Es decir, cada registro de la tabla incidentes se va a manejar desde aquí.
+// Aqui cada registro de la tabla incidentes se va a manejar desde aquí.
 
 use Illuminate\Database\Eloquent\Model;
 

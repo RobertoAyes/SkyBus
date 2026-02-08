@@ -212,6 +212,10 @@ Route::prefix('empleado')->middleware(['auth', 'user.active'])->group(function()
 
     // Perfil
     Route::get('/perfil', [EmpleadoController::class, 'perfil'])->name('empleado.perfil');
+
+    Route::get('/incidentes/create', [\App\Http\Controllers\IncidenteController::class, 'create'])
+        ->name('empleado.incidentes.create');
+
 });
 
 // Usuario
@@ -412,6 +416,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
+
+
+Route::post('/empleado/incidentes', [\App\Http\Controllers\IncidenteController::class, 'store'])
+    ->name('empleado.incidentes.store');
 
 // registrar y editar rutas (Francis)
 Route::get('/rutas', [RutaController::class, 'index'])->name('rutas.index');
