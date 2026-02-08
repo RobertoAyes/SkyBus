@@ -37,6 +37,8 @@ use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\DocumentoBusController;
 use App\Http\Controllers\CalificacionChoferController;
 use App\Http\Controllers\Cliente\FacturaController;
+use App\Http\Controllers\ExtraController;
+use App\Http\Controllers\ServicioController;
 
 
 // Toggle activar/inactivar
@@ -301,6 +303,10 @@ Route::post('admin/update-password', [AuthController::class, 'updateAdminPasswor
 // Usuario
 Route::get('usuario/cambiar-password', [AuthController::class, 'showUserChangePasswordForm'])->name('usuario.change-password');
 Route::post('usuario/update-password', [AuthController::class, 'updateUserPassword'])->name('usuario.update-password');
+
+//Servicios adicionales
+Route::resource('(/servicios_adicionales', ExtraController::class );
+Route::resource('/servicios', ServicioController::class);
 
 // Solicitudes de constancia
 Route::middleware(['auth'])->group(function () {
