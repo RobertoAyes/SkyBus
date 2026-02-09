@@ -35,6 +35,10 @@ class LoginController extends Controller
             if ($rol === 'empleado') {
                 return redirect()->route('empleado.dashboard');
             }
+
+            if ($rol === 'chofer') {
+                return redirect()->route('chofer.panel');
+            }
         }
 
         $rolUser = strtolower($user->role);
@@ -46,6 +50,10 @@ class LoginController extends Controller
 
         if ($rolUser === 'empleado') {
             return redirect()->route('empleado.dashboard');
+        }
+
+        if ($rolUser === 'chofer') {
+            return redirect()->route('chofer.panel');
         }
 
         return redirect()->route('cliente.perfil');

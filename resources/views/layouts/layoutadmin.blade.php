@@ -266,6 +266,30 @@
             </div>
         </div>
 
+        <!-- Calificaciones Chofer -->
+        <div class="nav-section">
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#calificacionesChofer"
+                    aria-expanded="{{ request()->routeIs('calificaciones.index') ? 'true' : 'false' }}">
+        <span class="d-flex align-items-center fw-bold fs-6">
+        <i class="fas fa-star me-1 fa-sm"></i> <!-- ícono de estrella con margen a la derecha -->
+            Calificación Chofer
+        </span>
+
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('calificaciones.index') ? 'show' : '' }}" id="calificacionesChofer">
+                <a href="{{ route('calificaciones.index') }}" class="{{ request()->routeIs('calificaciones.index') ? 'active fw-bold' : '' }}">
+                    Ver Calificaciones
+                </a>
+            </div>
+        </div>
+
+
+
+
         <!-- Cerrar sesión -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#sesion">

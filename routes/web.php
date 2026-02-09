@@ -355,10 +355,15 @@ Route::middleware(['auth'])->prefix('documentos-buses')->name('documentos-buses.
 Route::resource('rentas', RegistroRentaController::class);
 Route::put('/reservas/{reserva}', [ReservaController::class, 'update'])->name('reserva.update');
 
-
-Route::get('/chofer/panel', function () {
+//Ruta chofer
+Route::middleware(['auth', 'user.active'])->get('/chofer/panel', function () {
+    if (auth()->user()->role !== 'Chofer') {
+        abort(403);
+    }
     return view('interfaces.chofer');
 })->name('chofer.panel');
+
+
 // NUEVAS RUTAS PARA CANJES
 Route::get('/mis-puntos', [RegistroPuntosController::class, 'index'])->name('puntos.index');
 Route::post('/canjear-puntos/{beneficio_id}', [RegistroPuntosController::class, 'canjear'])->name('puntos.canjear');
@@ -405,3 +410,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
+
+//Rutas calidicar chofer
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->group(function () {
+        Route::get('/calificaciones-choferes',
+            [\App\Http\Controllers\Admin\CalificacionesChoferController::class, 'index']
+        )->name('admin.calificaciones.choferes');
+    });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/calificaciones', [CalificacionChoferController::class, 'index'])
+        ->name('calificaciones.index');
+});
+

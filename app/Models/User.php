@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 
 class User extends Authenticatable
 {
@@ -35,5 +37,16 @@ class User extends Authenticatable
     protected $attributes = [
         'estado' => 'activo',
     ];
+
+
+    public function calificacionesRealizadas()
+    {
+        return $this->hasMany(CalificacionChofer::class, 'usuario_id');
+    }
+
+    public function calificacionesRecibidas()
+    {
+        return $this->hasMany(CalificacionChofer::class, 'chofer_id');
+    }
 }
 
