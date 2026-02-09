@@ -32,4 +32,9 @@ class Reserva extends Model
     {
         return $this->belongsTo(Asiento::class);
     }
+
+    public function extras()
+    {
+        return $this->hasOne(Extra::class);
+    }
 }

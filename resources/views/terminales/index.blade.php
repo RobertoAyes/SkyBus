@@ -106,6 +106,18 @@
                                     <a href="{{ route('terminales.edit', $terminal) }}" class="btn btn-primary btn-sm">Editar</a>
 
                                 </td>
+
+                                <td>
+                                    @forelse($terminal->servicios as $servicio)
+                                        {{$servicio->nombre}}@if(!$loop->last), @endif <br>
+                                    @empty
+                                        <span class="text-muted">N/A</span>
+                                    @endforelse
+                                </td>
+                                <td>
+                                    <a href="{{ route('terminales.edit', $terminal) }}" class="btn btn-primary btn-sm">Editar</a>
+                                    <a href="{{ route('servicios.edit', $terminal) }}" class="btn btn-success btn-sm">Servicios</a>
+                                </td>
                             </tr>
                         @empty
                             <tr>

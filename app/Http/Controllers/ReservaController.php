@@ -17,102 +17,119 @@ class ReservaController extends Controller
         $this->middleware('auth');
     }
 
-    // Mostrar formulario de búsqueda
+    /**
+     * Vista principal (buscador y reservas)
+     */
     public function create()
     {
         $ciudades = Ciudad::all();
-        return view('cliente.reserva.create', compact('ciudades'));
+        return view('interfaces.principal', [
+            'ciudades' => $ciudades,
+            'viajes' => collect(),
+            'asientos' => collect(),
+            'reserva' => null,
+            'qrCode' => null,
+            'busquedaRealizada' => false, // Indica que aún no se buscó
+        ]);
     }
 
-
-    // Buscar viajes disponibles
+    /**
+     * Buscar viajes (misma vista)
+     */
     public function buscar(Request $request)
     {
         $request->validate([
-            'ciudad_origen_id'  => 'required|exists:ciudades,id',
+            'ciudad_origen_id' => 'required|exists:ciudades,id',
             'ciudad_destino_id' => 'required|exists:ciudades,id|different:ciudad_origen_id',
+            'fecha' => 'required|date',
         ]);
 
-        $viajes = Viaje::where('ciudad_origen_id', $request->ciudad_origen_id)
+        $ciudades = Ciudad::all();
+
+        $viajes = Viaje::with([
+            'origen',
+            'destino',
+            'asientos' => fn($q) => $q->where('disponible', true)
+        ])
+            ->where('ciudad_origen_id', $request->ciudad_origen_id)
             ->where('ciudad_destino_id', $request->ciudad_destino_id)
+            ->whereDate('fecha_hora_salida', $request->fecha)
             ->where('fecha_hora_salida', '>', now())
-            ->withCount(['asientos' => fn($q) => $q->where('disponible', true)])
-            ->having('asientos_count', '>', 0)
             ->get();
 
-        if ($viajes->isEmpty()) {
-            return redirect()->back()->with('error', 'No hay viajes disponibles entre estas ciudades.');
-        }
-
-        return view('cliente.reserva.seleccionar', compact('viajes'));
+        return view('interfaces.principal', [
+            'ciudades' => $ciudades,
+            'viajes' => $viajes,
+            'asientos' => collect(),
+            'reserva' => null,
+            'qrCode' => null,
+            'busquedaRealizada' => true, // Solo ahora se muestra la tabla o mensaje
+        ]);
     }
 
-    // Mostrar asientos para un viaje
-    public function seleccionarAsiento($viaje_id)
+    /**
+     * Mostrar asientos de un viaje
+     */
+    public function asientos($viaje_id)
     {
-        $viaje = Viaje::findOrFail($viaje_id);
-        $asientos = $viaje->asientos()->where('disponible', true)->get();
+        $viaje = Viaje::with('origen', 'destino')->findOrFail($viaje_id);
+        $asientos = Asiento::where('viaje_id', $viaje_id)->where('disponible', true)->get();
+        $ciudades = Ciudad::all();
 
-        return view('cliente.reserva.asientos', compact('viaje', 'asientos'));
+        return view('interfaces.principal', [
+            'ciudades' => $ciudades,
+            'viajes' => collect(),
+            'viaje' => $viaje,
+            'asientos' => $asientos,
+            'reserva' => null,
+            'qrCode' => null,
+            'busquedaRealizada' => false,
+        ]);
     }
 
-    // Procesar reserva
+    /**
+     * Guardar reserva
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'viaje_id'   => 'required|exists:viajes,id',
+            'viaje_id' => 'required|exists:viajes,id',
             'asiento_id' => 'required|exists:asientos,id',
         ]);
 
         $asiento = Asiento::findOrFail($request->asiento_id);
+
         if (!$asiento->disponible) {
-            return redirect()->back()->with('error', 'Asiento no disponible.');
+            return redirect()->back()->with('error', 'El asiento ya fue reservado.');
         }
 
-        $codigo = uniqid('RES_');
+        $codigo = strtoupper(uniqid('SKY-'));
 
         $reserva = Reserva::create([
-            'user_id'        => Auth::id(),          // <-- CAMBIO
-            'viaje_id'       => $request->viaje_id,
-            'asiento_id'     => $request->asiento_id,
-            'codigo_reserva' => $codigo,
-            'fecha_reserva'  => now(),
-            'estado'         => 'pendiente',
-        ]);
-
-        $asiento->update(['disponible' => false, 'reserva_id' => $reserva->id]);
-
-        $qrCode = DNS2D::getBarcodeSVG($codigo, 'QRCODE');
-
-        return view('cliente.reserva.confirmacion', compact('reserva', 'qrCode'));
-    }
-
-
-    public function update(Request $request, Reserva $reserva)
-    {
-        // Validación básica
-        $request->validate([
-            'ciudad_origen_id' => 'required|exists:ciudades,id',
-            'ciudad_destino_id' => 'required|exists:ciudades,id',
-            'fecha_salida' => 'required|date',
-            'hora_salida' => 'required',
-            'asiento_id' => 'required|exists:asientos,id',
-        ]);
-
-        // Actualizar datos del viaje
-        $reserva->viaje->update([
-            'ciudad_origen_id' => $request->ciudad_origen_id,
-            'ciudad_destino_id' => $request->ciudad_destino_id,
-            'fecha_hora_salida' => $request->fecha_salida . ' ' . $request->hora_salida,
-        ]);
-
-        // Actualizar asiento
-        $reserva->update([
+            'user_id' => Auth::id(),
+            'viaje_id' => $request->viaje_id,
             'asiento_id' => $request->asiento_id,
+            'codigo_reserva' => $codigo,
+            'fecha_reserva' => now(),
+            'estado' => 'confirmada',
         ]);
 
-        return redirect()->back()->with('success', '¡Reserva actualizada correctamente!');
+        $asiento->update([
+            'disponible' => false,
+            'reserva_id' => $reserva->id,
+        ]);
+
+        $qrCode = DNS2D::getBarcodeSVG($codigo, 'QRCODE', 8, 8);
+        $ciudades = Ciudad::all();
+
+        return view('interfaces.principal', [
+            'ciudades' => $ciudades,
+            'viajes' => $viajes,
+            'asientos' => collect(),
+            'reserva' => null,
+            'qrCode' => null,
+            'busquedaRealizada' => true,
+        ]);
+
     }
-
-
 }
