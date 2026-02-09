@@ -366,10 +366,15 @@ Route::middleware(['auth'])->prefix('documentos-buses')->name('documentos-buses.
 Route::resource('rentas', RegistroRentaController::class);
 Route::put('/reservas/{reserva}', [ReservaController::class, 'update'])->name('reserva.update');
 
-
-Route::get('/chofer/panel', function () {
+//Ruta chofer
+Route::middleware(['auth', 'user.active'])->get('/chofer/panel', function () {
+    if (auth()->user()->role !== 'Chofer') {
+        abort(403);
+    }
     return view('interfaces.chofer');
 })->name('chofer.panel');
+
+
 // NUEVAS RUTAS PARA CANJES
 Route::get('/mis-puntos', [RegistroPuntosController::class, 'index'])->name('puntos.index');
 Route::post('/canjear-puntos/{beneficio_id}', [RegistroPuntosController::class, 'canjear'])->name('puntos.canjear');
@@ -417,6 +422,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Endpoint público para verificar autenticidad del QR
 Route::get('/facturas/verificar/{numeroFactura}', [\App\Http\Controllers\Cliente\FacturaController::class, 'verificarAutenticidad'])->name('facturas.verificar');
 
+
+//Rutas calidicar chofer
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->group(function () {
+        Route::get('/calificaciones-choferes',
+            [\App\Http\Controllers\Admin\CalificacionesChoferController::class, 'index']
+        )->name('admin.calificaciones.choferes');
+    });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/calificaciones', [CalificacionChoferController::class, 'index'])
+        ->name('calificaciones.index');
+});
+
+
 Route::get('/principal', function () {
     return view('interfaces.principal', [
         'ciudades' => Ciudad::all()
@@ -452,7 +474,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/register', [RegisteredUserController::class, 'create'])
     ->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
-=======
+
 
 Route::post('/empleado/incidentes', [\App\Http\Controllers\IncidenteController::class, 'store'])
     ->name('empleado.incidentes.store');
@@ -463,3 +485,4 @@ Route::get('/rutas/create', [RutaController::class, 'create'])->name('rutas.crea
 Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
+

@@ -2,50 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\CalificacionChofer;
-
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 class CalificacionChoferController extends Controller
 {
-    public function __construct()
+    /**
+     * Mostrar formulario para calificar chofer
+     */
+
+
+    public function index()
     {
-        $this->middleware('auth');
+        // Obtener choferes con promedio y total de calificaciones
+        $estadisticas = User::where('role', 'Chofer')
+            ->withCount('calificacionesRecibidas')   // total de calificaciones
+            ->withAvg('calificacionesRecibidas', 'estrellas') // promedio de estrellas
+            ->get();
+
+        return view('admin.calificaciones.index', compact('estadisticas'));
     }
 
-    // Mostrar formulario
-    public function formulario()
-    {
-        return view('CalificacionChofer.calificarChofer');
-    }
 
-    // Guardar calificación
-    public function guardar(Request $request)
+
+
+    /**
+     * Guardar la calificación
+     */
+    public function store(Request $request)
     {
         $request->validate([
-            'calificacion' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string|max:255',
-            'mejoras' => 'required|string|max:255',
-            'positivo' => 'required|string|max:255',
-            'comportamientos' => 'required|string|max:255',
-            'velocidad' => 'required|in:si,no',
-            'seguridad' => 'required|in:si,no',
+            'chofer_id'  => 'required|exists:users,id',
+            'estrellas'  => 'required|integer|min:1|max:5',
+            'comentario' => 'nullable|string|max:500',
         ]);
 
         CalificacionChofer::create([
-            'usuario_id' => null,
-            'calificacion' => $request->calificacion,
+            'usuario_id' => auth()->id(), // usuario que califica
+            'chofer_id'  => $request->chofer_id,
+            'estrellas'  => $request->estrellas,
             'comentario' => $request->comentario,
-            'mejoras' => $request->mejoras,
-            'positivo' => $request->positivo,
-            'comportamientos' => $request->comportamientos,
-            'velocidad' => $request->velocidad,
-            'seguridad' => $request->seguridad,
         ]);
 
-        return redirect()->back()->with('success', '¡Tu calificación fue enviada exitosamente!');
+        return redirect()
+            ->back()
+            ->with('success', 'Calificación guardada correctamente');
     }
-
 }
-
 

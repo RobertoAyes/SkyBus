@@ -58,7 +58,7 @@ class AuthController extends Controller
             }
 
             // Normalizamos el rol
-            $rol = strtolower($user->role);
+            $rol = trim(strtolower($user->role));
 
             switch ($rol) {
                 case 'administrador':
@@ -67,10 +67,14 @@ class AuthController extends Controller
                 case 'empleado':
                     return redirect()->route('empleado.dashboard');
 
+                case 'chofer':
+                    return redirect()->route('chofer.panel');
+
                 case 'cliente':
                 default:
                     return redirect()->route('cliente.perfil');
             }
+
         }
 
         return back()->withErrors([

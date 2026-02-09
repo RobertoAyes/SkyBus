@@ -27,7 +27,8 @@
             <div class="card-body p-4">
                 <p class="text-center text-muted mb-4">Tu opinión nos ayuda a mejorar la experiencia de viaje.</p>
 
-                <form id="formCalificacion" action="{{ route('calificar.chofer.guardar') }}" method="POST">
+                <form input type="hidden" name="chofer_id" value="{{ $chofer->id }}">
+                >
                     @csrf
 
                     <div class="text-center mb-4">
