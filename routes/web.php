@@ -486,3 +486,17 @@ Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
 
+//Rutas calificar chofer desde el usuario
+Route::middleware(['auth'])->group(function () {
+
+    // Formulario para calificar chofer (USUARIO)
+    Route::get('/calificaciones/crear', [CalificacionChoferController::class, 'create'])
+        ->name('calificaciones.form');
+
+    // Guardar calificación
+    Route::post('/calificar-chofer', [CalificacionChoferController::class, 'store'])
+        ->name('calificar.chofer.guardar');
+
+});
+
+
