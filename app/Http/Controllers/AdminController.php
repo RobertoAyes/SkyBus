@@ -41,4 +41,15 @@ class AdminController extends Controller
 
         return redirect()->route('admin.usuarios')->with('success', "Usuario {$usuario->name} ahora está {$nuevoEstado}");
     }
+
+    public function index()
+    {
+        $estadisticas = User::where('role', 'Chofer')
+            ->withCount('calificacionesRecibidas')
+            ->withAvg('calificacionesRecibidas', 'estrellas')
+            ->get();
+
+        return view('admin.calificaciones.index', compact('estadisticas'));
+    }
+
 }

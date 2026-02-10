@@ -315,7 +315,7 @@
                    class="{{ request()->routeIs('cliente.facturas*') ? 'active' : '' }}">
                     Ver Facturas
                 </a>
-                <a href="{{ route('calificar.chofer') }}" class="{{ request()->routeIs('calificar.chofer') ? 'active' : '' }}">
+                <a href="{{ route('calificaciones.form') }}" class="{{ request()->routeIs('calificaciones.form') ? 'active' : '' }}">
                     Calificar al Conductor
                 </a>
             </div>
