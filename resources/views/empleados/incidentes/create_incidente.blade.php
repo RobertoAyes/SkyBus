@@ -2,9 +2,9 @@
 Esta pantalla es para registrar un incidente.
 --}}
 
-@extends('layouts.layoutempleado')
+@extends('layouts.layoutadmin')
 
-@section('contenido')
+@section('content')
 
 <div class="container">
 
@@ -46,7 +46,6 @@ Esta pantalla es para registrar un incidente.
             <input type="text"
                    name="conductor_nombre"
                    class="form-control"
-                   value="{{ old('conductor_nombre', $conductorNombre ?? '') }}">
         </div>
 
         {{-- Número de bus --}}
