@@ -21,7 +21,10 @@
 
                     <div class="mb-3">
                         <label for="origen" class="form-label"><i class="fas fa-location-arrow me-1"></i>Origen</label>
-                        <input type="text" name="origen" id="origen" class="form-control" value="{{ old('origen') }}" required>
+                        <input type="text" name="origen" id="origen" class="form-control"
+                               value="{{ old('origen') }}"
+                               onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                               required>
                         @error('origen')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
@@ -29,11 +32,15 @@
 
                     <div class="mb-3">
                         <label for="destino" class="form-label"><i class="fas fa-map-marker-alt me-1"></i>Destino</label>
-                        <input type="text" name="destino" id="destino" class="form-control" value="{{ old('destino') }}" required>
+                        <input type="text" name="destino" id="destino" class="form-control"
+                               value="{{ old('destino') }}"
+                               onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                               required>
                         @error('destino')
                         <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
+
 
                     <div class="mb-3">
                         <label for="distancia" class="form-label"><i class="fas fa-road me-1"></i>Distancia (km)</label>
