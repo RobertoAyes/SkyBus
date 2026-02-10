@@ -71,7 +71,11 @@
 
                                                         <div class="mb-3 text-start">
                                                             <label class="form-label fw-bold"><i class="fas fa-location-arrow me-1"></i>Origen</label>
-                                                            <input type="text" name="origen" class="form-control" value="{{ old('origen', $ruta->origen) }}" required>
+                                                            <input type="text" name="origen" class="form-control"
+                                                                   value="{{ old('origen', $ruta->origen) }}"
+                                                                   onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                                                                   required>
+
                                                             @error('origen')
                                                             <small class="text-danger">{{ $message }}</small>
                                                             @enderror
@@ -79,7 +83,11 @@
 
                                                         <div class="mb-3 text-start">
                                                             <label class="form-label fw-bold"><i class="fas fa-map-marker-alt me-1"></i>Destino</label>
-                                                            <input type="text" name="destino" class="form-control" value="{{ old('destino', $ruta->destino) }}" required>
+                                                            <input type="text" name="destino" class="form-control"
+                                                                   value="{{ old('destino', $ruta->destino) }}"
+                                                                   onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                                                                   required>
+
                                                             @error('destino')
                                                             <small class="text-danger">{{ $message }}</small>
                                                             @enderror
@@ -87,7 +95,7 @@
 
                                                         <div class="mb-3 text-start">
                                                             <label class="form-label fw-bold"><i class="fas fa-road me-1"></i>Distancia (km)</label>
-                                                            <input type="number" step="0.01" name="distancia" class="form-control" value="{{ old('distancia', $ruta->distancia) }}" required>
+                                                            <input type="number" step="0.01" name="distancia" class="form-control" value="{{ old('distancia', $ruta->distancia) }}" min="5"required>
                                                             @error('distancia')
                                                             <small class="text-danger">{{ $message }}</small>
                                                             @enderror
@@ -95,7 +103,7 @@
 
                                                         <div class="mb-3 text-start">
                                                             <label class="form-label fw-bold"><i class="fas fa-clock me-1"></i>Duración estimada (min)</label>
-                                                            <input type="number" name="duracion_estimada" class="form-control" value="{{ old('duracion_estimada', $ruta->duracion_estimada) }}" required>
+                                                            <input type="number" name="duracion_estimada" class="form-control" value="{{ old('duracion_estimada', $ruta->duracion_estimada) }}" min="15" required>
                                                             @error('duracion_estimada')
                                                             <small class="text-danger">{{ $message }}</small>
                                                             @enderror
