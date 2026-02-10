@@ -154,6 +154,11 @@ class RegistroTeminalController extends Controller
         }
     }
 
+    public function servicios()
+    {
+        return $this->hasMany(Servicio::class, 'registro_terminal_id');
+    }
+
     public function destroy()
     {
         // Lógica de eliminación...

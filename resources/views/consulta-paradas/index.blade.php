@@ -264,7 +264,7 @@
                         <th>Ubicación</th>
                         <th>Horario</th>
                         <th>Contacto</th>
-                        <th>Coordenadas</th>
+                        <th>Servicios Disponibles</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -305,13 +305,15 @@
                                     <br><i class="fas fa-envelope me-1"></i>{{ $terminal->correo }}
                                 @endif
                             </td>
+                            //Servicios adicionales
                             <td>
-                                @forelse($terminal->sevicios as $servicio)
-                                    <b>{{$servicio->nombre}}</b>: {{$servicio->$descripcion}} <br>
+                                @forelse($terminal->servicios as $servicio)
+                                    <b>{{ $servicio->nombre }}</b>: {{ $servicio->descripcion }} <br>
                                 @empty
                                     <span class="text-muted">N/A</span>
                                 @endforelse
                             </td>
+
                             <td>
                                 @if($terminal->latitud && $terminal->longitud)
                                     <span class="badge bg-success">

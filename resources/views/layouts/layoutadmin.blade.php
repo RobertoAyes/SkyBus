@@ -238,6 +238,19 @@
             </div>
         </div>
 
+        <!-- Rutas -->
+        <div class="nav-section">
+            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#rutas">
+                <span><i class="fas fa-route"></i> Rutas</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+            <div class="collapse btn-toggle-nav" id="rutas">
+                <a href="{{ route('rutas.index') }}">
+                    Ver Rutas
+                </a>
+            </div>
+        </div>
+
 
 
         <!-- Usuarios (PARTE DE MAIN) -->
