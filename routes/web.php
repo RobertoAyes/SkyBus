@@ -497,6 +497,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/calificar-chofer', [CalificacionChoferController::class, 'store'])
         ->name('calificar.chofer.guardar');
 
+    // Lista todas las consultas (vista admin)
+    Route::get('/consultas', [ConsultaController::class, 'listar'])->name('consultas.listar');
+
+    Route::post('/consultas/{id}/responder', [ConsultaController::class, 'responderConsulta'])->name('consultas.responder');
+
+
 });
 
 
