@@ -16,7 +16,8 @@ class EmpleadoController extends Controller
 
     public function dashboardEmpleado()
     {
-        if (auth()->user()->role !== 'Empleado') abort(403);
+        $user = auth()->user();
+        if ($user->role !== 'Empleado') abort(403);
         return view('empleados.dashboard');
     }
 

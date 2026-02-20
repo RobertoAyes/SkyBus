@@ -39,6 +39,9 @@ use App\Http\Controllers\CalificacionChoferController;
 use App\Http\Controllers\Cliente\FacturaController;
 use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\ServicioExtraController;
+use App\Http\Controllers\PerfilChoferController;
+
 
 
 // Toggle activar/inactivar
@@ -307,6 +310,10 @@ Route::post('usuario/update-password', [AuthController::class, 'updateUserPasswo
 //Servicios adicionales
 Route::resource('(/servicios_adicionales', ExtraController::class );
 Route::resource('/servicios', ServicioController::class);
+//servicios extras
+Route::resource('/servicios_reserva', ServicioExtraController::class);
+Route::resource('/servicios', ServicioController::class);
+
 
 // Solicitudes de constancia
 Route::middleware(['auth'])->group(function () {
@@ -486,3 +493,11 @@ Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
 
+//Rutas para vizualizar el perfil de chofer
+Route::middleware(['auth', 'user.active'])->group(function () {
+    Route::get('/chofer/panel', function () {
+        return redirect()->route('chofer.perfil');
+    })->name('chofer.panel');
+
+    Route::get('/chofer/perfil', [PerfilChoferController::class, 'verPerfil'])->name('chofer.perfil');
+});
