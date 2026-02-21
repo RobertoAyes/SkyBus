@@ -49,6 +49,7 @@ class DatabaseSeeder extends Seeder
 
 
 
+
         //  Otros seeders de datos base
         $this->call([
             CiudadesSeeder::class,
