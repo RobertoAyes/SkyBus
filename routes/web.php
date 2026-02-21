@@ -493,6 +493,7 @@ Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
 
+
 //Rutas para vizualizar el perfil de chofer
 Route::middleware(['auth', 'user.active'])->group(function () {
     Route::get('/chofer/panel', function () {
@@ -501,3 +502,24 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 
     Route::get('/chofer/perfil', [PerfilChoferController::class, 'verPerfil'])->name('chofer.perfil');
 });
+
+//Rutas calificar chofer desde el usuario
+Route::middleware(['auth'])->group(function () {
+
+    // Formulario para calificar chofer (USUARIO)
+    Route::get('/calificaciones/crear', [CalificacionChoferController::class, 'create'])
+        ->name('calificaciones.form');
+
+    // Guardar calificación
+    Route::post('/calificar-chofer', [CalificacionChoferController::class, 'store'])
+        ->name('calificar.chofer.guardar');
+
+    // Lista todas las consultas (vista admin)
+    Route::get('/consultas', [ConsultaController::class, 'listar'])->name('consultas.listar');
+
+    Route::post('/consultas/{id}/responder', [ConsultaController::class, 'responderConsulta'])->name('consultas.responder');
+
+
+});
+
+
