@@ -18,7 +18,7 @@
                 <div style="background: linear-gradient(135deg, #5cb3ff 0%, #1e63b8 100%); border-radius: 16px; padding: 40px; color: white; margin-bottom: 30px; display: flex; align-items: center; gap: 30px;">
 
                     {{-- Foto o inicial --}}
-                    @if($chofer->foto)
+                    @if($chofer->foto && file_exists(public_path('storage/' . $chofer->foto)))
                         <img src="{{ asset('storage/' . $chofer->foto) }}"
                              style="width: 110px; height: 110px; object-fit: cover; border-radius: 50%; border: 4px solid rgba(255,255,255,0.4);">
                     @else
@@ -76,15 +76,17 @@
                         </div>
 
                         <!-- Edad -->
-                        <div style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Edad</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
-                                    {{ $chofer->edad ? $chofer->edad . ' años' : 'No registrada' }}
-                                </p>
-                            </div>
-                            <i class="fas fa-hourglass-half" style="color: #5cb3ff; font-size: 24px;"></i>
-                        </div>
+                        <!--
+<div style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Edad</p>
+        <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
+            {{ $chofer->edad ? $chofer->edad . ' años' : 'No registrada' }}
+                        </p>
+                    </div>
+                    <i class="fas fa-hourglass-half" style="color: #5cb3ff; font-size: 24px;"></i>
+                </div>
+-->
 
                     </div>
 
