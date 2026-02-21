@@ -1,15 +1,38 @@
-@extends('layouts.layoutchofer') <!-- Este es el layout para choferes -->
+@extends('layouts.layoutchofer')
 @section('contenido')
 
 
 
     <div class="container-fluid px-4">
         <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb" style="background-color: transparent; padding: 0;">
-                <li class="breadcrumb-item active" aria-current="page">Mi Perfil (Chofer)</li>
-            </ol>
-        </nav>
+        <!-- Barra superior -->
+        <div class="d-flex justify-content-end align-items-center gap-2 mb-4 p-3 rounded shadow-sm"
+             style="background-color: #0d1f3f; border-left: 5px solid #0dcaf0;">
+
+            <a href="{{ route('interfaces.principal') }}"
+               class="btn btn-outline-light btn-sm px-3 rounded-pill shadow-sm">
+                <i class="fas fa-home me-1"></i> Inicio
+            </a>
+
+            @php
+                $adminNotiCount = \App\Models\Notificacion::where('usuario_id', auth()->id())
+                    ->where('leida', false)
+                    ->count();
+            @endphp
+
+            <a href="{{ route('usuario.notificaciones') }}"
+               class="btn btn-outline-light btn-sm position-relative rounded-circle shadow-sm"
+               style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-bell"></i>
+
+                @if($adminNotiCount > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ $adminNotiCount }}
+                <span class="visually-hidden">notificaciones no leídas</span>
+            </span>
+                @endif
+            </a>
+        </div>
 
         <div class="row">
             <div class="col-lg-9 mx-auto">
@@ -69,7 +92,10 @@
                                 <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Fecha de Ingreso</p>
                                 <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
                                     {{-- Fecha de ingreso --}}
-                                    {{ $chofer->fecha_ingreso ? $chofer->fecha_ingreso->format('d \d\e F \d\e Y') : 'No registrada' }}
+                                    {{ $chofer->fecha_ingreso
+                                        ? $chofer->fecha_ingreso->locale('es')->translatedFormat('d \d\e F \d\e Y')
+                                            : 'No registrada'
+                                    }}
                                 </p>
                             </div>
                             <i class="fas fa-calendar-check" style="color: #5cb3ff; font-size: 24px;"></i>
@@ -91,12 +117,7 @@
                     </div>
 
                     <!-- Footer (opcional, por ahora solo ver perfil) -->
-                    <div style="background: #f8f9fa; padding: 20px; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #f0f0f0; border-radius: 0 0 12px 12px;">
-                        <a href="{{ route('chofer.perfil') }}"
-                           style="padding: 10px 24px; background: #5cb3ff; color: white; border-radius: 8px; font-weight: 600; text-decoration: none;">
-                            <i class="fas fa-user me-2"></i> Actualizar
-                        </a>
-                    </div>
+
                 </div>
 
             </div>
