@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('extras', function (Blueprint $table) {
+        Schema::create('servicios_extras', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('descripcion');
-            $table->text('imagen');
-            $table->boolean('estado')->default(true);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('reserva_id');
+            $table->date('fecha');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('extras');
+        Schema::dropIfExists('servicios_extras');
     }
 };

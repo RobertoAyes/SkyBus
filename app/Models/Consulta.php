@@ -16,7 +16,10 @@ class Consulta extends Model
         'nombre_completo',
         'correo',
         'asunto',
-        'mensaje'
+        'mensaje',
+        'estado',
+        'respuesta_admin',
+
     ];
 
     public function user()

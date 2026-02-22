@@ -52,11 +52,32 @@ class ConsultaController extends Controller
     /**
      * Lista todas las consultas (para panel admin)
      */
-    public function listar()
+    public function listar(Request $request)
     {
-        $consultas = Consulta::orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.consultas', compact('consultas'));
+        $query = Consulta::query();
+
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function($q) use ($buscar) {
+                $q->where('nombre_completo', 'like', "%{$buscar}%")
+                    ->orWhere('asunto', 'like', "%{$buscar}%");
+            });
+        }
+
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $consultas = $query->orderBy('created_at', 'desc')->paginate(10);
+
+
+        $consultas->appends($request->all());
+
+        return view('ayuda.consultas_admin', compact('consultas'));
     }
+
 
     public function misConsultas()
     {
@@ -65,5 +86,19 @@ class ConsultaController extends Controller
             ->get();
 
         return view('ayuda.indexh44', compact('consultas'));
+    }
+
+    public function responderConsulta(Request $request, $id)
+    {
+        $request->validate([
+            'respuesta_admin' => 'required|string|max:2000',
+        ]);
+
+        $consulta = Consulta::findOrFail($id);
+        $consulta->respuesta_admin = $request->respuesta_admin;
+        $consulta->estado = 'Respondida';
+        $consulta->save();
+
+        return redirect()->back()->with('success', '¡Respuesta enviada correctamente!');
     }
 }

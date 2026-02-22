@@ -158,7 +158,7 @@
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.perfil*') ? 'show':'' }}" id="miCuenta">
-                <a href="{{ route('empleado.perfil') }}" class="{{ request()->routeIs('empleado.perfil') ? 'active':'' }}">Ver perfil</a>
+                <a href="{{ route('chofer.perfil') }}" class="{{ request()->routeIs('chofer.perfil') ? 'active':'' }}">Ver perfil</a>
 
             </div>
         </div>

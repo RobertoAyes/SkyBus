@@ -39,6 +39,9 @@ use App\Http\Controllers\CalificacionChoferController;
 use App\Http\Controllers\Cliente\FacturaController;
 use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\ServicioExtraController;
+use App\Http\Controllers\PerfilChoferController;
+
 
 
 // Toggle activar/inactivar
@@ -195,7 +198,8 @@ Route::post('/ayuda-soporte', [ConsultaController::class, 'store'])->name('sopor
 // Interfaz empleados
 Route::prefix('empleado')->middleware(['auth', 'user.active'])->group(function() {
 
-    Route::get('/dashboard', [EmpleadoController::class, 'dashboard'])->name('empleado.dashboard');
+    Route::get('/dashboard', [EmpleadoController::class, 'dashboardEmpleado'])
+        ->name('empleado.dashboard');
     Route::get('/viajes', [EmpleadoController::class, 'viajes'])->name('empleado.viajes');
     Route::get('/pasajeros', [EmpleadoController::class, 'pasajeros'])->name('empleado.pasajeros');
     Route::get('/confirmar', [EmpleadoController::class, 'confirmar'])->name('empleado.confirmar');
@@ -213,8 +217,14 @@ Route::prefix('empleado')->middleware(['auth', 'user.active'])->group(function()
     // Perfil
     Route::get('/perfil', [EmpleadoController::class, 'perfil'])->name('empleado.perfil');
 
+    // Incidentes
     Route::get('/incidentes/create', [\App\Http\Controllers\IncidenteController::class, 'create'])
         ->name('empleado.incidentes.create');
+
+    // Ver mis incidentes (HU45)
+    Route::get('/mis-incidentes', [\App\Http\Controllers\IncidenteController::class, 'misIncidentes'])
+        ->name('empleado.misIncidentes');
+
 
 });
 
@@ -307,6 +317,10 @@ Route::post('usuario/update-password', [AuthController::class, 'updateUserPasswo
 //Servicios adicionales
 Route::resource('(/servicios_adicionales', ExtraController::class );
 Route::resource('/servicios', ServicioController::class);
+//servicios extras
+Route::resource('/servicios_reserva', ServicioExtraController::class);
+Route::resource('/servicios', ServicioController::class);
+
 
 // Solicitudes de constancia
 Route::middleware(['auth'])->group(function () {
@@ -486,6 +500,16 @@ Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
 
+
+//Rutas para vizualizar el perfil de chofer
+Route::middleware(['auth', 'user.active'])->group(function () {
+    Route::get('/chofer/panel', function () {
+        return redirect()->route('chofer.perfil');
+    })->name('chofer.panel');
+
+    Route::get('/chofer/perfil', [PerfilChoferController::class, 'verPerfil'])->name('chofer.perfil');
+});
+
 //Rutas calificar chofer desde el usuario
 Route::middleware(['auth'])->group(function () {
 
@@ -496,6 +520,12 @@ Route::middleware(['auth'])->group(function () {
     // Guardar calificación
     Route::post('/calificar-chofer', [CalificacionChoferController::class, 'store'])
         ->name('calificar.chofer.guardar');
+
+    // Lista todas las consultas (vista admin)
+    Route::get('/consultas', [ConsultaController::class, 'listar'])->name('consultas.listar');
+
+    Route::post('/consultas/{id}/responder', [ConsultaController::class, 'responderConsulta'])->name('consultas.responder');
+
 
 });
 

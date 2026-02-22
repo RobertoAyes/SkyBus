@@ -203,6 +203,20 @@
                 </a>
             </div>
         </div>
+
+        <!-- Consultas -->
+        <div class="nav-section">
+            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#consultas">
+                <span><i class="fas fa-comments"></i> Consultas</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+            <div class="collapse btn-toggle-nav" id="consultas">
+                <a href="{{ route('consultas.listar') }}"
+                   class="{{ request()->routeIs('consultas.listar') ? 'active' : '' }}">
+                    Ver Consultas
+                </a>
+            </div>
+        </div>
         <!-- Rentas -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#Renta">
@@ -234,6 +248,29 @@
                 </a>
                 <a href="{{ route('servicios.create') }}" class="{{ request()->routeIs('servicios.create') ? 'active' : '' }}">
                     Agregar servicios disponibles
+                </a>
+            </div>
+        </div>
+
+        <!-- Servicios Adicionales -->
+        <div class="nav-section">
+            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#extras"
+                    aria-expanded="{{ request()->routeIs('usuario.servicios_adicionales*') ? 'true' : 'false' }}">
+                <span><i class="fas fa-star"></i> S. Adicionales</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.servicios_adicionales.index') || request()->routeIs('servicios_adicionales.create') ? 'show' : '' }}"
+                 id="extras">
+
+                <a href="{{ route('servicios_adicionales.index') }}"
+                   class="{{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}">
+                    Lista de servicios adicionales
+                </a>
+
+                <a href="{{ route('servicios_adicionales.create') }}"
+                   class="{{ request()->routeIs('servicios_adicionales.create') ? 'active' : '' }}">
+                    Registrar nuevos servicios adicionales
                 </a>
             </div>
         </div>
