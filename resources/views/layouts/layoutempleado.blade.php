@@ -150,6 +150,12 @@
                    class="{{ request()->routeIs('empleado.incidentes.create') ? 'active':'' }}">
                     Registrar incidente
                 </a>
+
+                <a href="{{ route('empleado.misIncidentes') }}"
+                   class="nav-link {{ request()->routeIs('empleado.misIncidentes') ? 'active' : '' }}">
+                    Ver mis incidentes
+                </a>
+
             </div>
         </div>
 

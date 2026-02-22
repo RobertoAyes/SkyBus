@@ -55,7 +55,7 @@ class IncidenteController extends Controller
         Incidente::create([
             // Por ahora no usamos todavía el empleado real,
             // luego lo conectamos mejor.
-            'empleado_id' => null,
+            'empleado_id' => auth()->id(),
 
             // Datos que vienen del formulario
             'conductor_nombre' => $request->conductor_nombre,
@@ -71,7 +71,26 @@ class IncidenteController extends Controller
         // Después de guardar, regresamos al formulario
         // y mostramos un mensaje de éxito.
         return redirect()
-            ->route('empleado.incidentes.create')
+            ->route('empleado.misIncidentes')
             ->with('success', 'Incidente reportado con éxito.');
     }
+
+        // Esta función permite que el empleado vea
+        // todos los incidentes que él mismo ha registrado.
+        public function misIncidentes()
+        {
+            // Obtener el empleado que inició sesión
+            $empleado = auth()->user();
+
+            // Buscar en la tabla incidentes los registros
+            // que tengan el mismo empleado_id
+            // y ordenarlos por fecha (más recientes primero)
+            $incidentes = Incidente::where('empleado_id', $empleado->id)
+                ->orderBy('fecha_hora', 'desc')
+                ->get();
+
+            // Enviar los datos a la vista
+            return view('empleados.incidentes.mis_incidentes', compact('incidentes'));
+    }
+
 }
