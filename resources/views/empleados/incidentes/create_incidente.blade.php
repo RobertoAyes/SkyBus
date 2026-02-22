@@ -46,7 +46,7 @@ Esta pantalla es para registrar un incidente.
             <input type="text"
                    name="conductor_nombre"
                    class="form-control"
-        </div>
+                   value="{{ old('conductor_nombre',  '') }}">        </div>
 
         {{-- Número de bus --}}
         <div class="mb-3">
