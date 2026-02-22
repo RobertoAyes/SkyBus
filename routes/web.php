@@ -198,7 +198,8 @@ Route::post('/ayuda-soporte', [ConsultaController::class, 'store'])->name('sopor
 // Interfaz empleados
 Route::prefix('empleado')->middleware(['auth', 'user.active'])->group(function() {
 
-    Route::get('/dashboard', [EmpleadoController::class, 'dashboard'])->name('empleado.dashboard');
+    Route::get('/dashboard', [EmpleadoController::class, 'dashboardEmpleado'])
+        ->name('empleado.dashboard');
     Route::get('/viajes', [EmpleadoController::class, 'viajes'])->name('empleado.viajes');
     Route::get('/pasajeros', [EmpleadoController::class, 'pasajeros'])->name('empleado.pasajeros');
     Route::get('/confirmar', [EmpleadoController::class, 'confirmar'])->name('empleado.confirmar');
@@ -216,8 +217,14 @@ Route::prefix('empleado')->middleware(['auth', 'user.active'])->group(function()
     // Perfil
     Route::get('/perfil', [EmpleadoController::class, 'perfil'])->name('empleado.perfil');
 
+    // Incidentes
     Route::get('/incidentes/create', [\App\Http\Controllers\IncidenteController::class, 'create'])
         ->name('empleado.incidentes.create');
+
+    // Ver mis incidentes (HU45)
+    Route::get('/mis-incidentes', [\App\Http\Controllers\IncidenteController::class, 'misIncidentes'])
+        ->name('empleado.misIncidentes');
+
 
 });
 
