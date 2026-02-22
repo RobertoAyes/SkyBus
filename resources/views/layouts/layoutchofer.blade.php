@@ -170,7 +170,7 @@
             </button>
 
             <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.viajes*') ? 'show':'' }}" id="viajes">
-                <a href="{{ route('usuario.viajes') }}" class="{{ request()->routeIs('usuario.viajes') ? 'active':'' }}">Ver lista de viajes</a>
+                <a href="{{ route('usuario.viajes') }}" class="{{ request()->routeIs('usuario.viajes') ? 'active':'' }}">Ver Itinerario</a>
                 <a href="{{ route('usuario.pasajeros') }}" class="{{ request()->routeIs('usuario.pasajeros') ? 'active':'' }}">Pasajeros y reservas</a>
                 <a href="{{ route('usuario.confirmar') }}" class="{{ request()->routeIs('usuario.confirmar') ? 'active':'' }}">Confirmar salida/llegada</a>
             </div>
