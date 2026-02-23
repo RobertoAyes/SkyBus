@@ -536,6 +536,19 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{itinerarioChofer}', [ItinerarioChoferController::class, 'update'])->name('update');
         Route::delete('/{itinerarioChofer}', [ItinerarioChoferController::class, 'destroy'])->name('destroy');
     });
+
+    //Rutas itinerario layout chofer
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/chofer/itinerario', [ItinerarioChoferController::class, 'miItinerario'])
+            ->name('usuario.viajes');
+    });
+
+
+    Route::middleware(['auth', 'user.active'])->group(function () {
+        Route::get('/usuario/viajes', [ItinerarioChoferController::class, 'miItinerario'])
+            ->name('usuario.viajes');
+    });
+
 });
 
 

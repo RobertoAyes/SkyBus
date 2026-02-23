@@ -106,4 +106,16 @@ class ItinerarioChoferController extends Controller
         return redirect()->route('itinerarioChofer.index')
             ->with('success', 'Itinerario eliminado correctamente.');
     }
+
+    public function miItinerario()
+    {
+        $choferId = auth()->id();
+
+        $itinerarios = ItinerarioChofer::with('ruta')
+            ->where('chofer_id', $choferId)
+            ->orderBy('fecha', 'asc')
+            ->get();
+
+        return view('chofer.itinerario', compact('itinerarios'));
+    }
 }
