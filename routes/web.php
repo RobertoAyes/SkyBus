@@ -41,7 +41,7 @@ use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\ServicioExtraController;
 use App\Http\Controllers\PerfilChoferController;
-
+use App\Http\Controllers\ItinerarioChoferController;
 
 
 // Toggle activar/inactivar
@@ -526,7 +526,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/consultas/{id}/responder', [ConsultaController::class, 'responderConsulta'])->name('consultas.responder');
 
+    //Rutas Itinerario chofer
 
+    Route::middleware(['auth', 'user.active'])->prefix('itinerarioChofer')->name('itinerarioChofer.')->group(function () {
+        Route::get('/', [ItinerarioChoferController::class, 'index'])->name('index');
+        Route::get('/create', [ItinerarioChoferController::class, 'create'])->name('create');
+        Route::post('/', [ItinerarioChoferController::class, 'store'])->name('store');
+        Route::get('/{itinerarioChofer}/edit', [ItinerarioChoferController::class, 'edit'])->name('edit');
+        Route::put('/{itinerarioChofer}', [ItinerarioChoferController::class, 'update'])->name('update');
+        Route::delete('/{itinerarioChofer}', [ItinerarioChoferController::class, 'destroy'])->name('destroy');
+    });
 });
 
 

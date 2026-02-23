@@ -15,10 +15,10 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::table('empleados', function (Blueprint $table) {
-            $table->enum('rol', ['Empleado', 'Administrador'])
+            $table->enum('rol', ['Empleado', 'Administrador', 'Chofer'])
                 ->default('Empleado')
                 ->change();
         });
