@@ -20,7 +20,7 @@ return new class extends Migration
                 $table->string('password');
                 $table->enum('role', ['Empleado', 'Administrador', 'Cliente'])->default('Empleado');
                 $table->enum('estado', ['activo', 'inactivo'])->default('activo');
-                
+
                 $table->rememberToken();
                 $table->timestamps();
             });

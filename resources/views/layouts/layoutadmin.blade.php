@@ -288,6 +288,24 @@
             </div>
         </div>
 
+        <!-- Itinerario Chofer -->
+        <div class="nav-section">
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#itinerarioChofer"
+                    aria-expanded="{{ request()->routeIs('itinerarioChofer.*') ? 'true' : 'false' }}">
+        <span class="d-flex align-items-center fw-bold fs-6">
+            <i class="fas fa-road me-1 fa-sm"></i> Itinerario Chofer
+        </span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('itinerarioChofer.*') ? 'show' : '' }}" id="itinerarioChofer">
+                <a href="{{ route('itinerarioChofer.index') }}" class="{{ request()->routeIs('itinerarioChofer.index') ? 'active fw-bold' : '' }}">
+                    Listado de itinerarios
+                </a>
+            </div>
+        </div>
 
 
         <!-- Usuarios (PARTE DE MAIN) -->
