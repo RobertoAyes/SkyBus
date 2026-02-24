@@ -139,16 +139,9 @@
             <i class="fas fa-chevron-left"></i>
         </button>
 
-        <div class="brand-logo">
-            <h2>
-                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
-                     alt="Logo"
-                     style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
-            </h2>
-        </div>
-
         <div class="user-info">
-            <h3>Admin</h3>
+            <h3>Panel </h3>
+            <h3> Administrador</h3>
         </div>
 
         <!-- Estadísticas -->

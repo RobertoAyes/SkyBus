@@ -304,7 +304,6 @@
                     <div class="field-group">
                         <label class="field-label" for="fecha">
                             <i class="fas fa-clock"></i> Fecha y hora
-                            <span class="optional-badge">Opcional</span>
                         </label>
                         <input
                             type="datetime-local"

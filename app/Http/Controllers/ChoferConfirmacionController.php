@@ -16,7 +16,8 @@ class ChoferConfirmacionController extends Controller
     public function index()
     {
         $itinerarios = ItinerarioChofer::with('ruta')
-        ->where('chofer_id', Auth::id())
+            ->where('chofer_id', auth()->id())
+
             ->orderBy('fecha', 'desc')
             ->orderBy('hora_salida', 'desc')
             ->paginate(10);
