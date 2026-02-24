@@ -1,6 +1,6 @@
-@extends('layouts.layoutuser')
+@extends('layouts.layoutadmin')
 
-@section('contenido')
+@section('content')
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h4>Agregar Servicio Adicional</h4>
