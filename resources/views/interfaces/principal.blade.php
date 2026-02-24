@@ -8,6 +8,56 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
+
+        .travel-section {
+            background: linear-gradient(135deg, #e3f2fd, #f8fbff);
+        }
+
+        .travel-card {
+            background: #ffffff;
+            border-radius: 150px;
+            padding: 25px;
+            height: 100%;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .travel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .benefits-section {
+            background: #f8f9fa;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 150px;
+            padding: 25px 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .info-card i {
+            color: #1976d2;
+        }
         #btnScrollTop {
             position: fixed;
             bottom: 25px;
@@ -447,115 +497,126 @@
     </div>
 
 </section>
-<!-- SECCIÓN: Prepare su viaje -->
-<section class="mt-4 p-4 rounded text-center" style="background-color: #f0f8ff;">
-    <h2 class="text-center mb-4">Prepare su viaje</h2>
-    <p class="text-center mb-5">Recomendaciones para hacer de su viaje una experiencia inolvidable.</p>
 
-    <div class="row g-4 text-center">
-        <!-- Fila 1 -->
-        <div class="col-12 col-md-6">
-            <img loading="lazy" alt="Planee su viaje" src="https://www.ticabus.com/documents/7092829/7093204/ico_planea.svg/227152e1-824b-3052-c301-3ee496d1ef9f?t=1732002538128" class="img-fluid mb-2" style="max-height:50px;">
-            <h6>Planee su viaje</h6>
-            <p>Elija su destino, fecha de viaje, horario y punto de abordaje.</p>
-        </div>
+<section class="benefits-section mt-5 p-5 rounded-4 text-center">
+    <h2 class="fw-bold mb-4">Beneficios en algunos de nuestros buses</h2>
 
-        <div class="col-12 col-md-6">
-            <img loading="lazy" alt="Compre su boleto" src="https://www.ticabus.com/documents/7092829/7093204/ico_compra.svg/537e738f-b33c-4091-7cfa-1053d9b4fa2c?t=1732002538017" class="img-fluid mb-2" style="max-height:50px;">
-            <h6>Compre su boleto</h6>
-            <p>Adquiera sus boletos en línea aquí.</p>
-        </div>
-
-        <!-- Fila 2 -->
-        <div class="col-12 col-md-6">
-            <img loading="lazy" alt="Aborde a tiempo" src="https://www.ticabus.com/documents/7092829/7093204/ico_aborda.svg/101af751-58dc-674b-ee0e-00bd950ce590?t=1732002537917" class="img-fluid mb-2" style="max-height:50px;">
-            <h6>Aborde a tiempo</h6>
-            <p>Preséntese una hora antes de su horario de salida en el punto de abordaje para el chequeo del equipaje.</p>
-        </div>
-
-        <div class="col-12 col-md-6">
-            <img loading="lazy" alt="Equipaje" src="https://www.ticabus.com/documents/7092829/7093204/ico_equipaje.svg/7096cfbe-1126-f415-2858-a8dfab33ce35?t=1732002537690" class="img-fluid mb-2" style="max-height:50px;">
-            <h6>Equipaje</h6>
-            <p>Cada pasajero tiene derecho a llevar dos maletas de 15 kilos cada una y un bolso de mano.</p>
-        </div>
-    </div>
-
-    <!-- AVISO AL FINAL -->
-    <div class="mt-4 p-4 bg-light rounded text-center">
-        <small>
-            *La empresa no se hace responsable por pérdida o daños de valores, caja frágil, equipo de cómputo, electrónico y electrodoméstico.
-            Los objetos quedan bajo la responsabilidad del pasajero.
-        </small>
-    </div>
-</section>
-<div class="mt-4 p-4 bg-light rounded text-center">
-    <h2 class="text-center fw-bold mb-4">Beneficios en algunos de nuestros buses</h2>
-    <p class="text-center mb-5" style="font-size: 18px;">
-        En <strong>SkyBus</strong> su seguridad y comodidad es nuestra prioridad.<br>
-        Nuestros servicios le permiten viajar por Honduras de forma confortable para que tenga un recorrido placentero y seguro con nuestros conductores certificados. Además, le ofrecemos los siguientes servicios exclusivos en nuestras unidades:
+    <p class="text-muted mb-5 fs-6">
+        En <strong>SkyBus</strong> su seguridad y comodidad es nuestra prioridad.
+        Disfrute de un viaje confortable y seguro con nuestros servicios exclusivos.
     </p>
 
     <div class="row g-4 justify-content-center">
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-wifi fa-2x mb-2" style="color:#1976d2;"></i>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="info-card">
+                <i class="fas fa-wifi fa-2x mb-3"></i>
                 <h6>WIFI a bordo</h6>
             </div>
         </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-snowflake fa-2x mb-2" style="color:#1976d2;"></i>
+
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="info-card">
+                <i class="fas fa-snowflake fa-2x mb-3"></i>
                 <h6>Aire acondicionado</h6>
             </div>
         </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-suitcase fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Kit de viajes</h6>
+
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="info-card">
+                <i class="fas fa-suitcase fa-2x mb-3"></i>
+                <h6>Kit de viaje</h6>
             </div>
         </div>
 
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-coffee fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Paradas de cortesía</h6>
-            </div>
-        </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-bolt fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Conexiones eléctricas y USB</h6>
-            </div>
-        </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-map-marker-alt fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Sistema de geolocalización GPS</h6>
-            </div>
-        </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-tv fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Entretenimiento a bordo</h6>
-            </div>
-        </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-video fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Cámaras de video vigilancia</h6>
-            </div>
-        </div>
-        <div class="col-6 col-md-4">
-            <div class="info-card text-center p-3">
-                <i class="fas fa-ellipsis-h fa-2x mb-2" style="color:#1976d2;"></i>
-                <h6>Y mucho más</h6>
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="info-card">
+                <i class="fas fa-bolt fa-2x mb-3"></i>
+                <h6>Conexión USB</h6>
             </div>
         </div>
 
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="info-card">
+                <i class="fas fa-map-marker-alt fa-2x mb-3"></i>
+                <h6>GPS</h6>
+            </div>
+        </div>
 
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="info-card">
+                <i class="fas fa-video fa-2x mb-3"></i>
+                <h6>Videovigilancia</h6>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+<section class="travel-section mt-5 p-5 rounded-4 text-center">
+    <h2 class="fw-bold mb-3">Prepare su viaje</h2>
+    <p class="text-muted mb-5">
+        Recomendaciones para hacer de su viaje una experiencia inolvidable.
+    </p>
 
+    <div class="row g-4">
+        <div class="col-12 col-md-6">
+            <div class="travel-card">
+                <div class="icon-circle">
+                    <img src="https://www.ticabus.com/documents/7092829/7093204/ico_planea.svg/227152e1-824b-3052-c301-3ee496d1ef9f?t=1732002538128"
+                         alt="Planee su viaje" style="max-height:35px;">
+                </div>
+                <h6 class="fw-bold">Planee su viaje</h6>
+                <p class="text-muted">
+                    Elija su destino, fecha de viaje, horario y punto de abordaje.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="travel-card">
+                <div class="icon-circle">
+                    <img src="https://www.ticabus.com/documents/7092829/7093204/ico_compra.svg/537e738f-b33c-4091-7cfa-1053d9b4fa2c?t=1732002538017"
+                         alt="Compre su boleto" style="max-height:35px;">
+                </div>
+                <h6 class="fw-bold">Compre su boleto</h6>
+                <p class="text-muted">
+                    Adquiera sus boletos en línea de forma rápida y segura.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="travel-card">
+                <div class="icon-circle">
+                    <img src="https://www.ticabus.com/documents/7092829/7093204/ico_aborda.svg/101af751-58dc-674b-ee0e-00bd950ce590?t=1732002537917"
+                         alt="Aborde a tiempo" style="max-height:35px;">
+                </div>
+                <h6 class="fw-bold">Aborde a tiempo</h6>
+                <p class="text-muted">
+                    Preséntese una hora antes para el chequeo de equipaje.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="travel-card">
+                <div class="icon-circle">
+                    <img src="https://www.ticabus.com/documents/7092829/7093204/ico_equipaje.svg/7096cfbe-1126-f415-2858-a8dfab33ce35?t=1732002537690"
+                         alt="Equipaje" style="max-height:35px;">
+                </div>
+                <h6 class="fw-bold">Equipaje</h6>
+                <p class="text-muted">
+                    Dos maletas de 15 kg y un bolso de mano por pasajero.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 p-4 bg-white rounded-4 shadow-sm">
+        <small class="text-muted">
+            *La empresa no se hace responsable por pérdida o daños de objetos de valor,
+            equipos electrónicos o frágiles. La responsabilidad recae en el pasajero.
+        </small>
+    </div>
+</section>
 <button id="btnScrollTop" aria-label="Volver arriba">
     <i class="fas fa-arrow-up"></i>
 </button>
