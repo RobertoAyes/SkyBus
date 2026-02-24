@@ -141,18 +141,18 @@
 
                 <!-- Servicios Adicionales -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('servicios_adicionales.*') ? 'active' : '' }}"
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('servicios_reserva.*') ? 'active' : '' }}"
                        href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-star me-1"></i> Servicios Adicionales
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item {{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}"
-                               href="{{ route('servicios_adicionales.index') }}">Historial</a>
+                            <a class="dropdown-item {{ request()->routeIs('servicios_reserva.index') ? 'active' : '' }}"
+                               href="{{ route('servicios_reserva.index') }}">Historial</a>
                         </li>
                         <li>
-                            <a class="dropdown-item {{ request()->routeIs('servicios_adicionales.create') ? 'active' : '' }}"
-                               href="{{ route('servicios_adicionales.create') }}">Registrar</a>
+                            <a class="dropdown-item {{ request()->routeIs('servicios_reserva.create') ? 'active' : '' }}"
+                               href="{{ route('servicios_reserva.create') }}">Registrar</a>
                         </li>
                     </ul>
                 </li>

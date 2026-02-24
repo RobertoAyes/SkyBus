@@ -1,8 +1,8 @@
-@extends('layouts.layoutuser')
+@extends('layouts.layoutadmin')
 
 @section('title', 'Lista de Servicios Adicionales')
 
-@section('contenido')
+@section('content')
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">
