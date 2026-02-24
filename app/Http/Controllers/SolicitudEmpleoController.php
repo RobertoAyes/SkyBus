@@ -53,4 +53,46 @@ class SolicitudEmpleoController extends Controller
         $solicitudes = SolicitudEmpleo::where('user_id', auth()->id())->latest()->get();
         return view('solicitudes.index-empleo', compact('solicitudes'));
     }
+
+    public function indexAdmin(Request $request)
+    {
+        // Verificamos que el usuario sea administrador
+        if (auth()->user()->role !== 'Administrador') {
+            abort(403, 'Acceso denegado');
+        }
+
+        // Creamos una consulta base a la tabla solicitudes_empleo
+        $query = SolicitudEmpleo::query();
+
+        // Filtro por estado (pendiente, en_proceso, atendida)
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        // Filtro por puesto deseado
+        if ($request->filled('puesto')) {
+            // Busca coincidencias parciales en el nombre del puesto
+            $query->where('puesto_deseado', 'like', '%' . $request->puesto . '%');
+        }
+
+        // Traemos las solicitudes ordenadas por más reciente
+        $solicitudes = $query->latest()->get();
+
+        // Enviamos las solicitudes a la vista
+        return view('admin.solicitudes_empleo.index', compact('solicitudes'));
+    }
+
+    public function show($id)
+    {
+        // Verificamos que el usuario sea administrador
+        if (auth()->user()->role !== 'Administrador') {
+            abort(403, 'Acceso denegado');
+        }
+
+        // Buscamos la solicitud por su ID
+        $solicitud = SolicitudEmpleo::findOrFail($id);
+
+        // Retornamos la vista de detalle
+        return view('admin.solicitudes_empleo.show', compact('solicitud'));
+    }
 }

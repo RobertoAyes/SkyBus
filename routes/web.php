@@ -408,10 +408,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/home-editor/update', [HomeEditorController::class, 'update'])
         ->name('admin.home.update');
 });
-Route::prefix('admin')->name('admin.')->group(function() {
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function() {
+
     Route::resource('departamentos', App\Http\Controllers\Admin\DepartamentoController::class);
     Route::resource('lugares', App\Http\Controllers\Admin\LugarController::class);
     Route::resource('comidas', App\Http\Controllers\Admin\ComidaController::class);
+
+    // HU56 - Visualización de solicitudes de empleo
+    Route::get('/solicitudes-empleo',
+        [App\Http\Controllers\SolicitudEmpleoController::class, 'indexAdmin']
+    )->name('solicitudes.empleo');
+
+    Route::get('/solicitudes-empleo/{id}',
+        [App\Http\Controllers\SolicitudEmpleoController::class, 'show']
+    )->name('solicitudes.empleo.show');
 });
 Route::get('/principal', [HomeController::class, 'index'])->name('interfaces.principal');
 

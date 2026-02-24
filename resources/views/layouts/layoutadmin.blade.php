@@ -266,6 +266,12 @@
                    class="{{ request()->routeIs('solicitudes.index') ? 'active' : '' }}">
                     Constancias de Trabajo
                 </a>
+
+                <a href="{{ route('admin.solicitudes.empleo') }}"
+                   class="{{ request()->routeIs('admin.solicitudes.empleo') ? 'active' : '' }}">
+                    Solicitudes de Empleo
+                </a>
+
             </div>
         </div>
 
