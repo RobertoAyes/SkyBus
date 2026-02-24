@@ -141,7 +141,7 @@
 
         <div class="brand-logo">
             <h2>
-                <img src="{{ asset('Imagenes/bustrak-logo.jpg') }}"
+                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
                      alt="Logo"
                      style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
             </h2>

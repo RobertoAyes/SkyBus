@@ -74,7 +74,7 @@
     <div class="container-fluid">
 
         <a class="navbar-brand d-flex align-items-center" href="{{ route('interfaces.principal') }}">
-            <img src="{{ asset('Imagenes/bustrak-logo.jpg') }}"
+            <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
                  alt="Logo"
                  style="width: 90px; height:auto; margin-right:10px;">
         </a>
