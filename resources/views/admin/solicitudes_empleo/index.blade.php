@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.layoutadmin')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         <h2 class="mb-4">Solicitudes de Empleo</h2>
 
         <!-- FORMULARIO DE FILTRO POR ESTADO -->
