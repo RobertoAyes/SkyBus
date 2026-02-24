@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Controladores
 use App\Http\Controllers\RutaController;
+use App\Http\Controllers\ChoferConfirmacionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HomeEditorController;
 use App\Http\Controllers\Api\DestinosController;
@@ -558,6 +559,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/usuario/viajes', [ItinerarioChoferController::class, 'miItinerario'])
             ->name('usuario.viajes');
     });
+
+    // Vista principal para confirmar salida/llegada
+    Route::get('/confirmar-salida-llegada', [ChoferConfirmacionController::class, 'index'])
+        ->name('confirmar');
+
+// Registrar salida
+    Route::post('/viaje/{id}/salida', [ChoferConfirmacionController::class, 'registrarSalida'])
+        ->name('viaje.salida');
+
+// Registrar llegada
+    Route::post('/viaje/{id}/llegada', [ChoferConfirmacionController::class, 'registrarLlegada'])
+        ->name('viaje.llegada');
 
 });
 

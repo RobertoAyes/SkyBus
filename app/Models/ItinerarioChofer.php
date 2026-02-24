@@ -16,6 +16,15 @@ class ItinerarioChofer extends Model
         'chofer_id',
         'ruta_id',
         'fecha',
+        'hora_salida',
+        'hora_llegada',
+        'estado_viaje',
+
+    ];
+
+    protected $casts = [
+        'hora_salida' => 'datetime',
+        'hora_llegada' => 'datetime',
     ];
 
     // Relación con chofer (usuario con rol Chofer)
