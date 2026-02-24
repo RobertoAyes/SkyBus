@@ -8,6 +8,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
+        #btnScrollTop {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6a00, #ff3d00);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none; /* oculto por defecto */
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        #btnScrollTop:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
         body { font-family: 'Poppins', sans-serif; background: url('https://media.istockphoto.com/id/1457298168/es/foto/hombre-abordando-autob%C3%BAs-enfoque-selectivo-en-el-lado-del-parachoques-del-transporte-p%C3%BAblico.jpg?s=612x612&w=0&k=20&c=zl6SrTq50CuHHJ8V8L13EwQP4TNcsXRvKeyvIEtZd1c=') no-repeat center center fixed; background-size: cover; min-height: 100vh; }
         .booking-card { background: rgba(255,255,255,0.95); border-radius: 12px; padding: 30px; max-width: 1200px; width: 95%; margin: 60px auto; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
         .btn-orange { background-color: #FF5722; color: #fff; }
@@ -276,7 +306,7 @@
                 <div class="alert alert-warning mb-4 py-2"><i class="fas fa-exclamation-triangle me-1"></i><strong>Recuerda:</strong> Llega antes de la hora de salida.</div>
 
                 <div class="row g-3 mb-4 text-center">
-                    <div class="col-12"><small class="text-muted d-block">Código de Reserva</small><h5 class="fw-bold text-primary" id="codigoReservaStep4">ABC123</h5></div>
+                    <div class="col-12"><small class="text-muted d-block">Código de Reserva</small><h5 class="fw-bold text-primary" id="codigoReservaStep4">---</h5></div>
                     <div class="col-6"><small class="text-muted d-block">Origen</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-map-marker-alt text-primary me-2"></i><span id="origenStep4">-</span></div></div>
                     <div class="col-6"><small class="text-muted d-block">Destino</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-map-marker-check text-success me-2"></i><span id="destinoStep4">-</span></div></div>
                     <div class="col-6"><small class="text-muted d-block">Salida</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-clock text-info me-2"></i><span id="fechaStep4">-</span></div></div>
@@ -369,16 +399,15 @@
     });
 </script>
 <!-- Sección de Servicios -->
-<section class="services-section py-5" style="background-color: #f5f7fa;">
+<section class="services-section py-5">
     <div class="container">
 
         <!-- Servicios Usuario -->
-        <div class="row align-items-center mb-5">
+        <div class="service-card row align-items-center mb-5">
             <div class="col-md-6">
                 <h2 class="fw-bold text-primary">Servicios para el usuario</h2>
                 <p>
-Texto y mucho texto luego luego
-                </p>
+                    Ofrecemos atención personalizada, compras en línea y asistencia 24/7 para que tu experiencia sea segura y confiable.                </p>
             </div>
             <div class="col-md-6 text-center">
                 <img src="https://transportesonline.hn/wp-content/uploads/2020/12/GettyImages-1209969988-2048x1365.jpg"
@@ -387,35 +416,169 @@ Texto y mucho texto luego luego
             </div>
         </div>
 
-        <!-- Servicios  -->
-        <div class="row align-items-center">
+        <!-- Servicios dentro del bus -->
+        <div class="service-card row align-items-center mb-5">
             <div class="col-md-6 order-md-2">
                 <h2 class="fw-bold text-primary">Servicios dentro del bus</h2>
                 <p>
-                    Texto y mucho texto luego luego
-
-                </p>
+                    Disfruta de asientos cómodos, Wi-Fi gratuito, aire acondicionado y entretenimiento durante todo tu viaje.                </p>
             </div>
             <div class="col-md-6 order-md-1 text-center">
-                <img src="https://www.todoturismosrl.com/images/buses/bus_salar_cama7.jpg" alt="Servicios Transportista" class="img-fluid rounded shadow">
+                <img src="https://www.todoturismosrl.com/images/buses/bus_salar_cama7.jpg"
+                     alt="Servicios dentro del bus"
+                     class="img-fluid rounded shadow">
             </div>
         </div>
 
-        <div class="row align-items-center mb-5">
+        <!-- Nuestra Flota -->
+        <div class="service-card row align-items-center mb-5">
             <div class="col-md-6">
                 <h2 class="fw-bold text-primary">Nuestra Flota</h2>
                 <p>
-                    Texto y mucho texto luego luego
-                </p>
+                    Nuestra flota cuenta con buses modernos y seguros, con mantenimiento regular y personal altamente capacitado.                </p>
             </div>
             <div class="col-md-6 text-center">
                 <img src="https://bogota.gov.co/sites/default/files/styles/1050px/public/2024-06/busesbogota-1-2.png"
-                     alt="Servicios Usuario"
+                     alt="Nuestra Flota"
                      class="img-fluid rounded shadow">
             </div>
         </div>
 
     </div>
+
 </section>
+<!-- SECCIÓN: Prepare su viaje -->
+<section class="mt-4 p-4 rounded text-center" style="background-color: #f0f8ff;">
+    <h2 class="text-center mb-4">Prepare su viaje</h2>
+    <p class="text-center mb-5">Recomendaciones para hacer de su viaje una experiencia inolvidable.</p>
+
+    <div class="row g-4 text-center">
+        <!-- Fila 1 -->
+        <div class="col-12 col-md-6">
+            <img loading="lazy" alt="Planee su viaje" src="https://www.ticabus.com/documents/7092829/7093204/ico_planea.svg/227152e1-824b-3052-c301-3ee496d1ef9f?t=1732002538128" class="img-fluid mb-2" style="max-height:50px;">
+            <h6>Planee su viaje</h6>
+            <p>Elija su destino, fecha de viaje, horario y punto de abordaje.</p>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <img loading="lazy" alt="Compre su boleto" src="https://www.ticabus.com/documents/7092829/7093204/ico_compra.svg/537e738f-b33c-4091-7cfa-1053d9b4fa2c?t=1732002538017" class="img-fluid mb-2" style="max-height:50px;">
+            <h6>Compre su boleto</h6>
+            <p>Adquiera sus boletos en línea aquí.</p>
+        </div>
+
+        <!-- Fila 2 -->
+        <div class="col-12 col-md-6">
+            <img loading="lazy" alt="Aborde a tiempo" src="https://www.ticabus.com/documents/7092829/7093204/ico_aborda.svg/101af751-58dc-674b-ee0e-00bd950ce590?t=1732002537917" class="img-fluid mb-2" style="max-height:50px;">
+            <h6>Aborde a tiempo</h6>
+            <p>Preséntese una hora antes de su horario de salida en el punto de abordaje para el chequeo del equipaje.</p>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <img loading="lazy" alt="Equipaje" src="https://www.ticabus.com/documents/7092829/7093204/ico_equipaje.svg/7096cfbe-1126-f415-2858-a8dfab33ce35?t=1732002537690" class="img-fluid mb-2" style="max-height:50px;">
+            <h6>Equipaje</h6>
+            <p>Cada pasajero tiene derecho a llevar dos maletas de 15 kilos cada una y un bolso de mano.</p>
+        </div>
+    </div>
+
+    <!-- AVISO AL FINAL -->
+    <div class="mt-4 p-4 bg-light rounded text-center">
+        <small>
+            *La empresa no se hace responsable por pérdida o daños de valores, caja frágil, equipo de cómputo, electrónico y electrodoméstico.
+            Los objetos quedan bajo la responsabilidad del pasajero.
+        </small>
+    </div>
+</section>
+<div class="mt-4 p-4 bg-light rounded text-center">
+    <h2 class="text-center fw-bold mb-4">Beneficios en algunos de nuestros buses</h2>
+    <p class="text-center mb-5" style="font-size: 18px;">
+        En <strong>SkyBus</strong> su seguridad y comodidad es nuestra prioridad.<br>
+        Nuestros servicios le permiten viajar por Honduras de forma confortable para que tenga un recorrido placentero y seguro con nuestros conductores certificados. Además, le ofrecemos los siguientes servicios exclusivos en nuestras unidades:
+    </p>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-wifi fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>WIFI a bordo</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-snowflake fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Aire acondicionado</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-suitcase fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Kit de viajes</h6>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-coffee fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Paradas de cortesía</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-bolt fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Conexiones eléctricas y USB</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-map-marker-alt fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Sistema de geolocalización GPS</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-tv fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Entretenimiento a bordo</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-video fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Cámaras de video vigilancia</h6>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="info-card text-center p-3">
+                <i class="fas fa-ellipsis-h fa-2x mb-2" style="color:#1976d2;"></i>
+                <h6>Y mucho más</h6>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<button id="btnScrollTop" aria-label="Volver arriba">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+    const btnScrollTop = document.getElementById('btnScrollTop');
+
+    // Mostrar u ocultar el botón al hacer scroll
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            btnScrollTop.style.display = 'flex';
+        } else {
+            btnScrollTop.style.display = 'none';
+        }
+    });
+
+    // Ir arriba suavemente al hacer click
+    btnScrollTop.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
 </body>
 </html>
