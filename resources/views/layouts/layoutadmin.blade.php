@@ -323,10 +323,7 @@
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav {{ request()->routeIs('solicitudes.*') ? 'show' : '' }}" id="solicitud">
-                <a href="{{ route('solicitudes.index') }}"
-                   class="{{ request()->routeIs('solicitudes.index') ? 'active' : '' }}">
-                    Constancias de Trabajo
-                </a>
+
 
                 <a href="{{ route('admin.solicitudes.empleo') }}"
                    class="{{ request()->routeIs('admin.solicitudes.empleo') ? 'active' : '' }}">
@@ -356,28 +353,6 @@
                 </a>
             </div>
         </div>
-
-        <!-- Incidentes -->
-        <div class="nav-section">
-            <button class="btn-toggle"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#incidentes"
-                    aria-expanded="{{ request()->routeIs('empleado.incidentes*') ? 'true':'false' }}">
-        <span>
-            <i class="fas fa-exclamation-triangle"></i> Incidentes
-        </span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleado.incidentes*') ? 'show':'' }}"
-                 id="incidentes">
-                <a href="{{ route('empleado.incidentes.create') }}"
-                   class="{{ request()->routeIs('empleado.incidentes.create') ? 'active':'' }}">
-                    Registrar incidente
-                </a>
-            </div>
-        </div>
-
 
         <!-- Cerrar sesión -->
         <div class="nav-section">
