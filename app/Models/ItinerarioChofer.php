@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Ruta;
+use App\Models\ParadaItinerario;
 
 class ItinerarioChofer extends Model
 {
@@ -37,5 +38,10 @@ class ItinerarioChofer extends Model
     public function ruta()
     {
         return $this->belongsTo(Ruta::class, 'ruta_id');
+    }
+
+    public function paradas()
+    {
+        return $this->hasMany(ParadaItinerario::class, 'itinerario_chofer_id');
     }
 }

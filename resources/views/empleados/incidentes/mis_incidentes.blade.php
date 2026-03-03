@@ -1,435 +1,341 @@
 @extends('layouts.layoutchofer')
 
 @section('contenido')
-
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        .inc-wrap { font-family: 'DM Sans', sans-serif; background: #f0f9ff; min-height: 100vh; padding: 1.75rem 1.5rem; }
 
-        :root {
-            --bg-base:       #f0f7ff;
-            --bg-card:       #ffffff;
-            --bg-hover:      #f5faff;
-            --bg-header:     #e8f3fd;
-            --border:        #d0e8f8;
-            --border-accent: #a8d4f0;
-            --celeste-1:     #3a9fd6;
-            --celeste-2:     #5bb8e8;
-            --celeste-light: #e0f3fc;
-            --celeste-soft:  #b8dff5;
-            --text-primary:  #1a3a52;
-            --text-secondary:#3a6a8a;
-            --text-muted:    #7aaac8;
-        }
+        .inc-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
+        .inc-topbar-left { display: flex; align-items: baseline; gap: .5rem; }
+        .inc-title { font-size: 1.3rem; font-weight: 700; color: #0c1a2e; letter-spacing: -.02em; margin: 0; }
+        .inc-badge { font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 500; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: .15rem .55rem; border-radius: 20px; }
+        .inc-btn-print { display: inline-flex; align-items: center; gap: .4rem; background: #fff; border: 1px solid #c9dff2; color: #0284c7; border-radius: 8px; padding: .45rem 1rem; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .15s; }
+        .inc-btn-print:hover { background: #e0f2fe; border-color: #bae6fd; }
 
-        .incidentes-wrapper {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            background: var(--bg-base);
-            padding: 2.5rem 2rem;
-        }
+        .inc-stats { display: flex; gap: .75rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
+        .inc-stat { background: #fff; border: 1px solid #e2edf8; border-radius: 10px; padding: .65rem 1rem; display: flex; align-items: center; gap: .7rem; flex: 1; min-width: 130px; }
+        .inc-stat-ico { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: .8rem; flex-shrink: 0; }
+        .inc-stat-ico.blue { background: #e0f2fe; color: #0284c7; }
+        .inc-stat-ico.red  { background: #fff1f0; color: #dc2626; }
+        .inc-stat-ico.amber { background: #fffbeb; color: #d97706; }
+        .inc-stat-ico.green { background: #f0fdf4; color: #16a34a; }
+        .inc-stat-num { font-family: 'DM Mono', monospace; font-size: 1.35rem; font-weight: 500; color: #0c1a2e; line-height: 1; }
+        .inc-stat-lbl { font-size: .7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; font-weight: 500; margin-top: .1rem; }
 
-        .page-inner {
-            max-width: 960px;
-            margin: 0 auto;
-        }
+        .inc-filters { background: #fff; border: 1px solid #e2edf8; border-radius: 10px; padding: .7rem 1rem; display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+        .inc-fg { display: flex; align-items: center; gap: .35rem; flex: 1; min-width: 140px; }
+        .inc-fg-ico { color: #94a3b8; font-size: .75rem; flex-shrink: 0; }
+        .inc-filters input, .inc-filters select { font-family: 'DM Sans', sans-serif; font-size: .82rem; border: 1px solid #c9dff2; border-radius: 7px; padding: .38rem .65rem; color: #1e3a5f; background: #f8fbff; width: 100%; outline: none; transition: border .15s, box-shadow .15s; }
+        .inc-filters input:focus, .inc-filters select:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,.15); background: #fff; }
+        .inc-btn-clear { font-family: 'DM Sans', sans-serif; font-size: .78rem; font-weight: 600; color: #64748b; background: none; border: 1px solid #e2edf8; border-radius: 7px; padding: .38rem .8rem; cursor: pointer; white-space: nowrap; transition: all .15s; }
+        .inc-btn-clear:hover { background: #f8fbff; color: #1e3a5f; border-color: #c9dff2; }
+        .inc-filter-count { font-size: .75rem; color: #94a3b8; margin-left: auto; }
 
-        /* ── Banner ── */
-        .greeting-banner {
-            background: linear-gradient(135deg, #3a9fd6 0%, #5bb8e8 100%);
-            border-radius: 20px;
-            padding: 2rem 2.2rem;
-            margin-bottom: 1.8rem;
-            display: flex; align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem; flex-wrap: wrap;
-            box-shadow: 0 8px 28px rgba(58,159,214,0.22);
-            position: relative; overflow: hidden;
-        }
-        .greeting-banner::before {
-            content: '';
-            position: absolute; top: -40px; right: -40px;
-            width: 160px; height: 160px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%; pointer-events: none;
-        }
-        .greeting-banner::after {
-            content: '';
-            position: absolute; bottom: -50px; right: 80px;
-            width: 120px; height: 120px;
-            background: rgba(255,255,255,0.07);
-            border-radius: 50%; pointer-events: none;
-        }
-        .greeting-text { position: relative; z-index: 1; }
-        .greeting-label {
-            font-size: 0.78rem; font-weight: 700;
-            letter-spacing: 0.14em; text-transform: uppercase;
-            color: rgba(255,255,255,0.75); margin-bottom: 0.3rem;
-        }
-        .greeting-title {
-            font-size: 1.7rem; font-weight: 800;
-            color: #fff; line-height: 1.15; letter-spacing: -0.02em;
-        }
-        .greeting-sub {
-            font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-top: 0.3rem;
-        }
-        .greeting-icon-wrap {
-            position: relative; z-index: 1;
-            width: 64px; height: 64px;
-            background: rgba(255,255,255,0.18);
-            border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; color: #fff; flex-shrink: 0;
-        }
+        .inc-table-wrap { background: #fff; border: 1px solid #e2edf8; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 12px rgba(14,165,233,.06); }
+        .inc-table-wrap table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+        .inc-table-wrap thead { background: #f8fbff; border-bottom: 1px solid #c9dff2; }
+        .inc-table-wrap thead th { padding: .7rem 1rem; color: #64748b; font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+        .inc-th-sort { cursor: pointer; user-select: none; }
+        .inc-th-sort:hover { color: #0284c7; }
+        .inc-sort-ico { margin-left: .3rem; opacity: .4; font-size: .62rem; }
+        .inc-table-wrap tbody tr { border-bottom: 1px solid #f1f7fc; transition: background .12s; }
+        .inc-table-wrap tbody tr:last-child { border-bottom: none; }
+        .inc-table-wrap tbody tr:hover { background: #f0f9ff; }
+        .inc-table-wrap tbody td { padding: .72rem 1rem; color: #2d5a8e; vertical-align: middle; }
 
-        /* ── Summary chips ── */
-        .summary-chips {
-            display: flex; gap: 1rem;
-            margin-bottom: 1.8rem; flex-wrap: wrap;
-        }
-        .chip {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1rem 1.4rem;
-            display: flex; align-items: center; gap: 0.85rem;
-            flex: 1; min-width: 140px;
-            box-shadow: 0 2px 8px rgba(58,159,214,0.06);
-            transition: all 0.2s;
-        }
-        .chip:hover {
-            border-color: var(--border-accent);
-            box-shadow: 0 4px 16px rgba(58,159,214,0.12);
-            transform: translateY(-2px);
-        }
-        .chip-icon {
-            width: 40px; height: 40px; border-radius: 11px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; flex-shrink: 0;
-        }
-        .chip-icon.orange { background: #e0f3fc; color: #3a9fd6; }
-        .chip-icon.blue   { background: var(--celeste-light); color: var(--celeste-1); }
-        .chip-icon.red    { background: #fff0f0; color: #c0392b; }
-        .chip-value {
-            font-size: 1.5rem; font-weight: 800;
-            color: var(--text-primary); line-height: 1;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .chip-label {
-            font-size: 0.72rem; color: var(--text-muted);
-            font-weight: 500; text-transform: uppercase;
-            letter-spacing: 0.05em; margin-top: 0.15rem;
-        }
+        .inc-num { width: 28px; height: 28px; border-radius: 7px; background: #e0f2fe; border: 1px solid #bae6fd; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 700; color: #0284c7; }
 
-        /* ── Toolbar ── */
-        .toolbar {
-            display: flex; align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;
-        }
-        .section-title {
-            font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            color: var(--celeste-1);
-            display: flex; align-items: center; gap: 0.45rem;
-        }
-        .section-title::before {
-            content: ''; display: inline-block;
-            width: 16px; height: 2px;
-            background: var(--celeste-1); border-radius: 2px;
-        }
-        .btn-print {
-            display: inline-flex; align-items: center; gap: 0.45rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-accent);
-            color: var(--celeste-1);
-            padding: 0.55rem 1.2rem; border-radius: 10px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 600; font-size: 0.84rem;
-            cursor: pointer; transition: all 0.22s;
-            box-shadow: 0 2px 8px rgba(58,159,214,0.07);
-        }
-        .btn-print:hover {
-            background: var(--celeste-light);
-            border-color: var(--celeste-soft);
-            box-shadow: 0 4px 14px rgba(58,159,214,0.15);
-            transform: translateY(-1px);
-        }
+        .inc-tipo-plain { font-size: .85rem; font-weight: 600; color: #1e3a5f; }
+        .inc-tipo-plain i { font-size: .75rem; color: #94a3b8; margin-right: .25rem; }
 
-        /* ── Incident cards ── */
-        .incidents-list {
-            display: flex; flex-direction: column; gap: 0.85rem;
-        }
+        .inc-bus { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; font-weight: 600; color: #1e3a5f; }
+        .inc-bus i { font-size: .72rem; color: #94a3b8; }
 
-        .incident-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.2rem 1.5rem;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 1.2rem;
-            box-shadow: 0 2px 8px rgba(58,159,214,0.05);
-            transition: all 0.22s;
-            animation: cardIn 0.4s ease both;
-            border-left: 4px solid transparent;
-        }
-        .incident-card:nth-child(1){animation-delay:.05s}
-        .incident-card:nth-child(2){animation-delay:.10s}
-        .incident-card:nth-child(3){animation-delay:.15s}
-        .incident-card:nth-child(4){animation-delay:.20s}
-        .incident-card:nth-child(5){animation-delay:.25s}
-        @keyframes cardIn {
-            from { opacity:0; transform:translateY(10px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
-        .incident-card:hover {
-            border-color: var(--border-accent);
-            box-shadow: 0 6px 20px rgba(58,159,214,0.11);
-            transform: translateY(-2px);
-        }
+        .inc-route-plain { display: flex; align-items: center; gap: .3rem; font-size: .8rem; color: #2d5a8e; margin-top: .25rem; }
+        .inc-route-plain i { font-size: .68rem; color: #38bdf8; }
+        .inc-no-ruta { font-size: .75rem; color: #94a3b8; font-style: italic; }
 
-        /* Tipo color accent */
-        .incident-card.tipo-accidente  { border-left-color: #e74c3c; }
-        .incident-card.tipo-mecanico   { border-left-color: #e67e22; }
-        .incident-card.tipo-trafico    { border-left-color: #f1c40f; }
-        .incident-card.tipo-otro       { border-left-color: var(--celeste-1); }
+        .inc-desc { font-size: .8rem; color: #64748b; line-height: 1.45; max-width: 280px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Left: number + tipo badge */
-        .card-left { display:flex; flex-direction:column; align-items:center; gap:0.5rem; }
-        .card-number {
-            width: 38px; height: 38px; border-radius: 11px;
-            background: var(--celeste-light);
-            border: 1px solid var(--celeste-soft);
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.88rem; font-weight: 700; color: var(--celeste-1);
-        }
+        .inc-date { font-family: 'DM Mono', monospace; font-size: .78rem; color: #64748b; }
+        .inc-date-day { color: #1e3a5f; font-weight: 500; display: block; font-size: .82rem; }
 
-        /* Center: main info */
-        .card-body-content { min-width: 0; }
-        .card-top-row {
-            display: flex; align-items: center; gap: 0.6rem;
-            flex-wrap: wrap; margin-bottom: 0.45rem;
-        }
-        .tipo-badge {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.22rem 0.7rem; border-radius: 30px;
-            font-size: 0.75rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-        .tipo-badge.accidente { background:#ffeaea; color:#c0392b; border:1px solid #f5c2c2; }
-        .tipo-badge.mecanico  { background:#fff3e0; color:#b34700; border:1px solid #ffd5a8; }
-        .tipo-badge.trafico   { background:#fffde7; color:#8a6d00; border:1px solid #ffe082; }
-        .tipo-badge.otro      { background:var(--celeste-light); color:var(--celeste-1); border:1px solid var(--celeste-soft); }
+        .inc-empty td { text-align: center; padding: 3.5rem 1rem; }
+        .inc-empty-ico { width: 52px; height: 52px; background: #e0f2fe; border: 2px dashed #bae6fd; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto .8rem; color: #38bdf8; font-size: 1.3rem; }
+        .inc-empty-t { font-weight: 600; color: #64748b; font-size: .9rem; }
+        .inc-empty-s { font-size: .78rem; color: #94a3b8; margin-top: .25rem; }
 
-        .card-bus {
-            font-size: 0.8rem; font-weight: 600;
-            color: var(--text-muted);
-            display: flex; align-items: center; gap: 0.3rem;
-        }
-        .card-bus i { font-size: 0.72rem; }
+        .inc-pag-bar { display: flex; align-items: center; justify-content: space-between; padding: .7rem 1rem; border-top: 1px solid #e2edf8; flex-wrap: wrap; gap: .5rem; }
+        .inc-pag-info { font-size: .77rem; color: #94a3b8; }
+        .inc-pag-info strong { color: #64748b; }
+        .inc-pag-links { display: flex; align-items: center; gap: .3rem; }
+        .inc-pag-btn { min-width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: .78rem; font-weight: 600; border: 1px solid #e2edf8; background: #fff; color: #64748b; cursor: pointer; transition: all .15s; padding: 0 .5rem; font-family: 'DM Sans', sans-serif; }
+        .inc-pag-btn:hover { border-color: #38bdf8; color: #0284c7; background: #f0f9ff; }
+        .inc-pag-active { background: #0284c7 !important; border-color: #0284c7 !important; color: #fff !important; }
+        .inc-pag-btn:disabled { opacity: .35; cursor: not-allowed; pointer-events: none; }
 
-        .card-desc {
-            font-size: 0.88rem; color: var(--text-secondary);
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .card-route-row {
-            display: flex; align-items: center; gap: 0.45rem;
-            margin-top: 0.4rem;
-        }
-        .route-pill {
-            display: inline-flex; align-items: center; gap: 0.35rem;
-            background: var(--bg-header);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.22rem 0.7rem; border-radius: 30px;
-            font-size: 0.78rem; font-weight: 500;
-        }
-        .route-pill i { font-size: 0.68rem; color: var(--celeste-1); }
-
-        /* Right: date/time */
-        .card-meta {
-            display: flex; flex-direction: column;
-            align-items: flex-end; gap: 0.4rem; flex-shrink: 0;
-        }
-        .meta-pill {
-            display: inline-flex; align-items: center; gap: 0.35rem;
-            padding: 0.28rem 0.75rem; border-radius: 30px;
-            font-size: 0.79rem; font-weight: 600; white-space: nowrap;
-        }
-        .meta-pill.date {
-            background: var(--bg-header);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-        .meta-pill.time {
-            background: var(--celeste-light);
-            border: 1px solid var(--celeste-soft);
-            color: var(--celeste-1);
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .meta-pill i { font-size: 0.7rem; opacity: 0.75; }
-
-        /* ── Empty state ── */
-        .empty-state {
-            background: var(--bg-card);
-            border: 2px dashed var(--celeste-soft);
-            border-radius: 20px;
-            padding: 4rem 2rem; text-align: center;
-        }
-        .empty-icon-wrap {
-            width: 72px; height: 72px;
-            background: var(--celeste-light);
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 1.2rem;
-            font-size: 1.9rem; color: var(--celeste-1);
-        }
-        .empty-title { font-size:1.05rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.35rem; }
-        .empty-sub   { font-size:0.84rem; color:var(--text-muted); }
-
-        /* ── Responsive ── */
-        @media (max-width: 600px) {
-            .incident-card { grid-template-columns: auto 1fr; }
-            .card-meta { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
-            .card-left { flex-direction: row; }
-        }
-
-        /* ── Print ── */
-        @media print {
-            .greeting-banner, .summary-chips, .btn-print, .toolbar { display: none !important; }
-            .incidentes-wrapper { background: #fff; padding: 0; }
-            .incident-card {
-                border: 1px solid #ddd !important;
-                box-shadow: none !important;
-                break-inside: avoid;
-                margin-bottom: 0.5rem;
-            }
-            .incident-card:hover { transform: none !important; }
-        }
+        #inc-no-results { display: none; }
     </style>
 
-    <div class="incidentes-wrapper">
-        <div class="page-inner">
+    <div class="inc-wrap">
 
-            <!-- Banner -->
-            <div class="greeting-banner">
-                <div class="greeting-text">
-                    <div class="greeting-title">Mis Incidentes Registrados</div>
-                    <div class="greeting-sub">Historial completo de incidencias reportadas.</div>
-                </div>
-                <div class="greeting-icon-wrap">
-                    <i class="fas fa-exclamation-triangle"></i>
+        <div class="inc-topbar">
+            <div class="inc-topbar-left">
+                <h1 class="inc-title">Mis Incidentes</h1>
+                <span class="inc-badge" id="inc-counter">{{ $incidentes->count() }}</span>
+            </div>
+            <button onclick="window.print()" class="inc-btn-print">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+        </div>
+
+        <div class="inc-stats">
+            <div class="inc-stat">
+                <div class="inc-stat-ico blue"><i class="fas fa-clipboard-list"></i></div>
+                <div>
+                    <div class="inc-stat-num">{{ $incidentes->count() }}</div>
+                    <div class="inc-stat-lbl">Total</div>
                 </div>
             </div>
-
-            @if(!$incidentes->isEmpty())
-                <!-- Chips -->
-                <div class="summary-chips">
-                    <div class="chip">
-                        <div class="chip-icon orange"><i class="fas fa-clipboard-list"></i></div>
-                        <div>
-                            <div class="chip-value">{{ $incidentes->count() }}</div>
-                            <div class="chip-label">Total incidentes</div>
-                        </div>
-                    </div>
-                    <div class="chip">
-                        <div class="chip-icon blue"><i class="fas fa-bus"></i></div>
-                        <div>
-                            <div class="chip-value">{{ $incidentes->unique('bus_numero')->count() }}</div>
-                            <div class="chip-label">Buses involucrados</div>
-                        </div>
-                    </div>
-                    <div class="chip">
-                        <div class="chip-icon red"><i class="fas fa-car-crash"></i></div>
-                        <div>
-                            <div class="chip-value">{{ $incidentes->where('tipo_incidente', 'Accidente')->count() }}</div>
-                            <div class="chip-label">Accidentes</div>
-                        </div>
-                    </div>
+            <div class="inc-stat">
+                <div class="inc-stat-ico red"><i class="fas fa-car-crash"></i></div>
+                <div>
+                    <div class="inc-stat-num">{{ $incidentes->where('tipo_incidente', 'Accidente')->count() }}</div>
+                    <div class="inc-stat-lbl">Accidentes</div>
                 </div>
-
-                <!-- Toolbar -->
-                <div class="toolbar">
-                    <div class="section-title">Historial de incidencias</div>
-                    <button onclick="window.print()" class="btn-print">
-                        <i class="fas fa-print"></i> Imprimir historial
-                    </button>
+            </div>
+            <div class="inc-stat">
+                <div class="inc-stat-ico amber"><i class="fas fa-wrench"></i></div>
+                <div>
+                    <div class="inc-stat-num">{{ $incidentes->where('tipo_incidente', 'Falla mecánica')->count() }}</div>
+                    <div class="inc-stat-lbl">Fallas</div>
                 </div>
+            </div>
+            <div class="inc-stat">
+                <div class="inc-stat-ico blue"><i class="fas fa-bus"></i></div>
+                <div>
+                    <div class="inc-stat-num">{{ $incidentes->unique('bus_numero')->count() }}</div>
+                    <div class="inc-stat-lbl">Buses</div>
+                </div>
+            </div>
+        </div>
 
-                <!-- Cards -->
-                <div class="incidents-list">
-                    @foreach($incidentes as $index => $incidente)
-                        @php
-                            $tipo = strtolower($incidente->tipo_incidente ?? 'otro');
-                            $tipoClass = str_contains($tipo, 'accidente') ? 'accidente'
-                                : (str_contains($tipo, 'mec') ? 'mecanico'
-                                : (str_contains($tipo, 'tr') ? 'trafico' : 'otro'));
-                        @endphp
-                        <div class="incident-card tipo-{{ $tipoClass }}">
+        <div class="inc-filters">
+            <div class="inc-fg" style="max-width:250px;">
+                <i class="fas fa-search inc-fg-ico"></i>
+                <input type="text" id="inc-search" placeholder="Buscar ruta, bus, descripción..." autocomplete="off">
+            </div>
+            <div class="inc-fg" style="max-width:175px;">
+                <i class="fas fa-tag inc-fg-ico"></i>
+                <select id="inc-ftipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="accidente">Accidente</option>
+                    <option value="mecanico">Falla mecánica</option>
+                    <option value="trafico">Tráfico</option>
+                    <option value="medico">Incidente médico</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            <div class="inc-fg" style="max-width:165px;">
+                <i class="fas fa-calendar inc-fg-ico"></i>
+                <input type="date" id="inc-fdate">
+            </div>
+            <button class="inc-btn-clear" id="inc-clear"><i class="fas fa-times"></i> Limpiar</button>
+            <span class="inc-filter-count" id="inc-fcount"></span>
+        </div>
 
-                            <!-- Left -->
-                            <div class="card-left">
-                                <div class="card-number">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
-                            </div>
-
-                            <!-- Center -->
-                            <div class="card-body-content">
-                                <div class="card-top-row">
-                        <span class="tipo-badge {{ $tipoClass }}">
-                            <i class="fas fa-tag"></i>
-                            {{ $incidente->tipo_incidente ?? 'Otro' }}
-                        </span>
-                                    <span class="card-bus">
-                            <i class="fas fa-bus"></i> Bus #{{ $incidente->bus_numero ?? '—' }}
-                        </span>
-                                </div>
-
-                                <div class="card-desc">{{ $incidente->descripcion ?? 'Sin descripción.' }}</div>
-
-                                @if($incidente->ruta)
-                                    <div class="card-route-row">
-                        <span class="route-pill">
-                            <i class="fas fa-route"></i>{{ $incidente->ruta }}
-                        </span>
-                                    </div>
+        <div class="inc-table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th style="width:45px;">#</th>
+                    <th class="inc-th-sort" data-col="1">Tipo <i class="fas fa-sort inc-sort-ico"></i></th>
+                    <th class="inc-th-sort" data-col="2">Bus <i class="fas fa-sort inc-sort-ico"></i></th>
+                    <th class="inc-th-sort" data-col="3">Ruta <i class="fas fa-sort inc-sort-ico"></i></th>
+                    <th>Descripción</th>
+                    <th class="inc-th-sort" data-col="5">Fecha y Hora <i class="fas fa-sort inc-sort-ico"></i></th>
+                </tr>
+                </thead>
+                <tbody id="inc-body">
+                @forelse($incidentes as $index => $incidente)
+                    @php
+                        $tipo = strtolower($incidente->tipo_incidente ?? 'otro');
+                        $tipoKey = str_contains($tipo, 'accidente') ? 'accidente'
+                            : (str_contains($tipo, 'mec') ? 'mecanico'
+                            : (str_contains($tipo, 'tr') ? 'trafico'
+                            : (str_contains($tipo, 'med') ? 'medico' : 'otro')));
+                    @endphp
+                    <tr
+                        data-search="{{ strtolower(($incidente->tipo_incidente ?? '').' '.($incidente->bus_numero ?? '').' '.($incidente->ruta ?? '').' '.($incidente->descripcion ?? '')) }}"
+                        data-tipo="{{ $tipoKey }}"
+                        data-date="{{ $incidente->fecha_hora ? \Carbon\Carbon::parse($incidente->fecha_hora)->format('Y-m-d') : '' }}"
+                    >
+                        <td><div class="inc-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div></td>
+                        <td>
+                            <span class="inc-tipo-plain">{{ $incidente->tipo_incidente ?? 'Otro' }}</span>
+                        </td>
+                        <td>
+                            <div class="inc-bus"><i class="fas fa-bus"></i> Bus #{{ $incidente->bus_numero ?? '—' }}</div>
+                        </td>
+                        <td>
+                            @if($incidente->ruta)
+                                <div class="inc-route-plain"><i class="fas fa-route"></i> {{ $incidente->ruta }}</div>
+                            @else
+                                <span class="inc-no-ruta">Sin ruta</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="inc-desc">{{ $incidente->descripcion ?? 'Sin descripción.' }}</div>
+                        </td>
+                        <td>
+                            <div class="inc-date">
+                                @if($incidente->fecha_hora)
+                                    <span class="inc-date-day">{{ \Carbon\Carbon::parse($incidente->fecha_hora)->format('d M Y') }}</span>
+                                    {{ \Carbon\Carbon::parse($incidente->fecha_hora)->format('H:i') }}
+                                @else
+                                    <span style="color:#94a3b8">—</span>
                                 @endif
                             </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr class="inc-empty">
+                        <td colspan="6">
+                            <div class="inc-empty-ico"><i class="fas fa-clipboard-check"></i></div>
+                            <div class="inc-empty-t">Sin incidentes registrados</div>
+                            <div class="inc-empty-s">No tienes incidencias reportadas.<br>¡Todo marcha bien!</div>
+                        </td>
+                    </tr>
+                @endforelse
 
-                            <!-- Right: date + time -->
-                            <div class="card-meta">
-                    <span class="meta-pill date">
-                        <i class="fas fa-calendar-alt"></i>
-                        {{ $incidente->fecha_hora ? \Carbon\Carbon::parse($incidente->fecha_hora)->format('d/m/Y') : '—' }}
-                    </span>
-                                <span class="meta-pill time">
-                        <i class="fas fa-clock"></i>
-                        {{ $incidente->fecha_hora ? \Carbon\Carbon::parse($incidente->fecha_hora)->format('H:i') : '--:--' }}
-                    </span>
-                            </div>
+                <tr id="inc-no-results" class="inc-empty">
+                    <td colspan="6">
+                        <div class="inc-empty-ico"><i class="fas fa-filter"></i></div>
+                        <div class="inc-empty-t">Sin resultados</div>
+                        <div class="inc-empty-s">Prueba ajustando los filtros</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-                        </div>
-                    @endforeach
-                </div>
-
-            @else
-                <div class="empty-state">
-                    <div class="empty-icon-wrap">
-                        <i class="fas fa-clipboard-check"></i>
-                    </div>
-                    <div class="empty-title">Sin incidentes registrados</div>
-                    <div class="empty-sub">No tienes incidencias reportadas actualmente.<br>¡Todo marcha bien!</div>
-                </div>
-            @endif
-
+            <div class="inc-pag-bar">
+                <span class="inc-pag-info">Mostrando <strong id="inc-pfrom">1</strong>–<strong id="inc-pto">10</strong> de <strong id="inc-ptotal">{{ $incidentes->count() }}</strong></span>
+                <div class="inc-pag-links" id="inc-plinks"></div>
+            </div>
         </div>
     </div>
 
+    <script>
+        (function () {
+            var PER_PAGE = 10;
+            var currentPage = 1;
+            var visibleRows = [];
+
+            var tbody    = document.getElementById('inc-body');
+            var noRes    = document.getElementById('inc-no-results');
+            var fSearch  = document.getElementById('inc-search');
+            var fTipo    = document.getElementById('inc-ftipo');
+            var fDate    = document.getElementById('inc-fdate');
+            var btnClear = document.getElementById('inc-clear');
+            var fCount   = document.getElementById('inc-fcount');
+            var pfrom    = document.getElementById('inc-pfrom');
+            var pto      = document.getElementById('inc-pto');
+            var ptotal   = document.getElementById('inc-ptotal');
+            var plinks   = document.getElementById('inc-plinks');
+            var badge    = document.getElementById('inc-counter');
+
+            function getRows() {
+                return Array.from(tbody.querySelectorAll('tr[data-search]'));
+            }
+
+            function applyFilters() {
+                var q  = fSearch.value.toLowerCase().trim();
+                var tp = fTipo.value;
+                var dt = fDate.value;
+                var all = getRows();
+
+                visibleRows = all.filter(function(r) {
+                    return (!q  || r.dataset.search.includes(q))
+                        && (!tp || r.dataset.tipo === tp)
+                        && (!dt || r.dataset.date === dt);
+                });
+
+                all.forEach(function(r) { r.style.display = 'none'; });
+                noRes.style.display = visibleRows.length === 0 ? '' : 'none';
+                fCount.textContent = (q || tp || dt) ? visibleRows.length + ' resultado(s)' : '';
+                badge.textContent  = visibleRows.length;
+                currentPage = 1;
+                renderPage();
+            }
+
+            function renderPage() {
+                var total = visibleRows.length;
+                var pages = Math.max(1, Math.ceil(total / PER_PAGE));
+                if (currentPage > pages) currentPage = pages;
+                var start = (currentPage - 1) * PER_PAGE;
+                var end   = Math.min(start + PER_PAGE, total);
+                visibleRows.forEach(function(r, i) {
+                    r.style.display = (i >= start && i < end) ? '' : 'none';
+                });
+                pfrom.textContent  = total ? start + 1 : 0;
+                pto.textContent    = end;
+                ptotal.textContent = total;
+                buildPager(pages);
+            }
+
+            function buildPager(pages) {
+                plinks.innerHTML = '';
+                function makeBtn(label, page, disabled, active) {
+                    var b = document.createElement('button');
+                    b.className = 'inc-pag-btn' + (active ? ' inc-pag-active' : '');
+                    b.innerHTML = label;
+                    b.disabled  = disabled;
+                    if (!disabled && !active) {
+                        b.onclick = function() { currentPage = page; renderPage(); };
+                    }
+                    return b;
+                }
+                plinks.appendChild(makeBtn('<i class="fas fa-chevron-left"></i>', currentPage - 1, currentPage === 1, false));
+                var ps = Math.max(1, currentPage - 2);
+                var pe = Math.min(pages, ps + 4);
+                ps = Math.max(1, pe - 4);
+                for (var p = ps; p <= pe; p++) {
+                    plinks.appendChild(makeBtn(p, p, false, p === currentPage));
+                }
+                plinks.appendChild(makeBtn('<i class="fas fa-chevron-right"></i>', currentPage + 1, currentPage === pages, false));
+            }
+
+            var sortDir = {};
+            document.querySelectorAll('.inc-th-sort').forEach(function(th) {
+                th.addEventListener('click', function() {
+                    var col = parseInt(th.dataset.col);
+                    sortDir[col] = !sortDir[col];
+                    visibleRows.sort(function(a, b) {
+                        var ta = a.cells[col] ? a.cells[col].innerText.trim() : '';
+                        var tb = b.cells[col] ? b.cells[col].innerText.trim() : '';
+                        return sortDir[col] ? ta.localeCompare(tb) : tb.localeCompare(ta);
+                    });
+                    document.querySelectorAll('.inc-sort-ico').forEach(function(i) {
+                        i.className = 'fas fa-sort inc-sort-ico';
+                    });
+                    th.querySelector('.inc-sort-ico').className = 'fas fa-sort-' + (sortDir[col] ? 'up' : 'down') + ' inc-sort-ico';
+                    currentPage = 1;
+                    renderPage();
+                });
+            });
+
+            fSearch.addEventListener('input', applyFilters);
+            fTipo.addEventListener('change', applyFilters);
+            fDate.addEventListener('change', applyFilters);
+            btnClear.addEventListener('click', function() {
+                fSearch.value = '';
+                fTipo.value   = '';
+                fDate.value   = '';
+                applyFilters();
+            });
+
+            visibleRows = getRows();
+            renderPage();
+        })();
+    </script>
 @endsection
