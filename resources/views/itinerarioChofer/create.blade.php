@@ -2,262 +2,98 @@
 
 @section('title', 'Asignar Itinerario')
 
+
 @section('content')
-
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        .frm-wrap { font-family: 'DM Sans', sans-serif; background: #f0f9ff; min-height: 100vh; padding: 1.75rem 1.5rem; }
+        .frm-inner { max-width: 860px; margin: 0 auto; }
 
-        :root {
-            --bg-base:        #f0f7ff;
-            --bg-card:        #ffffff;
-            --bg-hover:       #f5faff;
-            --bg-header:      #e8f3fd;
-            --border:         #d0e8f8;
-            --border-accent:  #a8d4f0;
-            --celeste-1:      #3a9fd6;
-            --celeste-2:      #5bb8e8;
-            --celeste-light:  #e0f3fc;
-            --celeste-soft:   #b8dff5;
-            --text-primary:   #1a3a52;
-            --text-secondary: #3a6a8a;
-            --text-muted:     #7aaac8;
-        }
+        .frm-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .frm-title { font-size: 1.3rem; font-weight: 700; color: #0c1a2e; letter-spacing: -.02em; margin: 0; }
 
-        .create-wrapper {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            background: var(--bg-base);
-            padding: 2.5rem 2rem;
-        }
+        .frm-btn-back { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; font-weight: 600; color: #64748b; background: #fff; border: 1px solid #e2edf8; border-radius: 7px; padding: .4rem .85rem; text-decoration: none; transition: all .15s; }
+        .frm-btn-back:hover { color: #1e3a5f; border-color: #c9dff2; background: #f8fbff; }
+        .frm-btn-back i { font-size: .72rem; }
 
-        .page-inner {
-            max-width: 660px;
-            margin: 0 auto;
-        }
+        .frm-err { background: #fff1f0; border: 1px solid #fecaca; border-radius: 9px; padding: .7rem 1rem; margin-bottom: 1.1rem; font-size: .82rem; color: #dc2626; }
+        .frm-err ul { padding-left: 1.1rem; }
+        .frm-err li { margin-top: .2rem; }
 
-        /* Breadcrumb */
-        .breadcrumb-nav {
-            display: flex; align-items: center; gap: 0.5rem;
-            margin-bottom: 1.8rem; font-size: 0.8rem;
-        }
-        .breadcrumb-nav a {
-            color: var(--celeste-1); text-decoration: none;
-            font-weight: 600; transition: color 0.2s;
-        }
-        .breadcrumb-nav a:hover { color: var(--celeste-2); }
-        .breadcrumb-nav .sep { color: var(--border-accent); }
-        .breadcrumb-nav .current { color: var(--text-muted); }
+        .frm-card { background: #fff; border: 1px solid #e2edf8; border-radius: 12px; padding: 2rem 2.25rem; box-shadow: 0 1px 10px rgba(14,165,233,.05); margin-bottom: 1.25rem; }
 
-        /* Title */
-        .page-label {
-            font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--celeste-1); margin-bottom: 0.3rem;
-            display: flex; align-items: center; gap: 0.45rem;
-        }
-        .page-label::before {
-            content: ''; display: inline-block;
-            width: 18px; height: 2px;
-            background: var(--celeste-1); border-radius: 2px;
-        }
-        .page-title {
-            font-size: 1.95rem; font-weight: 800;
-            color: var(--text-primary); line-height: 1.1;
-            letter-spacing: -0.03em; margin-bottom: 0.4rem;
-        }
-        .page-title span { color: var(--celeste-1); }
-        .page-subtitle {
-            font-size: 0.86rem; color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
+        .frm-section-title { font-size: .72rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1rem; display: flex; align-items: center; gap: .4rem; }
+        .frm-section-title i { font-size: .75rem; }
+        .frm-section-line { flex: 1; height: 1px; background: #e2edf8; }
 
-        /* Card */
-        .form-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 22px; padding: 2.4rem;
-            box-shadow: 0 4px 28px rgba(58,159,214,0.09);
-            animation: cardIn 0.4s ease both;
-        }
-        @keyframes cardIn {
-            from { opacity:0; transform:translateY(14px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
+        .frm-field { margin-bottom: 1.25rem; }
+        .frm-field:last-child { margin-bottom: 0; }
+        .frm-field label { display: block; font-size: .82rem; font-weight: 600; color: #64748b; margin-bottom: .45rem; letter-spacing: .01em; }
+        .frm-field input, .frm-field select { font-family: 'DM Sans', sans-serif; font-size: .9rem; width: 100%; border: 1px solid #c9dff2; border-radius: 8px; padding: .7rem 1rem; color: #1e3a5f; background: #f8fbff; outline: none; transition: border .15s, box-shadow .15s; appearance: none; -webkit-appearance: none; }
+        .frm-field input:focus, .frm-field select:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,.15); background: #fff; }
+        .frm-field input[type="datetime-local"] { font-family: 'DM Mono', monospace; font-size: .87rem; }
+        .frm-hint { font-size: .72rem; color: #94a3b8; margin-top: .25rem; }
 
-        /* Steps */
-        .step-indicators {
-            display: flex; align-items: center;
-            margin-bottom: 2.2rem;
-        }
-        .step { display:flex; align-items:center; gap:0.5rem; flex:1; }
-        .step-dot {
-            width: 30px; height: 30px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.76rem; font-weight: 700; flex-shrink: 0; transition: all 0.3s;
-        }
-        .step.active .step-dot {
-            background: linear-gradient(135deg, var(--celeste-1), var(--celeste-2));
-            color: #fff; box-shadow: 0 0 0 4px rgba(58,159,214,0.15);
-        }
-        .step.inactive .step-dot {
-            background: var(--celeste-light);
-            color: var(--text-muted);
-            border: 1px solid var(--border-accent);
-        }
-        .step-text { font-size: 0.76rem; font-weight: 600; color: var(--text-muted); }
-        .step.active .step-text { color: var(--celeste-1); }
-        .step-line { flex:1; height:1px; background: var(--border); margin: 0 0.5rem; }
+        .frm-row { display: flex; flex-direction: column; gap: 0; }
 
-        /* Section divider */
-        .section-divider {
-            display: flex; align-items: center; gap: 0.8rem;
-            margin: 1.7rem 0 1.4rem;
-        }
-        .section-divider-line { flex:1; height:1px; background: var(--border); }
-        .section-divider-label {
-            font-size: 0.7rem; font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
-        }
+        .frm-paradas-labels { display: grid; grid-template-columns: 1fr 100px 32px; gap: .4rem; padding: 0 .7rem; margin-bottom: .25rem; }
+        .frm-paradas-labels span { font-size: .68rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; }
 
-        /* Fields */
-        .field-group { margin-bottom: 1.4rem; }
-        .field-label {
-            display: flex; align-items: center; gap: 0.4rem;
-            font-size: 0.81rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 0.45rem;
-            letter-spacing: 0.02em;
-        }
-        .field-label i { font-size: 0.76rem; color: var(--celeste-1); }
+        #frm-paradas-container { display: flex; flex-direction: column; gap: .5rem; }
 
-        .field-input, .field-select {
-            width: 100%; box-sizing: border-box;
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            padding: 0.82rem 1.05rem;
-            color: var(--text-primary);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.88rem; font-weight: 500;
-            transition: all 0.22s; outline: none;
-            appearance: none; -webkit-appearance: none;
-        }
-        .field-input::placeholder { color: var(--text-muted); }
-        .field-input:focus, .field-select:focus {
-            border-color: var(--celeste-2);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(58,159,214,0.12);
-            color: var(--text-primary);
-        }
+        .frm-parada-item { display: grid; grid-template-columns: 1fr 100px 32px; gap: .4rem; align-items: center; background: #f8fbff; border: 1px solid #e2edf8; border-radius: 8px; padding: .5rem .7rem; transition: border .15s; }
+        .frm-parada-item:focus-within { border-color: #bae6fd; }
+        .frm-parada-item input { font-family: 'DM Sans', sans-serif; font-size: .83rem; border: 1px solid #c9dff2; border-radius: 6px; padding: .38rem .6rem; color: #1e3a5f; background: #fff; outline: none; transition: border .15s, box-shadow .15s; width: 100%; }
+        .frm-parada-item input:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,.12); }
 
-        .select-wrapper { position: relative; }
-        .select-wrapper::after {
-            content: '\f078'; font-family: 'Font Awesome 5 Free'; font-weight: 900;
-            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted); font-size: 0.7rem; pointer-events: none;
-        }
+        .frm-btn-remove { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #fecaca; background: #fff1f0; color: #dc2626; font-size: .72rem; cursor: pointer; transition: all .15s; flex-shrink: 0; }
+        .frm-btn-remove:hover { background: #fee2e2; transform: scale(1.06); }
 
-        .field-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.3) sepia(1) hue-rotate(180deg) saturate(1.5);
-            cursor: pointer; opacity: 0.6;
-        }
+        .frm-btn-add { display: inline-flex; align-items: center; gap: .35rem; font-family: 'DM Sans', sans-serif; font-size: .8rem; font-weight: 600; color: #0284c7; background: #e0f2fe; border: 1px dashed #bae6fd; border-radius: 7px; padding: .42rem .9rem; cursor: pointer; transition: all .15s; margin-top: .5rem; }
+        .frm-btn-add:hover { background: #f0f9ff; border-color: #38bdf8; }
 
-        .optional-badge {
-            font-size: 0.67rem; font-weight: 600;
-            background: var(--celeste-light);
-            color: var(--celeste-1);
-            padding: 0.12rem 0.5rem; border-radius: 4px;
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-
-        .field-error {
-            font-size: 0.77rem; color: #c0392b;
-            margin-top: 0.38rem;
-            display: flex; align-items: center; gap: 0.3rem;
-        }
-
-        /* Footer */
-        .form-footer {
-            display: flex; justify-content: space-between;
-            align-items: center; margin-top: 2.2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            gap: 1rem;
-        }
-        .btn-cancel {
-            display: inline-flex; align-items: center; gap: 0.45rem;
-            background: #fff;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 0.72rem 1.35rem; border-radius: 11px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 600; font-size: 0.86rem;
-            text-decoration: none; transition: all 0.22s;
-        }
-        .btn-cancel:hover {
-            background: var(--bg-hover);
-            border-color: var(--border-accent);
-            color: var(--text-secondary);
-        }
-        .btn-submit {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: linear-gradient(135deg, var(--celeste-1), var(--celeste-2));
-            border: none; color: #fff;
-            padding: 0.72rem 1.75rem; border-radius: 11px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 700; font-size: 0.88rem;
-            cursor: pointer; transition: all 0.25s;
-            box-shadow: 0 4px 14px rgba(58,159,214,0.28);
-        }
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 22px rgba(58,159,214,0.4);
-        }
-        .btn-submit:active { transform: translateY(0); }
+        .frm-actions { display: flex; align-items: center; justify-content: flex-end; gap: .6rem; margin-top: 1.25rem; }
+        .frm-btn-cancel { font-family: 'DM Sans', sans-serif; font-size: .83rem; font-weight: 600; color: #64748b; background: #fff; border: 1px solid #e2edf8; border-radius: 8px; padding: .55rem 1.1rem; text-decoration: none; transition: all .15s; }
+        .frm-btn-cancel:hover { color: #1e3a5f; background: #f8fbff; border-color: #c9dff2; }
+        .frm-btn-save { font-family: 'DM Sans', sans-serif; font-size: .83rem; font-weight: 600; color: #fff; background: #0284c7; border: none; border-radius: 8px; padding: .55rem 1.4rem; cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; transition: all .18s; box-shadow: 0 2px 8px rgba(2,132,199,.25); }
+        .frm-btn-save:hover { background: #0369a1; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(2,132,199,.35); }
+        .frm-btn-save i { font-size: .75rem; }
     </style>
+    <div class="frm-wrap">
+        <div class="frm-inner">
 
-    <div class="create-wrapper">
-        <div class="page-inner">
+            <div class="frm-topbar">
+                <h1 class="frm-title">Asignar Itinerario</h1>
+                <a href="{{ route('itinerarioChofer.index') }}" class="frm-btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
 
-            <nav class="breadcrumb-nav">
-                <a href="{{ route('itinerarioChofer.index') }}"><i class="fas fa-calendar-alt me-1"></i>Itinerarios</a>
-                <span class="sep">/</span>
-                <span class="current">Asignar nuevo</span>
-            </nav>
-
-            <div class="page-label">Nuevo registro</div>
-            <h1 class="page-title">Asignar <span>Itinerario</span></h1>
-            <p class="page-subtitle">Vincula un chofer a una ruta con fecha y hora específicas.</p>
-
-            <div class="form-card">
-
-                <div class="step-indicators">
-                    <div class="step active">
-                        <div class="step-dot">1</div>
-                        <span class="step-text">Chofer</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step inactive">
-                        <div class="step-dot">2</div>
-                        <span class="step-text">Ruta</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step inactive">
-                        <div class="step-dot">3</div>
-                        <span class="step-text">Horario</span>
-                    </div>
+            @if($errors->any())
+                <div class="frm-err">
+                    <strong><i class="fas fa-exclamation-circle me-1"></i>Corrige los siguientes errores:</strong>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
+            @endif
 
-                <form action="{{ route('itinerarioChofer.store') }}" method="POST">
-                    @csrf
+            <form action="{{ route('itinerarioChofer.store') }}" method="POST">
+                @csrf
 
-                    <div class="field-group">
-                        <label class="field-label" for="chofer_id">
-                            <i class="fas fa-user-tie"></i> Chofer asignado
-                        </label>
-                        <div class="select-wrapper">
-                            <select name="chofer_id" id="chofer_id" class="field-select" required>
-                                <option value="">Seleccione un chofer...</option>
+                <div class="frm-card">
+                    <div class="frm-section-title">
+                        <i class="fas fa-user-tie"></i> Asignación
+                        <span class="frm-section-line"></span>
+                    </div>
+
+                    <div class="frm-row">
+                        <div class="frm-field">
+                            <label for="chofer_id">Chofer</label>
+                            <select name="chofer_id" id="chofer_id" required>
+                                <option value="">Seleccionar chofer…</option>
                                 @foreach($choferes as $chofer)
                                     <option value="{{ $chofer->id }}" {{ old('chofer_id') == $chofer->id ? 'selected' : '' }}>
                                         {{ $chofer->name }}
@@ -265,24 +101,10 @@
                                 @endforeach
                             </select>
                         </div>
-                        @error('chofer_id')
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i>{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="section-divider">
-                        <div class="section-divider-line"></div>
-                        <div class="section-divider-label">Ruta</div>
-                        <div class="section-divider-line"></div>
-                    </div>
-
-                    <div class="field-group">
-                        <label class="field-label" for="ruta_id">
-                            <i class="fas fa-route"></i> Ruta de viaje
-                        </label>
-                        <div class="select-wrapper">
-                            <select name="ruta_id" id="ruta_id" class="field-select" required>
-                                <option value="">Seleccione una ruta...</option>
+                        <div class="frm-field">
+                            <label for="ruta_id">Ruta</label>
+                            <select name="ruta_id" id="ruta_id" required>
+                                <option value="">Seleccionar ruta…</option>
                                 @foreach($rutas as $ruta)
                                     <option value="{{ $ruta->id }}" {{ old('ruta_id') == $ruta->id ? 'selected' : '' }}>
                                         {{ $ruta->origen }} → {{ $ruta->destino }}
@@ -290,45 +112,70 @@
                                 @endforeach
                             </select>
                         </div>
-                        @error('ruta_id')
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i>{{ $message }}</div>
-                        @enderror
                     </div>
 
-                    <div class="section-divider">
-                        <div class="section-divider-line"></div>
-                        <div class="section-divider-label">Horario</div>
-                        <div class="section-divider-line"></div>
+                    <div class="frm-field">
+                        <label for="fecha">Fecha y Hora</label>
+                        <input type="datetime-local" name="fecha" id="fecha" value="{{ old('fecha') }}" required>
+                        <div class="frm-hint">Selecciona el día y la hora de salida</div>
+                    </div>
+                </div>
+
+                <div class="frm-card">
+                    <div class="frm-section-title">
+                        <i class="fas fa-map-marker-alt"></i> Paradas intermedias
+                        <span style="font-weight:400;font-size:.68rem;color:#94a3b8;text-transform:none;letter-spacing:0;">&nbsp;(opcional)</span>
+                        <span class="frm-section-line"></span>
                     </div>
 
-                    <div class="field-group">
-                        <label class="field-label" for="fecha">
-                            <i class="fas fa-clock"></i> Fecha y hora
-                        </label>
-                        <input
-                            type="datetime-local"
-                            name="fecha" id="fecha"
-                            class="field-input"
-                            value="{{ old('fecha') ? \Carbon\Carbon::parse(old('fecha'))->format('Y-m-d\TH:i') : '' }}"
-                        >
-                        @error('fecha')
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i>{{ $message }}</div>
-                        @enderror
+                    <div class="frm-paradas-labels">
+                        <span>Lugar de parada</span>
+                        <span>Tiempo (min)</span>
+                        <span></span>
                     </div>
 
-                    <div class="form-footer">
-                        <a href="{{ route('itinerarioChofer.index') }}" class="btn-cancel">
-                            <i class="fas fa-arrow-left"></i> Cancelar
-                        </a>
-                        <button type="submit" class="btn-submit">
-                            <i class="fas fa-check"></i> Asignar Itinerario
-                        </button>
+                    <div id="frm-paradas-container">
+                        <div class="frm-parada-item">
+                            <input type="text" name="paradas[lugar][]" placeholder="Ej: Terminal Norte">
+                            <input type="number" name="paradas[tiempo][]" placeholder="0" min="0" step="1">
+                            <button type="button" class="frm-btn-remove"><i class="fas fa-times"></i></button>
+                        </div>
                     </div>
 
-                </form>
-            </div>
+                    <button type="button" id="frm-btn-add" class="frm-btn-add">
+                        <i class="fas fa-plus"></i> Agregar parada
+                    </button>
+                </div>
 
+                <div class="frm-actions">
+                    <a href="{{ route('itinerarioChofer.index') }}" class="frm-btn-cancel">Cancelar</a>
+                    <button type="submit" class="frm-btn-save"><i class="fas fa-check"></i> Guardar Itinerario</button>
+                </div>
+            </form>
         </div>
     </div>
 
+    <script>
+        document.getElementById('frm-btn-add').addEventListener('click', function () {
+            var container = document.getElementById('frm-paradas-container');
+            var div = document.createElement('div');
+            div.className = 'frm-parada-item';
+            div.innerHTML = '<input type="text" name="paradas[lugar][]" placeholder="Ej: Terminal Norte">'
+                + '<input type="number" name="paradas[tiempo][]" placeholder="0" min="0" step="1">'
+                + '<button type="button" class="frm-btn-remove"><i class="fas fa-times"></i></button>';
+            container.appendChild(div);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.frm-btn-remove')) {
+                var items = document.querySelectorAll('.frm-parada-item');
+                var item  = e.target.closest('.frm-parada-item');
+                if (items.length > 1) {
+                    item.remove();
+                } else {
+                    item.querySelectorAll('input').forEach(function(i) { i.value = ''; });
+                }
+            }
+        });
+    </script>
 @endsection

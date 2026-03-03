@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Ruta;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\ParadaItinerario;
 
 class ItinerarioChoferController extends Controller
 {
@@ -28,17 +29,20 @@ class ItinerarioChoferController extends Controller
         return view('itinerarioChofer.create', compact('choferes', 'rutas'));
     }
 
-    public function store(Request $request)
+
+        public function store(Request $request)
     {
+        //Validación
         $request->validate([
             'chofer_id' => 'required|exists:users,id',
             'ruta_id'   => 'required|exists:rutas,id',
             'fecha'     => 'required|date',
         ]);
 
-        $fecha = Carbon::parse($request->fecha)->format('Y-m-d H:i:s');
+        // Convertir fecha correctamente
+        $fecha = \Carbon\Carbon::parse($request->fecha)->format('Y-m-d H:i:s');
 
-        // Validación: no duplicar chofer + ruta + fecha
+        // Validar que no exista itinerario duplicado
         $existe = ItinerarioChofer::where('chofer_id', $request->chofer_id)
             ->where('ruta_id', $request->ruta_id)
             ->where('fecha', $fecha)
@@ -47,18 +51,36 @@ class ItinerarioChoferController extends Controller
         if ($existe) {
             return redirect()->back()
                 ->withInput()
-                ->withErrors(['chofer_id' => 'Este chofer ya tiene asignada esta ruta en la misma fecha y hora.']);
+                ->withErrors([
+                    'chofer_id' => 'Este chofer ya tiene asignada esta ruta en la misma fecha y hora.'
+                ]);
         }
 
-        ItinerarioChofer::create([
+        // Crear itinerario
+        $itinerario = ItinerarioChofer::create([
             'chofer_id' => $request->chofer_id,
             'ruta_id'   => $request->ruta_id,
             'fecha'     => $fecha,
         ]);
 
+        // Guardar paradas intermedias (SI existen)
+        if ($request->has('paradas')) {
+            foreach ($request->paradas['lugar'] as $index => $lugar) {
+                if (!empty($lugar) && !empty($request->paradas['tiempo'][$index])) {
+                    \App\Models\ParadaItinerario::create([
+                        'itinerario_chofer_id' => $itinerario->id,
+                        'lugar_parada' => $lugar,
+                        'tiempo_parada' => $request->paradas['tiempo'][$index],
+                    ]);
+                }
+            }
+        }
+
+        // Redirección final
         return redirect()->route('itinerarioChofer.index')
-            ->with('success', 'Itinerario asignado correctamente al chofer.');
+            ->with('success', 'Itinerario asignado correctamente con parada(s) intermedia(s).');
     }
+
 
     public function edit(ItinerarioChofer $itinerarioChofer)
     {
