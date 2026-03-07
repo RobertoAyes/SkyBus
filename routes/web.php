@@ -43,6 +43,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\ServicioExtraController;
 use App\Http\Controllers\PerfilChoferController;
 use App\Http\Controllers\ItinerarioChoferController;
+use App\Http\Controllers\IndicadorEnCursoController;
 
 
 // Toggle activar/inactivar
@@ -573,4 +574,6 @@ Route::middleware(['auth'])->group(function () {
         ->name('viaje.llegada');
 
 });
+//Indicador de viaje en curso
+Route::resource('indicador_en_curso', IndicadorEnCursoController::class);
 
