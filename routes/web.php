@@ -122,8 +122,14 @@ Route::middleware(['auth', 'user.active'])->prefix('cliente')->group(function ()
 // ADMIN
 // ======================================================
 Route::middleware(['auth', 'user.active'])->prefix('admin')->group(function () {
+
     Route::get('/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
+
     Route::post('/usuarios/{id}/cambiar-estado', [AdminController::class, 'cambiarEstado'])->name('admin.cambiarEstado');
+
+    Route::get('/usuarios-bloqueados', [AdminController::class, 'usuariosBloqueados'])
+        ->name('admin.usuarios.bloqueados');
+
 });
 
 Route::get('/admin/pagina', [EstadisticasController::class, 'index'])
