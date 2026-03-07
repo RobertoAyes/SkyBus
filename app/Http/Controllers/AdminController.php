@@ -41,4 +41,18 @@ class AdminController extends Controller
 
         return redirect()->route('admin.usuarios')->with('success', "Usuario {$usuario->name} ahora está {$nuevoEstado}");
     }
+
+    // Mostrar usuarios con múltiples intentos fallidos recientes
+    public function usuariosBloqueados()
+    {
+        $bloqueados = \App\Models\LoginAttempt::where('success', 0)
+            ->where('created_at', '>=', now()->subMinutes(5))
+            ->select('email')
+            ->selectRaw('COUNT(*) as intentos')
+            ->groupBy('email')
+            ->having('intentos', '>=', 5)
+            ->get();
+
+        return view('admin.usuarios_bloqueados', compact('bloqueados'));
+    }
 }

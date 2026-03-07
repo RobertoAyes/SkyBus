@@ -251,6 +251,11 @@
                    class="{{ request()->routeIs('usuarios.consultar') ? 'active' : '' }}">
                     Consultar usuarios
                 </a>
+
+                <a href="{{ route('admin.usuarios.bloqueados') }}"
+                   class="{{ request()->routeIs('admin.usuarios.bloqueados') ? 'active' : '' }}">
+                    Usuarios bloqueados
+                </a>
             </div>
         </div>
 
