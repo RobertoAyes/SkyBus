@@ -19,9 +19,7 @@ class ExtraController extends Controller
 
     public function index()
     {
-        $usuario = Auth::user();
-
-        $extras = $usuario->extras()->paginate(10);
+        $extras = Extra::Paginate(10);
 
         return view('servicios_adicionales.servicios_adicionales-index', compact('extras'));
     }
@@ -31,11 +29,7 @@ class ExtraController extends Controller
      */
     public function create()
     {
-        $usuario = Auth::user();
-        $fecha_hoy = date("Y-m-d");
-        $reservas = $usuario->reservas()->where('fecha_reserva', '>=', $fecha_hoy)->get();
-
-        return view('servicios_adicionales.servicios_adicionales-create', compact('reservas'));
+        return view('servicios_adicionales.servicios_adicionales-create');
     }
 
     /**
@@ -43,21 +37,36 @@ class ExtraController extends Controller
      */
     public function store(Request $request)
     {
-        $servicios = new Extra();
-        $servicios->user_id = Auth::id();
-        $servicios->reserva_id = $request->input('reserva_id');
-        $servicios->manta = $request->has('manta');
-        $servicios->orejeras = $request->has('orejeras');
-        $servicios->refrescos = $request->has('refrescos');
-        $servicios->snack = $request->has('snack');
-        $servicios->cafe = $request->has('cafe');
-        $servicios->almohada = $request->has('almohada');
-        $servicios->fecha = date('Y-m-d');
-        if ($servicios->save()) {
-            return redirect()->route('servicios_adicionales.index')->with('success', 'Los servicios adicionales fueron agregados con éxito.');
+
+        $request->validate(
+            [
+                'nombre' => 'required|string|max:255',
+                'descripcion' => 'required|string|max:1000',
+                'imagen' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            ],
+            [
+                'nombre.required' => 'El nombre del servicio es obligatorio.',
+                'descripcion.required' => 'La descripción es obligatoria.',
+
+                'imagen.required' => 'Debe seleccionar una imagen.',
+                'imagen.image' => 'El archivo debe ser una imagen válida.',
+                'imagen.mimes' => 'La imagen debe ser formato JPG, JPEG, PNG o WEBP.',
+                'imagen.max' => 'La imagen no debe pesar más de 2MB.',
+            ]
+        );
+
+        $extra = new Extra();
+        $extra->nombre = $request->nombre;
+        $extra->descripcion = $request->descripcion;
+
+        if ($request->hasFile('imagen')) {
+            $rutaImagen = $request->file('imagen')->store('servicios', 'public');
+            $extra->imagen = $rutaImagen;
         }
 
-
+        if ($extra->save()){
+            return redirect()->route('servicios_adicionales.index')->with('success', 'Servicio adicional agregado correctamente.');
+        }
     }
 
     /**
@@ -81,7 +90,11 @@ class ExtraController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $extra = Extra::findOrFail($id);
+        $extra->estado = !$extra->estado;
+        if($extra->save()){
+            return redirect()->route('servicios_adicionales.index')->with('success', 'Estado actualizado correctamente.');
+        }
     }
 
     /**

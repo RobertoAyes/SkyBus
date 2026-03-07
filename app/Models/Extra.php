@@ -18,4 +18,8 @@ class Extra extends Model
     public function usuario(){
         return $this->belongsTo(Usuario::class);
     }
+    public function servicios_extras()
+    {
+        return $this->belongsToMany(ServiciosExtra::class);
+    }
 }

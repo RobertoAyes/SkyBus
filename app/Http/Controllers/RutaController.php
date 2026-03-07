@@ -19,12 +19,12 @@ class RutaController extends Controller
         $request->validate([
             'origen' => 'required|string',
             'destino' => 'required|string|different:origen',
-            'distancia' => 'required|numeric|min:0.5',
-            'duracion_estimada' => 'required|integer|min:5',
+            'distancia' => 'required|numeric|min:5',
+            'duracion_estimada' => 'required|integer|min:15',
         ], [
             'destino.different' => 'El destino debe ser diferente al origen.',
-            'distancia.min' => 'La distancia mínima permitida es 0.5 km.',
-            'duracion_estimada.min' => 'La duración mínima permitida es 5 minutos.',
+            'distancia.min' => 'La distancia mínima permitida es 5 km.',
+            'duracion_estimada.min' => 'La duración mínima permitida es 15 minutos.',
         ]);
 
         if (
@@ -60,8 +60,8 @@ class RutaController extends Controller
             'duracion_estimada' => 'required|integer|min:5',
         ], [
             'destino.different' => 'El destino debe ser diferente al origen.',
-            'distancia.min' => 'La distancia mínima permitida es 0.5 km.',
-            'duracion_estimada.min' => 'La duración mínima permitida es 5 minutos.',
+            'distancia.min' => 'La distancia mínima permitida es 5 km.',
+            'duracion_estimada.min' => 'La duración mínima permitida es 15 minutos.',
         ]);
 
         if (

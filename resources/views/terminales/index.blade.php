@@ -81,6 +81,7 @@
                             <th><i class="fas fa-map-marker-alt me-1"></i>Ubicación</th>
                             <th><i class="fas fa-phone-alt me-1"></i>Contacto</th>
                             <th><i class="fas fa-clock me-1"></i>Horario</th>
+                            <th class="text-center"><i class="fas fa-cog me-1"></i>Servicios Disponibles</th>
                             <th class="text-center"><i class="fas fa-cog me-1"></i>Acciones</th>
                         </tr>
                         </thead>
@@ -102,10 +103,7 @@
                                         <span class="text-muted">N/A</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <a href="{{ route('terminales.edit', $terminal) }}" class="btn btn-primary btn-sm">Editar</a>
 
-                                </td>
 
                                 <td>
                                     @forelse($terminal->servicios as $servicio)

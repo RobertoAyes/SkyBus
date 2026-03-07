@@ -13,15 +13,10 @@ return new class extends Migration
     {
         Schema::create('extras', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('reserva_id');
-            $table->boolean('manta');
-            $table->boolean('orejeras');
-            $table->boolean('almohada');
-            $table->boolean('snack');
-            $table->boolean('refrescos');
-            $table->boolean('cafe');
-            $table->date('fecha');
+            $table->string('nombre');
+            $table->string('descripcion');
+            $table->text('imagen');
+            $table->boolean('estado')->default(true);
             $table->timestamps();
         });
     }

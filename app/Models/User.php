@@ -49,9 +49,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CalificacionChofer::class, 'chofer_id');
     }
-    public function extras()
+    public function servicios_extras()
     {
-        return $this->hasMany(Extra::class);
+        return $this->hasMany(ServiciosExtra::class);
     }
 
     public function reservas()

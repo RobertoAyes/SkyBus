@@ -33,8 +33,8 @@ class Reserva extends Model
         return $this->belongsTo(Asiento::class);
     }
 
-    public function extras()
+    public function servicios_extras()
     {
-        return $this->hasOne(Extra::class);
+        return $this->hasOne(ServiciosExtra::class);
     }
 }

@@ -1,6 +1,6 @@
-@extends('layouts.layoutuser')
+@extends('layouts.layoutadmin')
 
-@section('contenido')
+@section('content')
     <div class="card">
         <div class="card-header bg-primary text-white">
             <h4>Crear servicios disponibles de terminal</h4>

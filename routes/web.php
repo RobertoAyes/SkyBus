@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Controladores
 use App\Http\Controllers\RutaController;
+use App\Http\Controllers\ChoferConfirmacionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HomeEditorController;
 use App\Http\Controllers\Api\DestinosController;
@@ -39,6 +40,9 @@ use App\Http\Controllers\CalificacionChoferController;
 use App\Http\Controllers\Cliente\FacturaController;
 use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\ServicioExtraController;
+use App\Http\Controllers\PerfilChoferController;
+use App\Http\Controllers\ItinerarioChoferController;
 
 
 // Toggle activar/inactivar
@@ -320,6 +324,10 @@ Route::post('usuario/update-password', [AuthController::class, 'updateUserPasswo
 //Servicios adicionales
 Route::resource('(/servicios_adicionales', ExtraController::class );
 Route::resource('/servicios', ServicioController::class);
+//servicios extras
+Route::resource('/servicios_reserva', ServicioExtraController::class);
+Route::resource('/servicios', ServicioController::class);
+
 
 // Solicitudes de constancia
 Route::middleware(['auth'])->group(function () {
@@ -508,4 +516,67 @@ Route::get('/rutas/create', [RutaController::class, 'create'])->name('rutas.crea
 Route::post('/rutas', [RutaController::class, 'store'])->name('rutas.store');
 Route::get('/rutas/{id}/edit', [RutaController::class, 'edit'])->name('rutas.edit');
 Route::put('/rutas/{id}', [RutaController::class, 'update'])->name('rutas.update');
+
+
+//Rutas para vizualizar el perfil de chofer
+Route::middleware(['auth', 'user.active'])->group(function () {
+    Route::get('/chofer/panel', function () {
+        return redirect()->route('chofer.perfil');
+    })->name('chofer.panel');
+
+    Route::get('/chofer/perfil', [PerfilChoferController::class, 'verPerfil'])->name('chofer.perfil');
+});
+
+//Rutas calificar chofer desde el usuario
+Route::middleware(['auth'])->group(function () {
+
+    // Formulario para calificar chofer (USUARIO)
+    Route::get('/calificaciones/crear', [CalificacionChoferController::class, 'create'])
+        ->name('calificaciones.form');
+
+    // Guardar calificación
+    Route::post('/calificar-chofer', [CalificacionChoferController::class, 'store'])
+        ->name('calificar.chofer.guardar');
+
+    // Lista todas las consultas (vista admin)
+    Route::get('/consultas', [ConsultaController::class, 'listar'])->name('consultas.listar');
+
+    Route::post('/consultas/{id}/responder', [ConsultaController::class, 'responderConsulta'])->name('consultas.responder');
+
+    //Rutas Itinerario chofer
+
+    Route::middleware(['auth', 'user.active'])->prefix('itinerarioChofer')->name('itinerarioChofer.')->group(function () {
+        Route::get('/', [ItinerarioChoferController::class, 'index'])->name('index');
+        Route::get('/create', [ItinerarioChoferController::class, 'create'])->name('create');
+        Route::post('/', [ItinerarioChoferController::class, 'store'])->name('store');
+        Route::get('/{itinerarioChofer}/edit', [ItinerarioChoferController::class, 'edit'])->name('edit');
+        Route::put('/{itinerarioChofer}', [ItinerarioChoferController::class, 'update'])->name('update');
+        Route::delete('/{itinerarioChofer}', [ItinerarioChoferController::class, 'destroy'])->name('destroy');
+    });
+
+    //Rutas itinerario layout chofer
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/chofer/itinerario', [ItinerarioChoferController::class, 'miItinerario'])
+            ->name('usuario.viajes');
+    });
+
+
+    Route::middleware(['auth', 'user.active'])->group(function () {
+        Route::get('/usuario/viajes', [ItinerarioChoferController::class, 'miItinerario'])
+            ->name('usuario.viajes');
+    });
+
+    // Vista principal para confirmar salida/llegada
+    Route::get('/confirmar-salida-llegada', [ChoferConfirmacionController::class, 'index'])
+        ->name('confirmar');
+
+// Registrar salida
+    Route::post('/viaje/{id}/salida', [ChoferConfirmacionController::class, 'registrarSalida'])
+        ->name('viaje.salida');
+
+// Registrar llegada
+    Route::post('/viaje/{id}/llegada', [ChoferConfirmacionController::class, 'registrarLlegada'])
+        ->name('viaje.llegada');
+
+});
 

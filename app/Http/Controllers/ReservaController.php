@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ciudad;
+use App\Models\Ruta;
 use App\Models\Viaje;
 use App\Models\Asiento;
 use App\Models\Reserva;
@@ -23,13 +24,16 @@ class ReservaController extends Controller
     public function create()
     {
         $ciudades = Ciudad::all();
+        $rutas = Ruta::all();
+
         return view('interfaces.principal', [
             'ciudades' => $ciudades,
+            'rutas' => $rutas,
             'viajes' => collect(),
             'asientos' => collect(),
             'reserva' => null,
             'qrCode' => null,
-            'busquedaRealizada' => false, // Indica que aún no se buscó
+            'busquedaRealizada' => false,
         ]);
     }
 
@@ -45,11 +49,12 @@ class ReservaController extends Controller
         ]);
 
         $ciudades = Ciudad::all();
+        $rutas = Ruta::all();
 
         $viajes = Viaje::with([
             'origen',
             'destino',
-            'asientos' => fn($q) => $q->where('disponible', true)
+            'asientos' => fn ($q) => $q->where('disponible', true)
         ])
             ->where('ciudad_origen_id', $request->ciudad_origen_id)
             ->where('ciudad_destino_id', $request->ciudad_destino_id)
@@ -59,11 +64,12 @@ class ReservaController extends Controller
 
         return view('interfaces.principal', [
             'ciudades' => $ciudades,
+            'rutas' => $rutas,
             'viajes' => $viajes,
             'asientos' => collect(),
             'reserva' => null,
             'qrCode' => null,
-            'busquedaRealizada' => true, // Solo ahora se muestra la tabla o mensaje
+            'busquedaRealizada' => true,
         ]);
     }
 
@@ -73,11 +79,16 @@ class ReservaController extends Controller
     public function asientos($viaje_id)
     {
         $viaje = Viaje::with('origen', 'destino')->findOrFail($viaje_id);
-        $asientos = Asiento::where('viaje_id', $viaje_id)->where('disponible', true)->get();
+        $asientos = Asiento::where('viaje_id', $viaje_id)
+            ->where('disponible', true)
+            ->get();
+
         $ciudades = Ciudad::all();
+        $rutas = Ruta::all();
 
         return view('interfaces.principal', [
             'ciudades' => $ciudades,
+            'rutas' => $rutas,
             'viajes' => collect(),
             'viaje' => $viaje,
             'asientos' => $asientos,
@@ -120,16 +131,18 @@ class ReservaController extends Controller
         ]);
 
         $qrCode = DNS2D::getBarcodeSVG($codigo, 'QRCODE', 8, 8);
+
         $ciudades = Ciudad::all();
+        $rutas = Ruta::all();
 
         return view('interfaces.principal', [
             'ciudades' => $ciudades,
-            'viajes' => $viajes,
+            'rutas' => $rutas,
+            'viajes' => collect(),
             'asientos' => collect(),
-            'reserva' => null,
-            'qrCode' => null,
+            'reserva' => $reserva,
+            'qrCode' => $qrCode,
             'busquedaRealizada' => true,
         ]);
-
     }
 }

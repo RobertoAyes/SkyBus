@@ -158,7 +158,7 @@
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.perfil*') ? 'show':'' }}" id="miCuenta">
-                <a href="{{ route('empleado.perfil') }}" class="{{ request()->routeIs('empleado.perfil') ? 'active':'' }}">Ver perfil</a>
+                <a href="{{ route('chofer.perfil') }}" class="{{ request()->routeIs('chofer.perfil') ? 'active':'' }}">Ver perfil</a>
 
             </div>
         </div>
@@ -170,10 +170,37 @@
             </button>
 
             <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.viajes*') ? 'show':'' }}" id="viajes">
-                <a href="{{ route('usuario.viajes') }}" class="{{ request()->routeIs('usuario.viajes') ? 'active':'' }}">Ver lista de viajes</a>
-                <a href="{{ route('usuario.pasajeros') }}" class="{{ request()->routeIs('usuario.pasajeros') ? 'active':'' }}">Pasajeros y reservas</a>
-                <a href="{{ route('usuario.confirmar') }}" class="{{ request()->routeIs('usuario.confirmar') ? 'active':'' }}">Confirmar salida/llegada</a>
+                <a href="{{ route('usuario.viajes') }}" class="{{ request()->routeIs('usuario.viajes') ? 'active':'' }}">Ver Itinerario</a>
+                <a href="{{ route('confirmar') }}" class="{{ request()->routeIs('confirmar') ? 'active':'' }}">
+                    Confirmar salida/llegada
+                </a>            </div>
+        </div>
+
+        <div class="nav-section">
+
+            <button class="btn-toggle"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#incidentes"
+                    aria-expanded="{{ request()->routeIs('empleado.incidentes*') ? 'true':'false' }}">
+        <span>
+            <i class="fas fa-exclamation-triangle"></i> Incidentes
+        </span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleado.incidentes*') ? 'show':'' }}"
+                 id="incidentes">
+                <a href="{{ route('empleado.incidentes.create') }}"
+                   class="{{ request()->routeIs('empleado.incidentes.create') ? 'active':'' }}">
+                    Registrar incidente
+                </a>
+
+                <a href="{{ route('empleado.misIncidentes') }}"
+                   class="{{ request()->routeIs('empleado.misIncidentes') ? 'active':'' }}">
+                    Mis incidentes
+                </a>
             </div>
+
         </div>
 
         <!-- Cerrar sesión -->

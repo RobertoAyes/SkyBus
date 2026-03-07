@@ -6,27 +6,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Models\Ruta;
 
 class ClienteController extends Controller
 {
-    // Perfil del cliente
     public function perfil()
     {
         $usuario = Auth::user();
         return view('cliente.perfil', compact('usuario'));
     }
 
-    // Reservas del cliente
     public function reservas()
     {
         $usuario = Auth::user();
-        // Aquí irán las reservas del usuario
         return view('cliente.reservas', compact('usuario'));
     }
 
     public function dashboard()
     {
-        return view('usuarios.dashboard'); // o la ruta a tu Blade correspondiente
+        return view('usuarios.dashboard');
     }
 
     public function edit()
@@ -63,5 +61,21 @@ class ClienteController extends Controller
         $usuario->save();
 
         return redirect()->route('cliente.perfil')->with('success', 'Tu perfil ha sido actualizado exitosamente.');
+    }
+
+    public function principal()
+    {
+        $rutas = Ruta::with(['origen', 'destino'])->get();
+
+        return view('interfaces.principal', compact('rutas'));
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('principal');
     }
 }

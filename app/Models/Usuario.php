@@ -51,5 +51,6 @@ class Usuario extends Model
     {
         return $this->user ? $this->user->role : 'cliente';
     }
+
 }
 
