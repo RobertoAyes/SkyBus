@@ -300,6 +300,25 @@
             </div>
         </div>
 
+        <!-- Informes de viaje -->
+        <div class="nav-section">
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#indicador_en_curso"
+                    aria-expanded="{{ request()->routeIs('indicador_en_curso.*') ? 'true' : 'false' }}">
+        <span class="d-flex align-items-center fw-bold fs-6">
+            <i class="fas fa-road me-1 fa-sm"></i> Informes de viajes
+        </span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('indicador_en_curso.*') ? 'show' : '' }}" id="indicador_en_curso">
+                <a href="{{ route('indicador_en_curso.index') }}" class="{{ request()->routeIs('indicador_en_curso.index') ? 'active fw-bold' : '' }}">
+                    Informe de viajes en curso
+                </a>
+            </div>
+        </div>
+
 
         <!-- Usuarios (PARTE DE MAIN) -->
         <div class="nav-section">
