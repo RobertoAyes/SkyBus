@@ -10,8 +10,22 @@ return new class extends Migration
     {
         Schema::create('reservas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('usuarios')->onDelete('cascade');
-            $table->foreignId('viaje_id')->constrained('viajes')->onDelete('cascade');
+
+            // Relación con usuarios (tu tabla de perfiles)
+            $table->foreignId('usuario_id')
+                ->constrained('usuarios')
+                ->onDelete('cascade');
+
+            // Relación con viajes
+            $table->foreignId('viaje_id')
+                ->constrained('viajes')
+                ->onDelete('cascade');
+
+            // 🔥 Relación con asientos (la que te faltaba)
+            $table->foreignId('asiento_id')
+                ->constrained('asientos')
+                ->onDelete('cascade');
+
             $table->string('codigo_reserva')->unique();
             $table->dateTime('fecha_reserva');
             $table->enum('estado', ['pendiente', 'confirmada', 'cancelada'])->default('pendiente');
@@ -24,4 +38,3 @@ return new class extends Migration
         Schema::dropIfExists('reservas');
     }
 };
-
