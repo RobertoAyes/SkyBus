@@ -185,8 +185,14 @@
         </div>
         <!-- Documentacion de buses -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#documentacionBuses">
-                <span><i class="fas fa-file-contract"></i> Documentación de Buses</span>
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse" data-bs-target="#documentacionBuses">
+
+        <span class="d-flex align-items-center">
+            <i class="fas fa-file-contract"></i>
+            <span class="ms-1">Doc. de Buses</span> <!-- Margen mínimo a la izquierda del icono -->
+        </span>
+
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
 
@@ -213,7 +219,7 @@
         <!-- Rentas -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#Renta">
-                <span><i class="fas fa-map-marker-alt"></i> Registro Renta</span>
+                <span><i class="fas fa-receipt"></i> Registro Renta</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav" id="Renta">
@@ -229,7 +235,7 @@
         <!-- Terminales -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#terminales">
-                <span><i class="fas fa-map-marker-alt"></i> Terminales</span>
+                <span><i class="fas fa-bus"></i> Terminales</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav" id="terminales">
@@ -247,9 +253,15 @@
 
         <!-- Servicios Adicionales -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#extras"
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse" data-bs-target="#extras"
                     aria-expanded="{{ request()->routeIs('usuario.servicios_adicionales*') ? 'true' : 'false' }}">
-                <span><i class="fas fa-star"></i> S. Adicionales</span>
+
+        <span class="d-flex align-items-center">
+            <i class="fas fa-plus-circle"></i>
+            <span class="ms-1">S.Adicionales</span> <!-- ms-1 agrega un margen mínimo a la izquierda -->
+        </span>
+
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
 
@@ -307,7 +319,7 @@
                     data-bs-target="#indicador_en_curso"
                     aria-expanded="{{ request()->routeIs('indicador_en_curso.*') ? 'true' : 'false' }}">
         <span class="d-flex align-items-center fw-bold fs-6">
-            <i class="fas fa-road me-1 fa-sm"></i> Informes de viajes
+           <i class="fas fa-calendar-alt me-1 fa-sm"></i> Informes de viajes
         </span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
