@@ -25,10 +25,9 @@ class ItinerarioChoferController extends Controller
     public function create()
     {
         $choferes = User::where('role', 'Chofer')->get();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get(); // solo rutas activas
         return view('itinerarioChofer.create', compact('choferes', 'rutas'));
     }
-
 
         public function store(Request $request)
     {
@@ -85,7 +84,7 @@ class ItinerarioChoferController extends Controller
     public function edit(ItinerarioChofer $itinerarioChofer)
     {
         $choferes = User::where('role', 'Chofer')->get();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get();
         return view('itinerarioChofer.edit', compact('itinerarioChofer', 'choferes', 'rutas'));
     }
 

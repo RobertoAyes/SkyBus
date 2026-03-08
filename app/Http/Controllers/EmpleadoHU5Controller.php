@@ -40,19 +40,23 @@ class EmpleadoHU5Controller extends Controller
         return view('empleados.index_hu5', compact('empleados'));
     }
 
-    public function update(Request $request, Empleado $empleado)
+    public function update(Request $request, $id)
     {
+        $empleado = Empleado::findOrFail($id);
+
+        // Validación
         $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
-            'dni' => 'required|string|unique:empleados,dni,' . $empleado->id,
+            'dni' => 'required|string|max:20',
             'cargo' => 'required|string|max:255',
             'fecha_ingreso' => 'required|date',
             'rol' => 'required|string',
             'estado' => 'required|string',
-            'foto' => 'nullable|image|max:2048',
+            'foto' => 'nullable|image|max:2048', // 2MB
         ]);
 
+        // Actualizar campos
         $empleado->nombre = $request->nombre;
         $empleado->apellido = $request->apellido;
         $empleado->dni = $request->dni;
@@ -61,13 +65,16 @@ class EmpleadoHU5Controller extends Controller
         $empleado->rol = $request->rol;
         $empleado->estado = $request->estado;
 
+        // Si hay foto nueva, guardarla
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('empleados', 'public');
-            $empleado->foto = $path;
+            $foto = $request->file('foto')->store('empleados', 'public');
+            $empleado->foto = $foto;
         }
 
-        $empleado->save();
+        $empleado->save(); // Guarda cambios en DB
 
-        return redirect()->route('empleados.hu5')->with('success', 'Empleado actualizado correctamente.');
+        // REDIRECCIÓN a la lista de empleados para refrescar tabla
+        return redirect()->route('empleados.hu5')
+            ->with('success', 'Empleado actualizado correctamente.');
     }
 }

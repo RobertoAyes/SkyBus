@@ -583,3 +583,9 @@ Route::middleware(['auth'])->group(function () {
 //Indicador de viaje en curso
 Route::resource('indicador_en_curso', IndicadorEnCursoController::class);
 
+//bloquear rutas
+Route::put('/rutas/{id}/bloquear', [RutaController::class, 'bloquear'])->name('rutas.bloquear');
+
+//editar empleado
+Route::get('/empleados-hu5', [EmpleadoHU5Controller::class, 'index'])->name('empleados.hu5');
+Route::put('/empleados-hu5/{empleado}', [EmpleadoHU5Controller::class, 'update'])->name('empleados.hu5.update');
