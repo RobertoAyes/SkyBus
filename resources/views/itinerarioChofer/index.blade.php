@@ -122,12 +122,29 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <button type="button"
-                                            class="btn btn-danger btn-sm"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#itnDel{{ $itinerario->id }}">
-                                        <i class="fas fa-trash-alt me-1"></i>Eliminar
-                                    </button>
+
+
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ route('itinerarioChofer.edit', $itinerario->id) }}"
+                                           class="itn-btn itn-btn-edit"
+                                           title="Editar itinerario">
+                                            <span class="btn-icon-wrap">
+                                                <i class="fas fa-pen-to-square"></i>
+                                            </span>
+                                        </a>
+                                        <button type="button"
+                                                class="itn-btn itn-btn-delete"
+                                                title="Eliminar itinerario"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#itnDel{{ $itinerario->id }}">
+      <span class="btn-icon-wrap">
+        <i class="fas fa-trash-can"></i>
+      </span>
+                                        </button>
+                                    </div>
+
+
+
                                 </td>
                             </tr>
 
@@ -202,7 +219,84 @@
             justify-content: center;
             flex-shrink: 0;
         }
+        .itn-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+            box-shadow 0.2s ease;
+        }
+
+        .btn-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        /* Botón Editar — azul moderno */
+        .itn-btn-edit {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+        }
+
+        .itn-btn-edit:hover {
+            color: #fff;
+            transform: translateY(-2px) scale(1.08);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+        }
+
+        .itn-btn-edit:hover .btn-icon-wrap {
+            transform: rotate(-8deg);
+        }
+
+        .itn-btn-edit:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Botón Eliminar — rojo con shimmer */
+        .itn-btn-delete {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+        }
+
+        .itn-btn-delete:hover {
+            color: #fff;
+            transform: translateY(-2px) scale(1.08);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+        }
+
+        .itn-btn-delete:hover .btn-icon-wrap {
+            animation: shake 0.3s ease;
+        }
+
+        .itn-btn-delete:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes shake {
+            0%   { transform: rotate(0deg); }
+            25%  { transform: rotate(-10deg); }
+            75%  { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
