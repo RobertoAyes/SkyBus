@@ -228,9 +228,7 @@
                     Historial de soporte
                 </a>-->
             </div>
-                   class="{{ request()->routeIs('empleado.misIncidentes') ? 'active':'' }}">
-                    Mis incidentes
-                </a>
+
             </div>
 
         </div>
