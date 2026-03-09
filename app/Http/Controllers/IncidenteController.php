@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Incidente;
 use Illuminate\Http\Request;
+use App\Models\Notificacion;
+use App\Models\User;
 
 class IncidenteController extends Controller
 {
@@ -40,7 +42,7 @@ class IncidenteController extends Controller
     // (cuando el conductor presiona el botón Guardar).
     public function store(Request $request)
     {
-        // Aquí reviso que los campos vengan llenos.
+        // Aquí se revisa que los campos vengan llenos.
         // Si alguno falta, Laravel regresa al formulario
         // y muestra los errores.
         $request->validate([
@@ -49,23 +51,29 @@ class IncidenteController extends Controller
             'ruta'             => 'required',
             'tipo_incidente'   => 'required',
             'descripcion'      => 'required',
+
+            // Campos nuevos HU73
+            'ubicacion'        => 'required',
+            'nivel_gravedad'   => 'required',
         ]);
 
         // Aquí se guarda el incidente en la base de datos.
         Incidente::create([
-            // Por ahora no usamos todavía el empleado real,
-            // luego lo conectamos mejor.
             'empleado_id' => auth()->id(),
 
-            // Datos que vienen del formulario
+            // Datos del formulario
             'conductor_nombre' => $request->conductor_nombre,
             'bus_numero'       => $request->bus_numero,
             'ruta'             => $request->ruta,
             'tipo_incidente'   => $request->tipo_incidente,
             'descripcion'      => $request->descripcion,
 
-            // La fecha y hora no la mandamos,
-            // porque la base de datos la pone sola.
+            // Campos nuevos HU73
+            'ubicacion'        => $request->ubicacion,
+            'nivel_gravedad'   => $request->nivel_gravedad,
+
+            // Estado inicial del reporte
+            'estado'           => 'pendiente',
         ]);
 
         // Después de guardar, regresamos al formulario
