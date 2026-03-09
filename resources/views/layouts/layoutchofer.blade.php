@@ -176,6 +176,9 @@
                 </a>            </div>
         </div>
 
+
+        <!-- Incidentes -->
+        <div class="nav-section">
         <div class="nav-section">
 
             <button class="btn-toggle"
@@ -196,6 +199,35 @@
                 </a>
 
                 <a href="{{ route('empleado.misIncidentes') }}"
+                   class="nav-link {{ request()->routeIs('empleado.misIncidentes') ? 'active' : '' }}">
+                    Ver mis incidentes
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Soporte Técnico -->
+        <div class="nav-section">
+            <button class="btn-toggle"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#soporteTecnico"
+                    aria-expanded="{{ request()->routeIs('soporte.*') ? 'true':'false' }}">
+                <span><i class="fas fa-headset"></i> Soporte Técnico</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('soporte.*') ? 'show':'' }}" id="soporteTecnico">
+                <a href="{{ route('soporte.create') }}"
+                   class="{{ request()->routeIs('soporte.create') ? 'active':'' }}">
+                    Solicitar soporte
+                </a>
+
+                <!--
+                <a href="{{ route('soporte.index') }}"
+                   class="{{ request()->routeIs('soporte.index') ? 'active':'' }}">
+                    Historial de soporte
+                </a>-->
+            </div>
                    class="{{ request()->routeIs('empleado.misIncidentes') ? 'active':'' }}">
                     Mis incidentes
                 </a>
