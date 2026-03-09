@@ -179,6 +179,8 @@
 
         <!-- Incidentes -->
         <div class="nav-section">
+        <div class="nav-section">
+
             <button class="btn-toggle"
                     data-bs-toggle="collapse"
                     data-bs-target="#incidentes"
@@ -226,6 +228,11 @@
                     Historial de soporte
                 </a>-->
             </div>
+                   class="{{ request()->routeIs('empleado.misIncidentes') ? 'active':'' }}">
+                    Mis incidentes
+                </a>
+            </div>
+
         </div>
 
         <!-- Cerrar sesión -->

@@ -3,332 +3,158 @@
 @section('title', 'Asignar Itinerario')
 
 @section('content')
+    <div class="container mt-4">
+        <div class="card shadow-sm border-0">
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+            <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
+                    <i class="fas fa-calendar-plus me-2"></i>Asignar Itinerario
+                </h2>
+                <a href="{{ route('itinerarioChofer.index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Volver
+                </a>
+            </div>
 
-        :root {
-            --bg-base:        #f0f7ff;
-            --bg-card:        #ffffff;
-            --bg-hover:       #f5faff;
-            --bg-header:      #e8f3fd;
-            --border:         #d0e8f8;
-            --border-accent:  #a8d4f0;
-            --celeste-1:      #3a9fd6;
-            --celeste-2:      #5bb8e8;
-            --celeste-light:  #e0f3fc;
-            --celeste-soft:   #b8dff5;
-            --text-primary:   #1a3a52;
-            --text-secondary: #3a6a8a;
-            --text-muted:     #7aaac8;
-        }
+            <div class="card-body">
 
-        .create-wrapper {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            background: var(--bg-base);
-            padding: 2.5rem 2rem;
-        }
-
-        .page-inner {
-            max-width: 660px;
-            margin: 0 auto;
-        }
-
-        /* Breadcrumb */
-        .breadcrumb-nav {
-            display: flex; align-items: center; gap: 0.5rem;
-            margin-bottom: 1.8rem; font-size: 0.8rem;
-        }
-        .breadcrumb-nav a {
-            color: var(--celeste-1); text-decoration: none;
-            font-weight: 600; transition: color 0.2s;
-        }
-        .breadcrumb-nav a:hover { color: var(--celeste-2); }
-        .breadcrumb-nav .sep { color: var(--border-accent); }
-        .breadcrumb-nav .current { color: var(--text-muted); }
-
-        /* Title */
-        .page-label {
-            font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--celeste-1); margin-bottom: 0.3rem;
-            display: flex; align-items: center; gap: 0.45rem;
-        }
-        .page-label::before {
-            content: ''; display: inline-block;
-            width: 18px; height: 2px;
-            background: var(--celeste-1); border-radius: 2px;
-        }
-        .page-title {
-            font-size: 1.95rem; font-weight: 800;
-            color: var(--text-primary); line-height: 1.1;
-            letter-spacing: -0.03em; margin-bottom: 0.4rem;
-        }
-        .page-title span { color: var(--celeste-1); }
-        .page-subtitle {
-            font-size: 0.86rem; color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-
-        /* Card */
-        .form-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 22px; padding: 2.4rem;
-            box-shadow: 0 4px 28px rgba(58,159,214,0.09);
-            animation: cardIn 0.4s ease both;
-        }
-        @keyframes cardIn {
-            from { opacity:0; transform:translateY(14px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
-
-        /* Steps */
-        .step-indicators {
-            display: flex; align-items: center;
-            margin-bottom: 2.2rem;
-        }
-        .step { display:flex; align-items:center; gap:0.5rem; flex:1; }
-        .step-dot {
-            width: 30px; height: 30px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.76rem; font-weight: 700; flex-shrink: 0; transition: all 0.3s;
-        }
-        .step.active .step-dot {
-            background: linear-gradient(135deg, var(--celeste-1), var(--celeste-2));
-            color: #fff; box-shadow: 0 0 0 4px rgba(58,159,214,0.15);
-        }
-        .step.inactive .step-dot {
-            background: var(--celeste-light);
-            color: var(--text-muted);
-            border: 1px solid var(--border-accent);
-        }
-        .step-text { font-size: 0.76rem; font-weight: 600; color: var(--text-muted); }
-        .step.active .step-text { color: var(--celeste-1); }
-        .step-line { flex:1; height:1px; background: var(--border); margin: 0 0.5rem; }
-
-        /* Section divider */
-        .section-divider {
-            display: flex; align-items: center; gap: 0.8rem;
-            margin: 1.7rem 0 1.4rem;
-        }
-        .section-divider-line { flex:1; height:1px; background: var(--border); }
-        .section-divider-label {
-            font-size: 0.7rem; font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
-        }
-
-        /* Fields */
-        .field-group { margin-bottom: 1.4rem; }
-        .field-label {
-            display: flex; align-items: center; gap: 0.4rem;
-            font-size: 0.81rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 0.45rem;
-            letter-spacing: 0.02em;
-        }
-        .field-label i { font-size: 0.76rem; color: var(--celeste-1); }
-
-        .field-input, .field-select {
-            width: 100%; box-sizing: border-box;
-            background: var(--bg-hover);
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            padding: 0.82rem 1.05rem;
-            color: var(--text-primary);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.88rem; font-weight: 500;
-            transition: all 0.22s; outline: none;
-            appearance: none; -webkit-appearance: none;
-        }
-        .field-input::placeholder { color: var(--text-muted); }
-        .field-input:focus, .field-select:focus {
-            border-color: var(--celeste-2);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(58,159,214,0.12);
-            color: var(--text-primary);
-        }
-
-        .select-wrapper { position: relative; }
-        .select-wrapper::after {
-            content: '\f078'; font-family: 'Font Awesome 5 Free'; font-weight: 900;
-            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted); font-size: 0.7rem; pointer-events: none;
-        }
-
-        .field-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.3) sepia(1) hue-rotate(180deg) saturate(1.5);
-            cursor: pointer; opacity: 0.6;
-        }
-
-        .optional-badge {
-            font-size: 0.67rem; font-weight: 600;
-            background: var(--celeste-light);
-            color: var(--celeste-1);
-            padding: 0.12rem 0.5rem; border-radius: 4px;
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-
-        .field-error {
-            font-size: 0.77rem; color: #c0392b;
-            margin-top: 0.38rem;
-            display: flex; align-items: center; gap: 0.3rem;
-        }
-
-        /* Footer */
-        .form-footer {
-            display: flex; justify-content: space-between;
-            align-items: center; margin-top: 2.2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            gap: 1rem;
-        }
-        .btn-cancel {
-            display: inline-flex; align-items: center; gap: 0.45rem;
-            background: #fff;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 0.72rem 1.35rem; border-radius: 11px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 600; font-size: 0.86rem;
-            text-decoration: none; transition: all 0.22s;
-        }
-        .btn-cancel:hover {
-            background: var(--bg-hover);
-            border-color: var(--border-accent);
-            color: var(--text-secondary);
-        }
-        .btn-submit {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: linear-gradient(135deg, var(--celeste-1), var(--celeste-2));
-            border: none; color: #fff;
-            padding: 0.72rem 1.75rem; border-radius: 11px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 700; font-size: 0.88rem;
-            cursor: pointer; transition: all 0.25s;
-            box-shadow: 0 4px 14px rgba(58,159,214,0.28);
-        }
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 22px rgba(58,159,214,0.4);
-        }
-        .btn-submit:active { transform: translateY(0); }
-    </style>
-
-    <div class="create-wrapper">
-        <div class="page-inner">
-
-            <nav class="breadcrumb-nav">
-                <a href="{{ route('itinerarioChofer.index') }}"><i class="fas fa-calendar-alt me-1"></i>Itinerarios</a>
-                <span class="sep">/</span>
-                <span class="current">Asignar nuevo</span>
-            </nav>
-
-            <div class="page-label">Nuevo registro</div>
-            <h1 class="page-title">Asignar <span>Itinerario</span></h1>
-            <p class="page-subtitle">Vincula un chofer a una ruta con fecha y hora específicas.</p>
-
-            <div class="form-card">
-
-                <div class="step-indicators">
-                    <div class="step active">
-                        <div class="step-dot">1</div>
-                        <span class="step-text">Chofer</span>
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Corrige los siguientes errores:</strong>
+                        <ul class="mb-0 mt-1">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                     </div>
-                    <div class="step-line"></div>
-                    <div class="step inactive">
-                        <div class="step-dot">2</div>
-                        <span class="step-text">Ruta</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step inactive">
-                        <div class="step-dot">3</div>
-                        <span class="step-text">Horario</span>
-                    </div>
-                </div>
+                @endif
 
                 <form action="{{ route('itinerarioChofer.store') }}" method="POST">
                     @csrf
 
-                    <div class="field-group">
-                        <label class="field-label" for="chofer_id">
-                            <i class="fas fa-user-tie"></i> Chofer asignado
-                        </label>
-                        <div class="select-wrapper">
-                            <select name="chofer_id" id="chofer_id" class="field-select" required>
-                                <option value="">Seleccione un chofer...</option>
-                                @foreach($choferes as $chofer)
-                                    <option value="{{ $chofer->id }}" {{ old('chofer_id') == $chofer->id ? 'selected' : '' }}>
-                                        {{ $chofer->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                    {{-- SECCIÓN ASIGNACIÓN --}}
+                    <div class="card border-0 shadow-sm mb-4" style="background:#f8faff;">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="chofer_id" class="form-label fw-semibold text-muted small">
+                                    <i class="fas fa-user me-1"></i>Chofer
+                                </label>
+                                <select name="chofer_id" id="chofer_id" class="form-select" required>
+                                    <option value="">Seleccionar chofer…</option>
+                                    @foreach($choferes as $chofer)
+                                        <option value="{{ $chofer->id }}" {{ old('chofer_id') == $chofer->id ? 'selected' : '' }}>
+                                            {{ $chofer->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('chofer_id')
+                                <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ruta_id" class="form-label fw-semibold text-muted small">
+                                    <i class="fas fa-route me-1"></i>Ruta
+                                </label>
+                                <select name="ruta_id" id="ruta_id" class="form-select" required>
+                                    <option value="">Seleccionar ruta…</option>
+                                    @foreach($rutas as $ruta)
+                                        <option value="{{ $ruta->id }}" {{ old('ruta_id') == $ruta->id ? 'selected' : '' }}>
+                                            {{ $ruta->origen }} → {{ $ruta->destino }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('ruta_id')
+                                <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="fecha" class="form-label fw-semibold text-muted small">
+                                    <i class="fas fa-calendar-alt me-1"></i>Fecha y Hora
+                                </label>
+                                <input type="datetime-local" name="fecha" id="fecha"
+                                       class="form-control"
+                                       value="{{ old('fecha') }}" required>
+                                <small class="text-muted">Selecciona el día y la hora de salida</small>
+                                @error('fecha')
+                                <small class="text-danger d-block">{{ $message }}</small>
+                                @enderror
+                            </div>
                         </div>
-                        @error('chofer_id')
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i>{{ $message }}</div>
-                        @enderror
                     </div>
 
-                    <div class="section-divider">
-                        <div class="section-divider-line"></div>
-                        <div class="section-divider-label">Ruta</div>
-                        <div class="section-divider-line"></div>
-                    </div>
+                    {{-- SECCIÓN PARADAS --}}
+                    <div class="card border-0 shadow-sm mb-4" style="background:#f8faff;">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3" style="color:#0284c7; font-size:.75rem; text-transform:uppercase; letter-spacing:.07em;">
+                                <i class="fas fa-map-marker-alt me-1"></i> Paradas intermedias
+                                <span class="text-muted fw-normal ms-1" style="font-size:.7rem; text-transform:none;">(opcional)</span>
+                            </h6>
 
-                    <div class="field-group">
-                        <label class="field-label" for="ruta_id">
-                            <i class="fas fa-route"></i> Ruta de viaje
-                        </label>
-                        <div class="select-wrapper">
-                            <select name="ruta_id" id="ruta_id" class="field-select" required>
-                                <option value="">Seleccione una ruta...</option>
-                                @foreach($rutas as $ruta)
-                                    <option value="{{ $ruta->id }}" {{ old('ruta_id') == $ruta->id ? 'selected' : '' }}>
-                                        {{ $ruta->origen }} → {{ $ruta->destino }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <div class="row g-2 mb-2 px-1">
+                                <div class="col"><small class="fw-semibold text-muted" style="font-size:.68rem; text-transform:uppercase; letter-spacing:.05em;">Lugar de parada</small></div>
+                                <div class="col-auto" style="width:120px;"><small class="fw-semibold text-muted" style="font-size:.68rem; text-transform:uppercase; letter-spacing:.05em;">Tiempo (min)</small></div>
+                                <div class="col-auto" style="width:42px;"></div>
+                            </div>
+
+                            <div id="frm-paradas-container" class="d-flex flex-column gap-2">
+                                <div class="frm-parada-item d-flex align-items-center gap-2 p-2 rounded" style="background:#fff; border:1px solid #e2edf8;">
+                                    <input type="text" name="paradas[lugar][]" placeholder="Ej: Terminal Norte"
+                                           class="form-control form-control-sm">
+                                    <input type="number" name="paradas[tiempo][]" placeholder="0" min="0" step="1"
+                                           class="form-control form-control-sm" style="width:120px; flex-shrink:0;">
+                                    <button type="button" class="btn btn-sm btn-outline-danger frm-btn-remove" style="width:34px; height:34px; flex-shrink:0; padding:0;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" id="frm-btn-add" class="btn btn-sm mt-3"
+                                    style="background:#e0f2fe; color:#0284c7; border:1px dashed #bae6fd; font-weight:600;">
+                                <i class="fas fa-plus me-1"></i> Agregar parada
+                            </button>
                         </div>
-                        @error('ruta_id')
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i>{{ $message }}</div>
-                        @enderror
                     </div>
 
-                    <div class="section-divider">
-                        <div class="section-divider-line"></div>
-                        <div class="section-divider-label">Horario</div>
-                        <div class="section-divider-line"></div>
-                    </div>
-
-                    <div class="field-group">
-                        <label class="field-label" for="fecha">
-                            <i class="fas fa-clock"></i> Fecha y hora
-                        </label>
-                        <input
-                            type="datetime-local"
-                            name="fecha" id="fecha"
-                            class="field-input"
-                            value="{{ old('fecha') ? \Carbon\Carbon::parse(old('fecha'))->format('Y-m-d\TH:i') : '' }}"
-                        >
-                        @error('fecha')
-                        <div class="field-error"><i class="fas fa-circle-exclamation"></i>{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-footer">
-                        <a href="{{ route('itinerarioChofer.index') }}" class="btn-cancel">
-                            <i class="fas fa-arrow-left"></i> Cancelar
+                    {{-- ACCIONES --}}
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ route('itinerarioChofer.index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i>Cancelar
                         </a>
-                        <button type="submit" class="btn-submit">
-                            <i class="fas fa-check"></i> Asignar Itinerario
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Guardar Itinerario
                         </button>
                     </div>
 
                 </form>
             </div>
-
         </div>
     </div>
 
+    <script>
+        document.getElementById('frm-btn-add').addEventListener('click', function () {
+            var container = document.getElementById('frm-paradas-container');
+            var div = document.createElement('div');
+            div.className = 'frm-parada-item d-flex align-items-center gap-2 p-2 rounded';
+            div.style.cssText = 'background:#fff; border:1px solid #e2edf8;';
+            div.innerHTML = '<input type="text" name="paradas[lugar][]" placeholder="Ej: Terminal Norte" class="form-control form-control-sm">'
+                + '<input type="number" name="paradas[tiempo][]" placeholder="0" min="0" step="1" class="form-control form-control-sm" style="width:120px; flex-shrink:0;">'
+                + '<button type="button" class="btn btn-sm btn-outline-danger frm-btn-remove" style="width:34px; height:34px; flex-shrink:0; padding:0;"><i class="fas fa-times"></i></button>';
+            container.appendChild(div);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.frm-btn-remove')) {
+                var items = document.querySelectorAll('.frm-parada-item');
+                var item  = e.target.closest('.frm-parada-item');
+                if (items.length > 1) {
+                    item.remove();
+                } else {
+                    item.querySelectorAll('input').forEach(function(i) { i.value = ''; });
+                }
+            }
+        });
+    </script>
 @endsection

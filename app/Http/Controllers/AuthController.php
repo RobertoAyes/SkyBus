@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Empleado;
+use App\Models\LoginAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,17 +14,11 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    /**
-     * Mostrar formulario de login
-     */
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    /**
-     * Procesar login
-     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -33,15 +28,41 @@ class AuthController extends Controller
 
         $user = User::where('email', $credentials['email'])->first();
 
-        // Validación: usuario no encontrado
+        // 🔐 BLOQUEO: verificar 5 intentos fallidos en los últimos 5 minutos
+        $intentosFallidos = LoginAttempt::where('email', $credentials['email'])
+            ->where('success', false)
+            ->where('created_at', '>=', now()->subMinutes(5))
+            ->count();
+
+        if ($intentosFallidos >= 5) {
+            return back()->withErrors([
+                'email' => 'Tu cuenta está bloqueada temporalmente por múltiples intentos fallidos. Intenta nuevamente en 5 minutos.',
+            ])->onlyInput('email');
+        }
+
+        // Usuario no encontrado
         if (!$user) {
+
+            LoginAttempt::create([
+                'email' => $credentials['email'],
+                'ip_address' => $request->ip(),
+                'success' => false,
+            ]);
+
             return back()->withErrors([
                 'email' => 'Las credenciales no coinciden con nuestros registros.',
             ])->onlyInput('email');
         }
 
-        // Validación: usuario inactivo
+        // Usuario inactivo
         if ($user->estado === 'inactivo') {
+
+            LoginAttempt::create([
+                'email' => $credentials['email'],
+                'ip_address' => $request->ip(),
+                'success' => false,
+            ]);
+
             return back()->withErrors([
                 'email' => 'Tu cuenta está desactivada. Contacta al administrador.',
             ])->onlyInput('email');
@@ -49,15 +70,21 @@ class AuthController extends Controller
 
         // Intento de autenticación
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+
             $request->session()->regenerate();
 
-            //  Guardar plain_password si no existe
+            // Registrar intento exitoso
+            LoginAttempt::create([
+                'email' => $credentials['email'],
+                'ip_address' => $request->ip(),
+                'success' => true,
+            ]);
+
             if (!$user->plain_password) {
                 $user->plain_password = $request->password;
                 $user->save();
             }
 
-            // Normalizamos el rol
             $rol = trim(strtolower($user->role));
 
             switch ($rol) {
@@ -74,25 +101,25 @@ class AuthController extends Controller
                 default:
                     return redirect()->route('cliente.perfil');
             }
-
         }
+
+        // Contraseña incorrecta
+        LoginAttempt::create([
+            'email' => $credentials['email'],
+            'ip_address' => $request->ip(),
+            'success' => false,
+        ]);
 
         return back()->withErrors([
             'email' => 'Las credenciales no coinciden con nuestros registros.',
         ])->onlyInput('email');
     }
 
-    /**
-     * Mostrar formulario de registro
-     */
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    /**
-     * Procesar registro
-     */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -106,7 +133,7 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'plain_password' => $validated['password'],
-            'role' => 'Cliente', // Importante: con mayúscula según tu migración
+            'role' => 'Cliente',
             'estado' => 'activo',
         ]);
 
@@ -115,27 +142,17 @@ class AuthController extends Controller
         return redirect()->route('cliente.perfil');
     }
 
-    /**
-     * Formulario de olvidar contraseña - RECUPERACIÓN RÁPIDA
-     */
     public function showForgotPassword()
     {
         return view('auth.forgot-password');
     }
 
-    /**
-     * Busca el usuario por email y devuelve sus datos para modal
-     */
     public function sendResetLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email'
-        ], [
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.email' => 'Debe ser un correo electrónico válido.'
         ]);
 
-        // Buscar en tabla users
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -144,7 +161,6 @@ class AuthController extends Controller
                 ->with('error', 'El correo ingresado no está registrado en el sistema.');
         }
 
-        // Devolver con datos para modal
         return back()->with([
             'user_data' => [
                 'name' => $user->nombre_completo ?? $user->name,
@@ -154,9 +170,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Mostrar formulario para cambiar contraseña
-     */
     public function showResetPassword($token)
     {
         return view('auth.reset-password', [
@@ -165,9 +178,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Procesar cambio de contraseña
-     */
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -186,7 +196,6 @@ class AuthController extends Controller
 
                 $user->save();
 
-                // Si es empleado, marcar que ya cambió su contraseña inicial
                 $empleado = Empleado::where('email', $user->email)->first();
                 if ($empleado) {
                     $empleado->update(['password_initial' => null]);
@@ -198,12 +207,9 @@ class AuthController extends Controller
 
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('status', 'Tu contraseña ha sido restablecida exitosamente.')
-            : back()->withErrors(['email' => 'No pudimos restablecer tu contraseña. Intenta nuevamente.']);
+            : back()->withErrors(['email' => 'No pudimos restablecer tu contraseña.']);
     }
 
-    /**
-     * Cerrar sesión
-     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -212,59 +218,4 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
-
-    // ---------------- ADMIN: CAMBIO DE CONTRASEÑA ----------------
-
-    public function showAdminChangePasswordForm()
-    {
-        return view('auth.cambiar-contraseña'); // formulario admin
-    }
-
-    public function updateAdminPassword(Request $request)
-    {
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = Auth::user();
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'La contraseña actual no coincide']);
-        }
-
-        $user->password = Hash::make($request->password);
-        $user->plain_password = $request->password;
-        $user->save();
-
-        return back()->with('success', 'Contraseña actualizada correctamente');
-    }
-
-    // ---------------- USUARIO: CAMBIO DE CONTRASEÑA ----------------
-
-    public function showUserChangePasswordForm()
-    {
-        return view('auth.usuario-reset-password'); // formulario usuario
-    }
-
-    public function updateUserPassword(Request $request)
-    {
-        $request->validate([
-            'password_actual' => 'required',
-            'password_nuevo' => 'required|min:8|confirmed',
-        ]);
-
-        $user = Auth::user();
-
-        if (!Hash::check($request->password_actual, $user->password)) {
-            return back()->withErrors(['password_actual' => 'La contraseña actual no es correcta']);
-        }
-
-        $user->password = Hash::make($request->password_nuevo);
-        $user->plain_password = $request->password_nuevo;
-        $user->save();
-
-        return back()->with('success', 'Contraseña cambiada correctamente.');
-    }
-
 }
