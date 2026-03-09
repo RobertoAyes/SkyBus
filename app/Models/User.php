@@ -45,10 +45,11 @@ class User extends Authenticatable
         return $this->hasMany(CalificacionChofer::class, 'usuario_id');
     }
 
-    public function calificacionesRecibidas()
+    /*public function calificacionesRecibidas()
     {
         return $this->hasMany(CalificacionChofer::class, 'chofer_id');
-    }
+    }*/
+
     public function servicios_extras()
     {
         return $this->hasMany(ServiciosExtra::class);
@@ -58,6 +59,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reserva::class);
 
+    }
+    public function calificacionesRecibidas()
+    {
+        return $this->hasMany(\App\Models\CalificacionChofer::class, 'chofer_id');
     }
 }
 
