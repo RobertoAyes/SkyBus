@@ -146,6 +146,29 @@
                     </div>
                 </div>
 
+                <div class="frm-field">
+                    <label for="ubicacion">
+                        <i class="fas fa-location-dot"></i> Ubicación actual
+                    </label>
+                    <input type="text" name="ubicacion" id="ubicacion"
+                           value="{{ old('ubicacion') }}"
+                           placeholder="Ej: Boulevard Morazán, parada UNAH, Terminal...">
+                </div>
+
+                <div class="frm-field">
+                    <label for="nivel_gravedad">
+                        <i class="fas fa-triangle-exclamation"></i> Nivel de gravedad
+                    </label>
+
+                    <select name="nivel_gravedad" id="nivel_gravedad">
+                        <option value="">Seleccione gravedad</option>
+                        <option value="baja" {{ old('nivel_gravedad') == 'baja' ? 'selected' : '' }}>Baja</option>
+                        <option value="media" {{ old('nivel_gravedad') == 'media' ? 'selected' : '' }}>Media</option>
+                        <option value="alta" {{ old('nivel_gravedad') == 'alta' ? 'selected' : '' }}>Alta</option>
+                        <option value="critica" {{ old('nivel_gravedad') == 'critica' ? 'selected' : '' }}>Crítica</option>
+                    </select>
+                </div>
+
                 <div class="frm-actions">
                     <button type="submit" class="frm-btn-save">
                         <i class="fas fa-floppy-disk"></i> Guardar incidente

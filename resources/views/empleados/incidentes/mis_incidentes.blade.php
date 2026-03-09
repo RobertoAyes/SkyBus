@@ -153,6 +153,7 @@
                     <th class="inc-th-sort" data-col="2">Bus <i class="fas fa-sort inc-sort-ico"></i></th>
                     <th class="inc-th-sort" data-col="3">Ruta <i class="fas fa-sort inc-sort-ico"></i></th>
                     <th>Descripción</th>
+                    <th class="inc-th-sort" data-col="5">Estado <i class="fas fa-sort inc-sort-ico"></i></th>
                     <th class="inc-th-sort" data-col="5">Fecha y Hora <i class="fas fa-sort inc-sort-ico"></i></th>
                 </tr>
                 </thead>
@@ -187,6 +188,27 @@
                         <td>
                             <div class="inc-desc">{{ $incidente->descripcion ?? 'Sin descripción.' }}</div>
                         </td>
+
+                        <td>
+                            @php
+                                $estado = $incidente->estado ?? 'pendiente';
+                            @endphp
+
+                            @if($estado == 'pendiente')
+                                <span style="background:#fff7ed;color:#c2410c;padding:4px 10px;border-radius:6px;font-size:.75rem;font-weight:600;">
+                                    Pendiente
+                                </span>
+                            @elseif($estado == 'en_proceso')
+                                <span style="background:#eff6ff;color:#1d4ed8;padding:4px 10px;border-radius:6px;font-size:.75rem;font-weight:600;">
+                                    En proceso
+                                </span>
+                            @elseif($estado == 'resuelto')
+                                <span style="background:#ecfdf5;color:#047857;padding:4px 10px;border-radius:6px;font-size:.75rem;font-weight:600;">
+                                    Resuelto
+                                </span>
+                            @endif
+                        </td>
+
                         <td>
                             <div class="inc-date">
                                 @if($incidente->fecha_hora)
