@@ -176,6 +176,58 @@
                 </a>            </div>
         </div>
 
+
+        <!-- Incidentes -->
+        <div class="nav-section">
+            <button class="btn-toggle"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#incidentes"
+                    aria-expanded="{{ request()->routeIs('empleado.incidentes*') ? 'true':'false' }}">
+        <span>
+            <i class="fas fa-exclamation-triangle"></i> Incidentes
+        </span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleado.incidentes*') ? 'show':'' }}"
+                 id="incidentes">
+                <a href="{{ route('empleado.incidentes.create') }}"
+                   class="{{ request()->routeIs('empleado.incidentes.create') ? 'active':'' }}">
+                    Registrar incidente
+                </a>
+
+                <a href="{{ route('empleado.misIncidentes') }}"
+                   class="nav-link {{ request()->routeIs('empleado.misIncidentes') ? 'active' : '' }}">
+                    Ver mis incidentes
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Soporte Técnico -->
+        <div class="nav-section">
+            <button class="btn-toggle"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#soporteTecnico"
+                    aria-expanded="{{ request()->routeIs('soporte.*') ? 'true':'false' }}">
+                <span><i class="fas fa-headset"></i> Soporte Técnico</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('soporte.*') ? 'show':'' }}" id="soporteTecnico">
+                <a href="{{ route('soporte.create') }}"
+                   class="{{ request()->routeIs('soporte.create') ? 'active':'' }}">
+                    Solicitar soporte
+                </a>
+
+                <!--
+                <a href="{{ route('soporte.index') }}"
+                   class="{{ request()->routeIs('soporte.index') ? 'active':'' }}">
+                    Historial de soporte
+                </a>-->
+            </div>
+        </div>
+
         <!-- Cerrar sesión -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#soporte" aria-expanded="false">

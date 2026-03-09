@@ -1,7 +1,7 @@
 {{-- Esta vista muestra todos los incidentes
      registrados por el empleado que inició sesión --}}
 
-@extends('layouts.layoutempleado') {{-- Usa el layout del empleado --}}
+@extends('layouts.layoutchofer') {{-- Usa el layout del empleado --}}
 
 @section('contenido')
 

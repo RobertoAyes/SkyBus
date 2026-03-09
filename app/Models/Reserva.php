@@ -15,7 +15,7 @@ class Reserva extends Model
         'asiento_id',
         'codigo_reserva',
         'fecha_reserva',
-        'estado',
+        'estado'
     ];
 
     public function user()

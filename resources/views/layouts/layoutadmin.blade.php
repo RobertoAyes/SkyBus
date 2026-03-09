@@ -357,26 +357,6 @@
             </div>
         </div>
 
-        <!-- Incidentes -->
-        <div class="nav-section">
-            <button class="btn-toggle"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#incidentes"
-                    aria-expanded="{{ request()->routeIs('empleado.incidentes*') ? 'true':'false' }}">
-        <span>
-            <i class="fas fa-exclamation-triangle"></i> Incidentes
-        </span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleado.incidentes*') ? 'show':'' }}"
-                 id="incidentes">
-                <a href="{{ route('empleado.incidentes.create') }}"
-                   class="{{ request()->routeIs('empleado.incidentes.create') ? 'active':'' }}">
-                    Registrar incidente
-                </a>
-            </div>
-        </div>
 
 
         <!-- Cerrar sesión -->
@@ -404,11 +384,6 @@
     <div class="content-area">
         <div class="d-flex justify-content-end align-items-center gap-2 mb-4 p-3 rounded shadow-sm"
              style="background-color: #0d1f3f; border-left: 5px solid #0dcaf0;">
-
-            <a href="{{ route('interfaces.principal') }}"
-               class="btn btn-outline-light btn-sm px-3 rounded-pill shadow-sm">
-                <i class="fas fa-home me-1"></i> Inicio
-            </a>
 
 
 

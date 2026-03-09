@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Controladores
+use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\ChoferConfirmacionController;
 use App\Http\Controllers\HomeController;
@@ -574,3 +575,9 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+//soporte chofer
+Route::prefix('chofer')->middleware('auth')->group(function () {
+    Route::get('soporte', [SoporteController::class, 'create'])->name('soporte.create');
+    Route::post('soporte', [SoporteController::class, 'store'])->name('soporte.store');
+    Route::get('soporte/historial', [SoporteController::class, 'index'])->name('soporte.index');
+});

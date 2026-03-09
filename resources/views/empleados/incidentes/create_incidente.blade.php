@@ -2,9 +2,9 @@
 Esta pantalla es para registrar un incidente.
 --}}
 
-@extends('layouts.layoutadmin')
+@extends('layouts.layoutchofer')
 
-@section('content')
+@section('contenido')
 
 <div class="container">
 
