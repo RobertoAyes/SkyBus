@@ -596,3 +596,7 @@ Route::prefix('chofer')->middleware('auth')->group(function () {
 //editar empleado
 Route::get('/empleados-hu5', [EmpleadoHU5Controller::class, 'index'])->name('empleados.hu5');
 Route::put('/empleados-hu5/{empleado}', [EmpleadoHU5Controller::class, 'update'])->name('empleados.hu5.update');
+
+// historial de incidentes
+Route::get('/historial-incidentes', [\App\Http\Controllers\IncidenteController::class, 'historial'])
+    ->name('empleados.incidentes.historial');

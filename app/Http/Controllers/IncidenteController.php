@@ -101,4 +101,33 @@ class IncidenteController extends Controller
             return view('empleados.incidentes.mis_incidentes', compact('incidentes'));
     }
 
+    public function historial(Request $request)
+    {
+        $query = Incidente::query();
+
+
+        if ($request->bus_numero) {
+            $query->where('bus_numero', 'like', "%{$request->bus_numero}%");
+        }
+
+
+        if ($request->conductor_nombre) {
+            $query->where('conductor_nombre', 'like', "%{$request->conductor_nombre}%");
+        }
+
+
+        if ($request->tipo_incidente) {
+            $query->where('tipo_incidente', $request->tipo_incidente);
+        }
+
+
+        if ($request->fecha_hora) {
+            $query->whereDate('fecha_hora', $request->fecha_hora);
+        }
+
+        $incidentes = $query->orderBy('fecha_hora', 'desc')->paginate(10);
+
+        return view('empleados.incidentes.historial_incidentes', compact('incidentes'));
+    }
+
 }
