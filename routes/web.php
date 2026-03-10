@@ -592,7 +592,7 @@ Route::put('/rutas/{id}/bloquear', [RutaController::class, 'bloquear'])->name('r
 // ===============================
 // CHOFER
 // ===============================
-Route::prefix('chofer')->middleware('auth')->group(function () {
+/*Route::prefix('chofer')->middleware('auth')->group(function () {
 
     // Historial de solicitudes propias
     Route::get('soporte', [SoporteController::class,'indexChofer'])
@@ -605,6 +605,23 @@ Route::prefix('chofer')->middleware('auth')->group(function () {
     // Guardar nueva solicitud (el form del chofer usa esta ruta)
     Route::post('soporte', [SoporteController::class,'store'])
         ->name('chofer.soporte.store');
+
+});*/
+
+Route::prefix('chofer')->middleware('auth')->group(function () {
+
+    Route::get('soporte', [SoporteController::class,'indexChofer'])
+        ->name('chofer.soporte.index');
+
+    Route::get('soporte/crear', [SoporteController::class,'crear'])
+        ->name('chofer.soporte.crear');
+
+    Route::post('soporte', [SoporteController::class,'store'])
+        ->name('chofer.soporte.store');
+
+    Route::get('admin/soportes', [SoporteController::class, 'indexAdmin'])
+        ->name('admin.soportes');
+
 });
 
 // ===============================

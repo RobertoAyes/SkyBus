@@ -218,8 +218,8 @@
                 </a>
 
                 <!-- Soporte de Chofer -->
-                <a href="{{ route('chofer.soporte.index') }}"
-                   class="{{ request()->routeIs('chofer.soporte.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.soportes') }}"
+                   class="{{ request()->routeIs('admin.soportes') ? 'active' : '' }}">
                     Ver Consultas Chofer
                 </a>
             </div>
