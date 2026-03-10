@@ -60,7 +60,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('soporte.store') }}" method="POST">
+            <form action="{{ route('chofer.soporte.store') }}" method="POST">
                 @csrf
 
                 <div class="frm-card">

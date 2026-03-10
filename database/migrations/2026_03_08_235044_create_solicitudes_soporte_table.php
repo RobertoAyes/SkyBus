@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('chofer_id')->constrained('users')->onDelete('cascade');
             $table->string('titulo');
             $table->text('descripcion');
-            $table->enum('estado', ['pendiente', 'en_proceso', 'resuelto'])->default('pendiente');
+            $table->enum('estado', ['pendiente','en_proceso','resuelto'])->default('pendiente');
             $table->timestamps();
         });
     }
