@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Incidente;
 use Illuminate\Http\Request;
+use App\Models\Notificacion;
+use App\Models\User;
 
 class IncidenteController extends Controller
 {
@@ -40,7 +42,7 @@ class IncidenteController extends Controller
     // (cuando el conductor presiona el botón Guardar).
     public function store(Request $request)
     {
-        // Aquí reviso que los campos vengan llenos.
+        // Aquí se revisa que los campos vengan llenos.
         // Si alguno falta, Laravel regresa al formulario
         // y muestra los errores.
         $request->validate([
@@ -49,23 +51,29 @@ class IncidenteController extends Controller
             'ruta'             => 'required',
             'tipo_incidente'   => 'required',
             'descripcion'      => 'required',
+
+            // Campos nuevos HU73
+            'ubicacion'        => 'required',
+            'nivel_gravedad'   => 'required',
         ]);
 
         // Aquí se guarda el incidente en la base de datos.
         Incidente::create([
-            // Por ahora no usamos todavía el empleado real,
-            // luego lo conectamos mejor.
             'empleado_id' => auth()->id(),
 
-            // Datos que vienen del formulario
+            // Datos del formulario
             'conductor_nombre' => $request->conductor_nombre,
             'bus_numero'       => $request->bus_numero,
             'ruta'             => $request->ruta,
             'tipo_incidente'   => $request->tipo_incidente,
             'descripcion'      => $request->descripcion,
 
-            // La fecha y hora no la mandamos,
-            // porque la base de datos la pone sola.
+            // Campos nuevos HU73
+            'ubicacion'        => $request->ubicacion,
+            'nivel_gravedad'   => $request->nivel_gravedad,
+
+            // Estado inicial del reporte
+            'estado'           => 'pendiente',
         ]);
 
         // Después de guardar, regresamos al formulario
@@ -91,6 +99,35 @@ class IncidenteController extends Controller
 
             // Enviar los datos a la vista
             return view('empleados.incidentes.mis_incidentes', compact('incidentes'));
+    }
+
+    public function historial(Request $request)
+    {
+        $query = Incidente::query();
+
+
+        if ($request->bus_numero) {
+            $query->where('bus_numero', 'like', "%{$request->bus_numero}%");
+        }
+
+
+        if ($request->conductor_nombre) {
+            $query->where('conductor_nombre', 'like', "%{$request->conductor_nombre}%");
+        }
+
+
+        if ($request->tipo_incidente) {
+            $query->where('tipo_incidente', $request->tipo_incidente);
+        }
+
+
+        if ($request->fecha_hora) {
+            $query->whereDate('fecha_hora', $request->fecha_hora);
+        }
+
+        $incidentes = $query->orderBy('fecha_hora', 'desc')->paginate(10);
+
+        return view('empleados.incidentes.historial_incidentes', compact('incidentes'));
     }
 
 }

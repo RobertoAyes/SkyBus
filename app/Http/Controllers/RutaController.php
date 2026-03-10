@@ -81,4 +81,15 @@ class RutaController extends Controller
         return redirect()->route('rutas.index')
             ->with('success', 'Ruta actualizada correctamente');
     }
+
+    public function bloquear($id)
+    {
+        $ruta = Ruta::findOrFail($id);
+
+        $ruta->estado = !$ruta->estado; // cambia true a false y viceversa
+        $ruta->save();
+
+        return redirect()->route('rutas.index')
+            ->with('success', 'Estado de la ruta actualizado');
+    }
 }

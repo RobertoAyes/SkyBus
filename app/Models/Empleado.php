@@ -33,7 +33,7 @@ class Empleado extends Model
 
     public $timestamps = true; // mantener created_at y updated_at
 
-    // ✅ AGREGADOS PARA LA HU (NO BORRAN NADA)
+    //  AGREGADOS PARA LA HU (NO BORRAN NADA)
     public function getNombreCompletoAttribute()
     {
         return $this->nombre . ' ' . $this->apellido;

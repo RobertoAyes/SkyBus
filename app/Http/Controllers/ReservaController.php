@@ -24,7 +24,7 @@ class ReservaController extends Controller
     public function create()
     {
         $ciudades = Ciudad::all();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get();
 
         return view('interfaces.principal', [
             'ciudades' => $ciudades,
@@ -49,7 +49,7 @@ class ReservaController extends Controller
         ]);
 
         $ciudades = Ciudad::all();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get();
 
         $viajes = Viaje::with([
             'origen',
@@ -84,7 +84,7 @@ class ReservaController extends Controller
             ->get();
 
         $ciudades = Ciudad::all();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get();
 
         return view('interfaces.principal', [
             'ciudades' => $ciudades,
@@ -133,7 +133,7 @@ class ReservaController extends Controller
         $qrCode = DNS2D::getBarcodeSVG($codigo, 'QRCODE', 8, 8);
 
         $ciudades = Ciudad::all();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get();
 
         return view('interfaces.principal', [
             'ciudades' => $ciudades,

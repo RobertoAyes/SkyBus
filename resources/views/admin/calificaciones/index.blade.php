@@ -3,225 +3,232 @@
 @section('title', 'Calificaciones de Choferes')
 
 @section('content')
-    <style>
-        .stats-header {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            border: none;
-        }
+    @php $estadisticas = $estadisticas ?? collect(); @endphp
 
-        .driver-card {
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-        }
+    <div class="container mt-4">
 
-        .driver-card:hover {
-            transform: translateX(4px);
-            border-left-color: #fbbf24;
-            background-color: #fefce8;
-        }
-
-        .rating-badge {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #78350f;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 1.25rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
-        }
-
-        .count-badge {
-            background: #f3f4f6;
-            color: #374151;
-            padding: 0.35rem 0.75rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-
-
-        .stats-container {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
+        {{-- STATS --}}
+        @php
+            $totalEvals    = 0;
+            $sumaPromedios = 0;
+            $mejorChofer   = null;
+            $mejorProm     = 0;
+            foreach($estadisticas as $ch) {
+                $prom = $ch->calificaciones_recibidas_avg_estrellas ?? 0;
+                $cnt  = $ch->calificaciones_recibidas_count ?? 0;
+                $totalEvals    += $cnt;
+                $sumaPromedios += $prom;
+                if ($prom > $mejorProm) { $mejorProm = $prom; $mejorChofer = $ch; }
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+            $total           = $estadisticas->count();
+            $promedioGeneral = $total > 0 ? $sumaPromedios / $total : 0;
+        @endphp
 
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #9ca3af;
-        }
-
-        .driver-name {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 1.05rem;
-        }
-
-        .driver-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-    </style>
-
-    <div class="stats-container">
-        <!-- Header moderno -->
-        <div class="mb-4">
-            <h2 class="fw-light mb-2" style="color: #1f2937; font-size: 1.75rem; letter-spacing: -0.5px;">
-                Estadísticas de Calificaciones
-            </h2>
-            <p class="text-muted mb-0" style="font-size: 0.95rem;">
-                Desempeño de conductores basado en evaluaciones de usuarios
-            </p>
-        </div>
-
-        <!-- Card principal -->
-        <div class="card shadow-sm border-0">
-            <div class="card-header stats-header text-white" style="padding: 1rem 1.5rem;">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h6 class="mb-0 fw-normal" style="font-size: 0.875rem; letter-spacing: 1px; text-transform: uppercase;">
-                        <i class="fas fa-chart-line me-2"></i>
-                        Rendimiento General
-                    </h6>
-                    <span class="badge bg-white text-dark" style="font-weight: 500;">
-                        {{ count($estadisticas) }} Conductores
-                    </span>
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center gap-3 py-3">
+                        <div class="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:38px;height:38px;background:#dbeafe;color:#1d4ed8;">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold fs-5" style="color:#0c1a2e;">{{ $total }}</div>
+                            <div class="text-muted" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;">Conductores</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center gap-3 py-3">
+                        <div class="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:38px;height:38px;background:#fef9c3;color:#b45309;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold fs-5" style="color:#0c1a2e;">{{ number_format($promedioGeneral, 1) }}</div>
+                            <div class="text-muted" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;">Promedio gral.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center gap-3 py-3">
+                        <div class="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:38px;height:38px;background:#ede9fe;color:#6d28d9;">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold fs-5" style="color:#0c1a2e;">{{ $totalEvals }}</div>
+                            <div class="text-muted" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;">Evaluaciones</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center gap-3 py-3">
+                        <div class="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:38px;height:38px;background:#dcfce7;color:#15803d;">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold" style="color:#0c1a2e;font-size:.9rem;line-height:1.3;">
+                                {{ $mejorChofer ? \Illuminate\Support\Str::limit($mejorChofer->name, 14) : '—' }}
+                            </div>
+                            <div class="text-muted" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;">Mejor calificado</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <div class="card-body p-0">
-                @if(count($estadisticas) > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
-                            <tr>
-                                <th style="padding: 1rem 1.5rem; font-weight: 600; color: #6b7280; font-size: 0.8rem; letter-spacing: 0.5px; text-transform: uppercase;">
-                                    Conductor
-                                </th>
-                                <th class="text-center" style="padding: 1rem 1.5rem; font-weight: 600; color: #6b7280; font-size: 0.8rem; letter-spacing: 0.5px; text-transform: uppercase;">
-                                    Calificación
-                                </th>
-                                <th class="text-center" style="padding: 1rem 1.5rem; font-weight: 600; color: #6b7280; font-size: 0.8rem; letter-spacing: 0.5px; text-transform: uppercase;">
-                                    Evaluaciones
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @php
-                                $estadisticasOrdenadas = $estadisticas->sortByDesc(function($chofer) {
-                                    return $chofer->calificaciones_recibidas_avg_estrellas ?? 0;
-                                });
-                                $mejorCalificacion = $estadisticasOrdenadas->first()->calificaciones_recibidas_avg_estrellas ?? 0;
-                            @endphp
 
-                            @foreach($estadisticasOrdenadas as $index => $chofer)
-                                @php
-                                    $promedio = $chofer->calificaciones_recibidas_avg_estrellas ?? 0;
-                                    $esTopPerformer = $promedio == $mejorCalificacion && $promedio > 0;
-                                @endphp
-                                <tr class="driver-card {{ $esTopPerformer ? 'top-performer' : '' }}">
-                                    <td style="padding: 1.25rem 1.5rem;">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="driver-avatar">
-                                                {{ strtoupper(substr($chofer->name, 0, 1)) }}
-                                            </div>
-                                            <div>
-                                                <div class="driver-name">{{ $chofer->name }}</div>
-                                                @if($esTopPerformer)
-                                                    <small class="text-warning" style="font-weight: 600; font-size: 0.75rem;">
-                                                        <i class="fas fa-trophy"></i> Mejor Calificado
-                                                    </small>
-                                                @endif
-                                            </div>
+
+        {{-- ===== TABLA COMENTARIOS ===== --}}
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white">
+                <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
+                    <i class="fas fa-comments me-2"></i>Comentarios de Usuarios
+                </h2>
+            </div>
+            <div class="card-body">
+
+                {{-- Filtros comentarios --}}
+                <div class="card border-0 shadow-sm mb-4" style="background:#f8faff;">
+                    <div class="card-body py-3">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-muted small mb-1">
+                                    <i class="fas fa-search me-1"></i>Buscar
+                                </label>
+                                <input type="text" id="fil-comentario" class="form-control form-control-sm" placeholder="Chofer, cliente, comentario...">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-muted small mb-1">
+                                    <i class="fas fa-star me-1"></i>Estrellas
+                                </label>
+                                <select id="fil-estrellas" class="form-select form-select-sm">
+                                    <option value="">Todas</option>
+                                    <option value="5">5 ⭐</option>
+                                    <option value="4">4 ⭐</option>
+                                    <option value="3">3 ⭐</option>
+                                    <option value="2">2 ⭐</option>
+                                    <option value="1">1 ⭐</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <button id="btn-clear2" class="btn btn-outline-secondary btn-sm w-100">
+                                    <i class="fas fa-times me-1"></i>Limpiar filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-primary">
+                        <tr>
+                            <th>Chofer</th>
+                            <th>Cliente</th>
+                            <th class="text-center">Estrellas</th>
+                            <th>Comentario</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-comentarios">
+                        @php $hayComentarios = false; @endphp
+                        @foreach($estadisticas as $chofer)
+                            @foreach($chofer->calificacionesRecibidas as $cal)
+                                @php $hayComentarios = true; @endphp
+                                <tr data-search="{{ strtolower($chofer->name.' '.($cal->usuario->name ?? '').' '.($cal->comentario ?? '')) }}"
+                                    data-estrellas="{{ $cal->estrellas }}">
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="itn-avatar">{{ strtoupper(substr($chofer->name, 0, 2)) }}</div>
+                                            <span class="fw-semibold" style="color:#1e3a5f;">{{ $chofer->name }}</span>
                                         </div>
                                     </td>
-
-                                    <td class="text-center" style="padding: 1.25rem 1.5rem;">
-                                        <div class="rating-badge">
-                                            <i class="fas fa-star"></i>
-                                            {{ number_format($promedio, 1) }}
-                                        </div>
+                                    <td style="font-size:.85rem;font-weight:500;color:#1e3a5f;">
+                                        {{ $cal->usuario->name ?? '—' }}
                                     </td>
-
-                                    <td class="text-center" style="padding: 1.25rem 1.5rem;">
-                                            <span class="count-badge">
-                                                <i class="fas fa-comment-alt me-1" style="font-size: 0.75rem;"></i>
-                                                {{ $chofer->calificaciones_recibidas_count }}
-                                            </span>
+                                    <td class="text-center">
+                                        <span style="color:#fbbf24;font-size:.85rem;">
+                                            @for($s = 1; $s <= 5; $s++)
+                                                <i class="fas fa-star" style="{{ $s > $cal->estrellas ? 'opacity:.2;' : '' }}"></i>
+                                            @endfor
+                                        </span>
+                                        <div class="text-muted" style="font-size:.7rem;">{{ $cal->estrellas }}/5</div>
+                                    </td>
+                                    <td style="font-size:.82rem;color:#64748b;max-width:260px;">
+                                        {{ $cal->comentario ?? '—' }}
                                     </td>
                                 </tr>
                             @endforeach
-                            </tbody>
-                        </table>
+                        @endforeach
+                        @if(!$hayComentarios)
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-5">
+                                    <i class="fas fa-comments fa-2x mb-2 d-block"></i>
+                                    <span class="fw-semibold d-block">Sin comentarios aún</span>
+                                    <small>Aquí aparecerán las reseñas de los usuarios</small>
+                                </td>
+                            </tr>
+                        @endif
+                        </tbody>
+                    </table>
+                    <div id="sin-resultados2" class="text-center text-muted py-4" style="display:none;">
+                        <i class="fas fa-search fa-2x mb-2 d-block"></i>
+                        No se encontraron comentarios con los filtros aplicados.
                     </div>
-                @else
-                    <div class="empty-state">
-                        <i class="fas fa-chart-bar" style="font-size: 3rem; opacity: 0.3;"></i>
-                        <p class="mt-3 mb-0" style="font-size: 1.1rem;">No hay calificaciones disponibles</p>
-                        <small>Las estadísticas aparecerán cuando los usuarios evalúen a los conductores</small>
-                    </div>
-                @endif
+                </div>
+
             </div>
         </div>
+        {{-- ===== FIN TABLA COMENTARIOS ===== --}}
 
-        <!-- Resumen rápido -->
-        @if(count($estadisticas) > 0)
-            <div class="row mt-4 g-3">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-star text-warning mb-2" style="font-size: 2rem;"></i>
-                            <h3 class="fw-bold mb-1" style="color: #1f2937;">
-                                {{ number_format($estadisticas->avg('calificaciones_recibidas_avg_estrellas'), 1) }}
-                            </h3>
-                            <p class="text-muted mb-0" style="font-size: 0.875rem;">Promedio General</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-comments text-primary mb-2" style="font-size: 2rem;"></i>
-                            <h3 class="fw-bold mb-1" style="color: #1f2937;">
-                                {{ $estadisticas->sum('calificaciones_recibidas_count') }}
-                            </h3>
-                            <p class="text-muted mb-0" style="font-size: 0.875rem;">Total Evaluaciones</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-users text-success mb-2" style="font-size: 2rem;"></i>
-                            <h3 class="fw-bold mb-1" style="color: #1f2937;">
-                                {{ count($estadisticas) }}
-                            </h3>
-                            <p class="text-muted mb-0" style="font-size: 0.875rem;">Conductores Activos</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
+
+    <style>
+        .itn-avatar {
+            width: 32px; height: 32px; border-radius: 7px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: #fff; font-size: .72rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputComentario = document.getElementById('fil-comentario');
+            const selectEstrellas = document.getElementById('fil-estrellas');
+            const btnClear2       = document.getElementById('btn-clear2');
+            const filasC          = document.querySelectorAll('#tbody-comentarios tr[data-search]');
+            const sinRes2         = document.getElementById('sin-resultados2');
+
+            function filtrarComentarios() {
+                const q  = inputComentario.value.toLowerCase().trim();
+                const es = selectEstrellas.value;
+                let visibles = 0;
+
+                filasC.forEach(function(fila) {
+                    const coincide = (!q  || fila.dataset.search.includes(q))
+                        && (!es || fila.dataset.estrellas === es);
+                    if (coincide) { fila.style.display = ''; visibles++; }
+                    else          { fila.style.display = 'none'; }
+                });
+                sinRes2.style.display = (filasC.length > 0 && visibles === 0) ? 'block' : 'none';
+            }
+
+            inputComentario.addEventListener('input', filtrarComentarios);
+            selectEstrellas.addEventListener('change', filtrarComentarios);
+            btnClear2.addEventListener('click', function () {
+                inputComentario.value  = '';
+                selectEstrellas.value  = '';
+                filtrarComentarios();
+            });
+        });
+    </script>
 @endsection

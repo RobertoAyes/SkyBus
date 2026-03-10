@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model; // <-- Esto faltaba
+use Illuminate\Database\Eloquent\Model; //
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CalificacionChofer extends Model

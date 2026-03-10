@@ -179,6 +179,8 @@
 
         <!-- Incidentes -->
         <div class="nav-section">
+        <div class="nav-section">
+
             <button class="btn-toggle"
                     data-bs-toggle="collapse"
                     data-bs-target="#incidentes"
@@ -221,6 +223,9 @@
                     Solicitar soporte
                 </a>
             </div>
+
+            </div>
+
         </div>
 
         <!-- Cerrar sesión -->
