@@ -575,9 +575,40 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-//soporte chofer
+
+// ----------------- Soporte Técnico Chofer -----------------
+// ===============================
+// CHOFER
+// ===============================
 Route::prefix('chofer')->middleware('auth')->group(function () {
-    Route::get('soporte', [SoporteController::class, 'create'])->name('soporte.create');
-    Route::post('soporte', [SoporteController::class, 'store'])->name('soporte.store');
-    Route::get('soporte/historial', [SoporteController::class, 'index'])->name('soporte.index');
+
+    // Historial de solicitudes propias
+    Route::get('soporte', [SoporteController::class,'indexChofer'])
+        ->name('chofer.soporte.index');
+
+    // Crear nueva solicitud
+    Route::get('soporte/crear', [SoporteController::class,'crear'])
+        ->name('chofer.soporte.crear');
+
+    // Guardar nueva solicitud (el form del chofer usa esta ruta)
+    Route::post('soporte', [SoporteController::class,'store'])
+        ->name('chofer.soporte.store');
 });
+
+// ===============================
+// ADMIN
+// ===============================
+Route::prefix('admin')->middleware('auth')->group(function () {
+
+    // Historial de todas las solicitudes (admin)
+    Route::get('soportes', [SoporteController::class,'indexAdmin'])
+        ->name('admin.soportes');
+
+    // Opcional: otras rutas admin aquí
+});
+
+// ===============================
+// CONSULTAS DE CLIENTES
+// ===============================
+Route::get('/consultas', [ConsultaController::class, 'listar'])
+    ->name('consultas.listar');

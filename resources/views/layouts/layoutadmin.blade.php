@@ -196,17 +196,25 @@
                 </a>
             </div>
         </div>
-
-        <!-- Consultas -->
+        <!-- Soporte Tecnico -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#consultas">
-                <span><i class="fas fa-comments"></i> Consultas</span>
+                <span><i class="fas fa-comments"></i> Soporte Tecnico</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
+
             <div class="collapse btn-toggle-nav" id="consultas">
+
+                <!-- Consultas de Clientes -->
                 <a href="{{ route('consultas.listar') }}"
                    class="{{ request()->routeIs('consultas.listar') ? 'active' : '' }}">
-                    Ver Consultas
+                    Ver Consultas Clientes
+                </a>
+
+                <!-- Soporte de Chofer -->
+                <a href="{{ route('chofer.soporte.index') }}"
+                   class="{{ request()->routeIs('chofer.soporte.index') ? 'active' : '' }}">
+                    Ver Consultas Chofer
                 </a>
             </div>
         </div>

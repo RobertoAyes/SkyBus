@@ -9,11 +9,13 @@ class SolicitudSoporte extends Model
 {
     use HasFactory;
 
+    protected $table = 'solicitudes_soporte';
+
     protected $fillable = [
         'chofer_id',
         'titulo',
         'descripcion',
-        'estado'
+        'estado',
     ];
 
     public function chofer()

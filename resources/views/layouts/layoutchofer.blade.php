@@ -209,22 +209,17 @@
             <button class="btn-toggle"
                     data-bs-toggle="collapse"
                     data-bs-target="#soporteTecnico"
-                    aria-expanded="{{ request()->routeIs('soporte.*') ? 'true':'false' }}">
+                    aria-expanded="{{ request()->routeIs('chofer.soporte.*') ? 'true':'false' }}">
                 <span><i class="fas fa-headset"></i> Soporte Técnico</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
 
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('soporte.*') ? 'show':'' }}" id="soporteTecnico">
-                <a href="{{ route('soporte.create') }}"
-                   class="{{ request()->routeIs('soporte.create') ? 'active':'' }}">
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('chofer.soporte.*') ? 'show':'' }}" id="soporteTecnico">
+                <!-- Crear nueva solicitud -->
+                <a href="{{ route('chofer.soporte.crear') }}"
+                   class="{{ request()->routeIs('chofer.soporte.crear') ? 'active':'' }}">
                     Solicitar soporte
                 </a>
-
-                <!--
-                <a href="{{ route('soporte.index') }}"
-                   class="{{ request()->routeIs('soporte.index') ? 'active':'' }}">
-                    Historial de soporte
-                </a>-->
             </div>
         </div>
 

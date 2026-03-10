@@ -3,44 +3,90 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SolicitudSoporte;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SolicitudSoporte;
 
 class SoporteController extends Controller
 {
-    public function __construct()
+    // ===============================
+    // CHOFER: Historial de solicitudes
+    // ===============================
+    public function indexChofer(Request $request)
     {
-        $this->middleware('auth');
+        $query = SolicitudSoporte::where('chofer_id', Auth::id());
+
+        // Filtro de búsqueda
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('titulo', 'like', "%{$buscar}%")
+                    ->orWhere('descripcion', 'like', "%{$buscar}%");
+            });
+        }
+
+        // Filtro por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $solicitudes = $query->latest()->paginate(10);
+
+        return view('chofer.soporte.index', compact('solicitudes'));
     }
 
-    public function create()
+    // ===============================
+    // CHOFER: Crear nueva solicitud
+    // ===============================
+    public function crear()
     {
         return view('chofer.soporte.create');
     }
 
+    // ===============================
+    // CHOFER: Guardar solicitud
+    // ===============================
     public function store(Request $request)
     {
         $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
+            'titulo' => 'required|max:255',
+            'descripcion' => 'required'
         ]);
 
         SolicitudSoporte::create([
             'chofer_id' => Auth::id(),
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
-            'estado' => 'pendiente',
+            'estado' => 'pendiente'
         ]);
 
-        return redirect()->route('soporte.create')->with('success', 'Solicitud enviada correctamente.');
+        return redirect()
+            ->route('chofer.soporte.index')
+            ->with('success', 'Solicitud enviada correctamente');
     }
 
-    public function index()
+    // ===============================
+    // ADMIN: Ver todas las solicitudes
+    // ===============================
+    public function indexAdmin(Request $request)
     {
-        $solicitudes = SolicitudSoporte::where('chofer_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = SolicitudSoporte::with('chofer');
 
-        return view('chofer.soporte.index', compact('solicitudes'));
+        // Filtro de búsqueda (opcional para admin)
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('titulo', 'like', "%{$buscar}%")
+                    ->orWhere('descripcion', 'like', "%{$buscar}%");
+            });
+        }
+
+        // Filtro por estado (opcional para admin)
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $solicitudes = $query->latest()->paginate(10);
+
+        return view('admin.soportes', compact('solicitudes'));
     }
 }
