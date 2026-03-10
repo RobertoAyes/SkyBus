@@ -15,7 +15,6 @@ class SoporteController extends Controller
     {
         $query = SolicitudSoporte::where('chofer_id', Auth::id());
 
-        // Filtro de búsqueda
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function ($q) use ($buscar) {
@@ -24,14 +23,13 @@ class SoporteController extends Controller
             });
         }
 
-        // Filtro por estado
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
 
         $solicitudes = $query->latest()->paginate(10);
 
-        return view('chofer.soporte.index', compact('solicitudes'));
+        return view('chofer.soporte.indexChofer', compact('solicitudes'));
     }
 
     // ===============================
@@ -62,6 +60,7 @@ class SoporteController extends Controller
         return redirect()
             ->route('chofer.soporte.index')
             ->with('success', 'Solicitud enviada correctamente');
+
     }
 
     // ===============================

@@ -217,11 +217,19 @@
             </button>
 
             <div class="collapse btn-toggle-nav {{ request()->routeIs('chofer.soporte.*') ? 'show':'' }}" id="soporteTecnico">
+
                 <!-- Crear nueva solicitud -->
                 <a href="{{ route('chofer.soporte.crear') }}"
                    class="{{ request()->routeIs('chofer.soporte.crear') ? 'active':'' }}">
                     Solicitar soporte
                 </a>
+
+                <!-- Ver solicitudes -->
+                <a href="{{ route('chofer.soporte.index') }}"
+                   class="{{ request()->routeIs('chofer.soporte.index') ? 'active':'' }}">
+                    Mis solicitudes
+                </a>
+
             </div>
 
             </div>
