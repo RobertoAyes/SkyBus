@@ -216,6 +216,21 @@
                 </a>
             </div>
         </div>
+
+        <!-- Incidentes -->
+        <div class="nav-section">
+            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#incidentes"
+                    aria-expanded="{{ request()->routeIs('empleados.incidentes.historial') ? 'true' : 'false' }}">
+                <span><i class="fas fa-exclamation-triangle"></i> Incidentes</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleados.incidentes.historial') ? 'show' : '' }}" id="incidentes">
+                <a href="{{ route('empleados.incidentes.historial') }}"
+                   class="{{ request()->routeIs('empleados.incidentes.historial') ? 'active' : '' }}">
+                    Ver Incidentes
+                </a>
+            </div>
+        </div>
         <!-- Rentas -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#Renta">
