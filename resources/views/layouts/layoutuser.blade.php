@@ -116,14 +116,7 @@
                             <a class="dropdown-item {{ request()->routeIs('cliente.reserva.create') ? 'active' : '' }}"
                                href="{{ route('cliente.reserva.create') }}">Nueva Reserva</a>
                         </li>
-                        <li>
-                            <a class="dropdown-item {{ request()->routeIs('cliente.historial') ? 'active' : '' }}"
-                               href="{{ route('cliente.historial') }}">Historial de Viajes</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item {{ request()->routeIs('itinerario.index') ? 'active' : '' }}"
-                               href="{{ route('itinerario.index') }}">Itinerario</a>
-                        </li>
+
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('cliente.facturas*') ? 'active' : '' }}"
                                href="{{ route('cliente.facturas') }}">Facturas</a>
@@ -146,14 +139,7 @@
                         <i class="fas fa-star me-1"></i> Servicios Adicionales
                     </a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item {{ request()->routeIs('servicios_reserva.index') ? 'active' : '' }}"
-                               href="{{ route('servicios_reserva.index') }}">Historial</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item {{ request()->routeIs('servicios_reserva.create') ? 'active' : '' }}"
-                               href="{{ route('servicios_reserva.create') }}">Registrar</a>
-                        </li>
+
                     </ul>
                 </li>
 
@@ -164,9 +150,8 @@
                         <i class="fas fa-headset me-1"></i> Soporte
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/ayuda-soporte">Enviar consulta</a></li>
                         <li><a class="dropdown-item {{ request()->routeIs('consulta.mis') ? 'active' : '' }}"
-                               href="{{ route('consulta.mis') }}">Mis consultas</a></li>
+                               href="{{ route('consulta.mis') }}">Consultas</a></li>
 
                         <li><a class="dropdown-item" href="{{ route('solicitud.empleo.mis-solicitudes') }}">Solicitud de trabajo</a></li>
 

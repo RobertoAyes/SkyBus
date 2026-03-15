@@ -139,6 +139,14 @@
             <i class="fas fa-chevron-left"></i>
         </button>
 
+        <div class="brand-logo">
+            <h2>
+                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
+                     alt="Logo"
+                     style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
+            </h2>
+        </div>
+
         <div class="user-info">
             <h3>Panel </h3>
             <h3> Administrador</h3>
@@ -438,30 +446,7 @@
     </nav>
 
     <div class="content-area">
-        <div class="d-flex justify-content-end align-items-center gap-2 mb-4 p-3 rounded shadow-sm"
-             style="background-color: #0d1f3f; border-left: 5px solid #0dcaf0;">
 
-
-
-            @php
-                $adminNotiCount = \App\Models\Notificacion::where('usuario_id', auth()->id())
-                    ->where('leida', false)
-                    ->count();
-            @endphp
-
-            <a href="{{ route('admin.notificaciones') }}"
-               class="btn btn-outline-light btn-sm position-relative rounded-circle shadow-sm"
-               style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-bell"></i>
-
-                @if($adminNotiCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $adminNotiCount }}
-                        <span class="visually-hidden">notificaciones no leídas</span>
-                    </span>
-                @endif
-            </a>
-        </div>
 
         @yield('content')
     </div>
