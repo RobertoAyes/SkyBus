@@ -220,9 +220,11 @@
                 <a href="{{ route('rentas.index') }}" class="{{ request()->routeIs('rentas.index') ? 'active' : '' }}">
                     Ver Registro
                 </a>
-                <a href="{{ route('rentas.create') }}" class="{{ request()->routeIs('rentas.create') ? 'active' : '' }}">
+                {{-- <a href="{{ route('rentas.create') }}" class="{{ request()->routeIs('rentas.create') ? 'active' : '' }}">
                     Agregar Renta
-                </a>
+                 </a>
+                 --}}
+
             </div>
         </div>
 

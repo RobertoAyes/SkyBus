@@ -243,6 +243,37 @@
                             </div>
                         </div>
 
+                        {{-- 4️⃣ SERVICIOS ADICIONALES --}}
+                        <h5 class="mb-3 mt-5" style="color:#1e63b8; font-weight:600; font-size:1.5rem;">
+                            <i class="fas fa-star me-2"></i>4. Servicios adicionales
+                        </h5>
+                        <hr class="mt-0 mb-4">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="wifi"
+                                {{ in_array('wifi', old('servicios', $terminal->servicios->pluck('nombre')->toArray() ?? [])) ? 'checked' : '' }}>
+                            <label class="form-check-label">WiFi</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="banos"
+                                {{ in_array('banos', old('servicios', $terminal->servicios->pluck('nombre')->toArray() ?? [])) ? 'checked' : '' }}>
+                            <label class="form-check-label">Baños</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="cafeteria"
+                                {{ in_array('cafeteria', old('servicios', $terminal->servicios->pluck('nombre')->toArray() ?? [])) ? 'checked' : '' }}>
+                            <label class="form-check-label">Cafetería</label>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="parqueo"
+                                {{ in_array('parqueo', old('servicios', $terminal->servicios->pluck('nombre')->toArray() ?? [])) ? 'checked' : '' }}>
+                            <label class="form-check-label">Parqueo</label>
+                        </div>
+
+
                         {{-- ⚙️ Botones de Acción --}}
                         <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                             <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('terminales.index') }}'">
