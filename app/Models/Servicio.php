@@ -11,6 +11,12 @@ class Servicio extends Model
     /** @use HasFactory<\Database\Factories\ServicioFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'registro_terminal_id'
+    ];
+
     public function terminal()
     {
         return $this->belongsTo(RegistroTerminal::class, 'registro_terminal_id');
