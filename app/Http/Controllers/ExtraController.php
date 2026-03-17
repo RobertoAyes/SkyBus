@@ -16,10 +16,11 @@ class ExtraController extends Controller
     {
         $this->middleware('auth');
     }
-
-    public function index()
+    public function index(Request $request)
     {
-        $extras = Extra::Paginate(10);
+        $perPage = in_array($request->get('perPage'), [5, 10, 25, 50]) ? $request->get('perPage') : 5;
+
+        $extras = Extra::paginate($perPage);
 
         return view('servicios_adicionales.servicios_adicionales-index', compact('extras'));
     }
