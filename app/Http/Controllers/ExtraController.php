@@ -6,7 +6,7 @@ use App\Models\Extra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ExtraController extends Controller
+class ExtraController extends Controller//usuario
 {
     /**
      * Display a listing of the resource.

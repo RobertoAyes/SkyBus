@@ -17,13 +17,23 @@ class ServicioExtraController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $usuario = Auth::user();
+        // Opciones permitidas
+        $allowed = [5, 10, 25, 50];
 
-        $servicios_extras = $usuario->servicios_extras()->paginate(10);
+        // Valor seleccionado por el usuario o default = 5
+        $perPage = $request->input('perPage', 5);
 
-        return view('extras.extra_index', compact('servicios_extras'));
+        // Validar que esté dentro de los permitidos
+        if (!in_array($perPage, $allowed)) {
+            $perPage = 5;
+        }
+
+        // Consulta con paginación
+        $extras = Extra::paginate($perPage);
+
+        return view('extras.extra_index', compact('extras', 'perPage'));
     }
 
     /**

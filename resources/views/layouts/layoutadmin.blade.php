@@ -283,33 +283,12 @@
         </div>
 
         <!-- Servicios Adicionales -->
-        <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center justify-content-between"
-                    data-bs-toggle="collapse" data-bs-target="#extras"
-                    aria-expanded="{{ request()->routeIs('usuario.servicios_adicionales*') ? 'true' : 'false' }}">
-
-        <span class="d-flex align-items-center">
-            <i class="fas fa-plus-circle"></i>
-            <span class="ms-1">S.Adicionales</span> <!-- ms-1 agrega un margen mínimo a la izquierda -->
-        </span>
-
-                <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.servicios_adicionales.index') || request()->routeIs('servicios_adicionales.create') ? 'show' : '' }}"
-                 id="extras">
-
-                <a href="{{ route('servicios_adicionales.index') }}"
-                   class="{{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}">
-                    Lista de servicios adicionales
-                </a>
-
-                <a href="{{ route('servicios_adicionales.create') }}"
-                   class="{{ request()->routeIs('servicios_adicionales.create') ? 'active' : '' }}">
-                    Registrar nuevos servicios adicionales
-                </a>
-            </div>
-        </div>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}"
+               href="{{ route('servicios_adicionales.index') }}">
+                <i class="fas fa-star me-1"></i> Servicios Adicionales
+            </a>
+        </li>
 
         <!-- Rutas -->
         <div class="nav-section">
@@ -498,6 +477,21 @@
         });
     });
 </script>
+//sidebar
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.querySelector('.sidebar');
 
+        // Restaurar posición de scroll guardada
+        const scrollPos = localStorage.getItem('sidebarScroll');
+        if (scrollPos) sidebar.scrollTop = parseInt(scrollPos);
+
+        // Guardar posición de scroll cada vez que el usuario se mueve
+        sidebar.addEventListener('scroll', () => {
+            localStorage.setItem('sidebarScroll', sidebar.scrollTop);
+        });
+    });
+</script>
 </body>
 </html>

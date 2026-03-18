@@ -8,13 +8,13 @@
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-list me-2"></i>
-                        Servicios Adicionales
+                        <i class="fas fa-list me-2"></i>Servicios Adicionales por Reserva
                     </h4>
                     <a href="{{ route('servicios_reserva.create') }}" class="btn btn-light btn-sm">
                         <i class="fas fa-plus me-1"></i> Agregar servicio
                     </a>
                 </div>
+
                 <div class="card-body">
 
                     @if(session('error'))
@@ -49,7 +49,7 @@
                             </div>
                         </form>
                         <small class="text-muted">
-                            Total: {{ $servicios_extras->total() }} registros
+                            Total: {{ $extras->total() }} registros
                         </small>
                     </div>
 
@@ -57,29 +57,31 @@
                         <table class="table table-hover table-bordered align-middle">
                             <thead class="table-primary">
                             <tr>
-                                <th>Código de Reserva</th>
-                                <th>Fecha de adición</th>
-                                <th>Extras</th>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Imagen</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($servicios_extras as $servicio)
+                            @forelse($extras as $extra)
                                 <tr>
-                                    <td>{{ $servicio->reserva->codigo_reserva ?? 'Sin reserva' }}</td>
-                                    <td>{{ date('d-m-Y', strtotime($servicio->fecha)) ?? 'N/D' }}</td>
+                                    <td>{{ $extras->firstItem() + $loop->index }}</td>
+                                    <td>{{ $extra->nombre }}</td>
+                                    <td>{{ $extra->descripcion }}</td>
                                     <td>
-                                        @forelse($servicio->extras as $extra)
-                                            <span class="badge bg-primary me-1 mb-1">
-                                                    {{ $extra->nombre ?? 'N/D' }}
-                                                </span>
-                                        @empty
-                                            <span class="text-muted">No hay extras asociados</span>
-                                        @endforelse
+                                        @if($extra->imagen)
+                                            <img src="{{ asset('storage/' . $extra->imagen) }}"
+                                                 class="img-fluid rounded shadow-sm"
+                                                 style="max-height:100px; object-fit:cover;">
+                                        @else
+                                            <span class="text-muted">Sin imagen</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted py-4">
+                                    <td colspan="4" class="text-center text-muted py-4">
                                         <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
                                         No hay servicios adicionales registrados.
                                     </td>
@@ -89,22 +91,17 @@
                         </table>
                     </div>
 
-                    @if($servicios_extras->hasPages())
+                    @if($extras->hasPages())
                         <div class="mt-4 d-flex justify-content-between align-items-center">
                             <small class="text-muted">
-                                Mostrando {{ $servicios_extras->firstItem() }} - {{ $servicios_extras->lastItem() }}
-                                de {{ $servicios_extras->total() }} registros
+                                Mostrando {{ $extras->firstItem() }} - {{ $extras->lastItem() }}
+                                de {{ $extras->total() }} registros
                             </small>
-                            {{ $servicios_extras->appends(request()->only('perPage'))->links() }}
+                            {{ $extras->appends(request()->only('perPage'))->links('pagination.numeros') }}
                         </div>
                     @endif
 
                 </div>
-            </div>
-
-            <div class="alert alert-info mt-4" role="alert">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>Importante:</strong> Aquí puedes ver todos los servicios adicionales asociados a tus reservas.
             </div>
         </div>
     </div>
