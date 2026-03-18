@@ -8,7 +8,7 @@
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Servicios Adicionales por Reserva
+                        <i class="fas fa-list me-2"></i>Historial de Servicios Adicionales
                     </h4>
                     <a href="{{ route('servicios_reserva.create') }}" class="btn btn-light btn-sm">
                         <i class="fas fa-plus me-1"></i> Agregar servicio
@@ -64,25 +64,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($extras as $extra)
+                            @forelse($extras as $servicio)
                                 <tr>
+                                    <!-- Numeración -->
                                     <td>{{ $extras->firstItem() + $loop->index }}</td>
-                                    <td>{{ $extra->nombre }}</td>
-                                    <td>{{ $extra->descripcion }}</td>
+
+                                    <!-- Código de reserva -->
+                                    <td>{{ $servicio->reserva->codigo_reserva ?? 'Sin reserva' }}</td>
+
+                                    <!-- Extras asociados -->
                                     <td>
-                                        @if($extra->imagen)
-                                            <img src="{{ asset('storage/' . $extra->imagen) }}"
-                                                 class="img-fluid rounded shadow-sm"
-                                                 style="max-height:100px; object-fit:cover;">
-                                        @else
-                                            <span class="text-muted">Sin imagen</span>
-                                        @endif
+                                        @forelse($servicio->extras ?? [] as $extra)
+                                            <span class="badge bg-primary me-1 mb-1">{{ $extra->nombre }}</span>
+                                        @empty
+                                            <span class="text-muted">No hay extras asociados</span>
+                                        @endforelse
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
-                                        <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                                    <td colspan="3" class="text-center py-4 text-muted">
                                         No hay servicios adicionales registrados.
                                     </td>
                                 </tr>

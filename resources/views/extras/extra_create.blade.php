@@ -52,11 +52,6 @@
                     @endforelse
                 </div>
 
-                <div class="d-flex gap-2 mt-3">
-                    <button type="button" id="btn-guardar" class="btn btn-primary" style="display:none;" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar selección</button>
-                    <a href="{{ route('servicios_reserva.index') }}" class="btn btn-secondary">Regresar</a>
-                </div>
-
                 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">

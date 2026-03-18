@@ -19,19 +19,17 @@ class ServicioExtraController extends Controller
 
     public function index(Request $request)
     {
-        // Opciones permitidas
+        // Opciones de paginación
         $allowed = [5, 10, 25, 50];
-
-        // Valor seleccionado por el usuario o default = 5
         $perPage = $request->input('perPage', 5);
+        if (!in_array($perPage, $allowed)) $perPage = 5;
 
-        // Validar que esté dentro de los permitidos
-        if (!in_array($perPage, $allowed)) {
-            $perPage = 5;
-        }
+        $usuario = Auth::user();
 
-        // Consulta con paginación
-        $extras = Extra::paginate($perPage);
+        // Traer solo los servicios del usuario logueado con extras y reserva
+        $extras = ServiciosExtra::with('extras', 'reserva')
+            ->where('user_id', $usuario->id)
+            ->paginate($perPage);
 
         return view('extras.extra_index', compact('extras', 'perPage'));
     }

@@ -35,7 +35,6 @@
                 </div>
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{{ route('servicios_adicionales.index') }}" class="btn btn-secondary">Regresar</a>
                 </div>
             </form>
         </div>
