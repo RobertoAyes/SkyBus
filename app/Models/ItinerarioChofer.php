@@ -24,6 +24,7 @@ class ItinerarioChofer extends Model
     ];
 
     protected $casts = [
+        'fecha'       => 'datetime',
         'hora_salida' => 'datetime',
         'hora_llegada' => 'datetime',
     ];
@@ -43,5 +44,21 @@ class ItinerarioChofer extends Model
     public function paradas()
     {
         return $this->hasMany(ParadaItinerario::class, 'itinerario_chofer_id');
+    }
+    public function getEstadoCalculadoAttribute()
+    {
+        if ($this->hora_salida && $this->hora_llegada) {
+            return 'Finalizado';
+        }
+
+        if ($this->hora_salida && !$this->hora_llegada) {
+            return 'En ruta';
+        }
+
+        if (!$this->hora_salida && now() > $this->fecha) {
+            return 'Atrasado';
+        }
+
+        return 'Pendiente';
     }
 }
