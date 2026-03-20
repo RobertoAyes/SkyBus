@@ -18,18 +18,15 @@ class ExtraController extends Controller//usuario
     }
     public function index(Request $request)
     {
-        $perPage = in_array($request->get('perPage'), [5, 10, 25, 50])
-            ? $request->get('perPage')
-            : 5;
+        $perPage = $request->get('per_page', 5);
+        $perPage = in_array($perPage, [5, 10, 25, 50]) ? $perPage : 5;
 
         $query = Extra::query();
 
-        // Filtro para buscar por nombre
         if ($request->filled('buscar')) {
             $query->where('nombre', 'like', '%' . $request->buscar . '%');
         }
 
-        // Filtro para buscar por estado
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
