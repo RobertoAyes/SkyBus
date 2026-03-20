@@ -18,9 +18,23 @@ class ExtraController extends Controller//usuario
     }
     public function index(Request $request)
     {
-        $perPage = in_array($request->get('perPage'), [5, 10, 25, 50]) ? $request->get('perPage') : 5;
+        $perPage = in_array($request->get('perPage'), [5, 10, 25, 50])
+            ? $request->get('perPage')
+            : 5;
 
-        $extras = Extra::paginate($perPage);
+        $query = Extra::query();
+
+        // Filtro para buscar por nombre
+        if ($request->filled('buscar')) {
+            $query->where('nombre', 'like', '%' . $request->buscar . '%');
+        }
+
+        // Filtro para buscar por estado
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $extras = $query->paginate($perPage);
 
         return view('servicios_adicionales.servicios_adicionales-index', compact('extras'));
     }
