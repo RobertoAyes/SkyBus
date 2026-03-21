@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItinerarioChofer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ChoferConfirmacionController extends Controller
@@ -13,17 +14,41 @@ class ChoferConfirmacionController extends Controller
         $this->middleware(['auth', 'user.active']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $itinerarios = ItinerarioChofer::with('ruta')
-            ->where('chofer_id', auth()->id())
+        $query = ItinerarioChofer::with('ruta')
+            ->where('chofer_id', auth()->id());
 
-            ->orderBy('fecha', 'desc')
-            ->orderBy('hora_salida', 'desc')
-            ->paginate(10);
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->whereHas('ruta', function ($q) use ($buscar) {
+                $q->where('origen', 'like', "%$buscar%")
+                    ->orWhere('destino', 'like', "%$buscar%")
+                    ->orWhereRaw("CONCAT(origen, ' ', destino) like ?", ["%$buscar%"])
+                    ->orWhereRaw("CONCAT(destino, ' ', origen) like ?", ["%$buscar%"]);
+            });
+        }
+        if ($request->filled('estado_viaje')) {
+            $query->where('estado_viaje', $request->estado_viaje);
+        }
+
+        if ($request->filled('fecha')) {
+            $query->whereDate('fecha', $request->fecha);
+        }
+
+        match ($request->orden) {
+            'fecha_asc'   => $query->orderBy('fecha', 'asc'),
+            'fecha_desc'  => $query->orderBy('fecha', 'desc'),
+            'salida_asc'  => $query->orderBy('hora_salida', 'asc'),
+            'salida_desc' => $query->orderBy('hora_salida', 'desc'),
+            default       => $query->orderBy('fecha', 'desc')->orderBy('hora_salida', 'desc'),
+        };
+
+        $itinerarios = $query->paginate(5)->withQueryString();
 
         return view('conductor.confirmar', compact('itinerarios'));
     }
+
 
     public function registrarSalida($id)
     {

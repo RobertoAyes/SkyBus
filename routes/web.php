@@ -646,3 +646,7 @@ Route::put('/empleados-hu5/{empleado}', [EmpleadoHU5Controller::class, 'update']
 // historial de incidentes
 Route::get('/historial-incidentes', [\App\Http\Controllers\IncidenteController::class, 'historial'])
     ->name('empleados.incidentes.historial');
+
+// Ruta para responder un incidente
+Route::post('/incidentes/{id}/responder', [\App\Http\Controllers\IncidenteController::class, 'responder'])
+    ->name('incidentes.responder');
