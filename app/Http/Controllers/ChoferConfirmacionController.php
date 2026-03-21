@@ -17,7 +17,7 @@ class ChoferConfirmacionController extends Controller
     {
         $itinerarios = ItinerarioChofer::with('ruta')
             ->where('chofer_id', auth()->id())
-            ->whereDate('fecha', now())  // <-- Solo viajes de hoy
+            ->whereDate('fecha', now())
             ->orderBy('hora_salida', 'asc')
             ->paginate(10);
 
