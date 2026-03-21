@@ -10,7 +10,7 @@ class Reserva extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'usuario_id', // ❌ Cambiado de user_id a usuario_id
         'viaje_id',
         'asiento_id',
         'codigo_reserva',
@@ -20,7 +20,7 @@ class Reserva extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->belongsTo(\App\Models\User::class, 'usuario_id'); // ❌ usa usuario_id
     }
 
     public function viaje()

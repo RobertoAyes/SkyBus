@@ -16,8 +16,8 @@
 
             <div class="card-body">
 
+                {{-- FORMULARIO BÚSQUEDA --}}
                 <form method="GET" action="{{ route('servicios_reserva.create') }}" class="mb-3">
-                    {{-- Búsqueda por nombre --}}
                     <div class="row g-3 align-items-end">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Buscar servicio</label>
@@ -44,27 +44,29 @@
                     Si no tienes una reserva vigente, no podrás utilizar esta pantalla.
                 </div>
 
-                {{-- SELECT RESERVA --}}
-                <div class="col-4 mb-3">
-                    <label class="form-label fw-bold">Seleccione código de reserva del viaje</label>
-                    <select name="reserva_id" class="form-select @error('reserva_id') is-invalid @enderror" id="reserva_id">
-                        <option value="">-- Seleccione --</option>
-                        @foreach($reservas as $reserva)
-                            @if(!$reserva->servicios_extras)
-                                <option value="{{ $reserva->id }}" {{ old('reserva_id') == $reserva->id ? 'selected' : '' }}>
-                                    {{ $reserva->codigo_reserva }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
-                    @error('reserva_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                {{-- MOSTRAR REGISTROS --}}
+                {{-- FORMULARIO POST PARA GUARDAR --}}
                 <form action="{{ route('servicios_reserva.store') }}" method="POST">
                     @csrf
+
+                    {{-- SELECT RESERVA --}}
+                    <div class="col-4 mb-3">
+                        <label class="form-label fw-bold">Seleccione código de reserva del viaje</label>
+                        <select name="reserva_id" class="form-select @error('reserva_id') is-invalid @enderror" id="reserva_id">
+                            <option value="">-- Seleccione --</option>
+                            @foreach($reservas as $reserva)
+                                @if(!$reserva->servicios_extras)
+                                    <option value="{{ $reserva->id }}" {{ old('reserva_id') == $reserva->id ? 'selected' : '' }}>
+                                        {{ $reserva->codigo_reserva }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                        @error('reserva_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- FILTRO Y TOTAL SERVICIOS --}}
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center gap-2">
                             <label class="mb-0 fw-semibold">Mostrar:</label>
@@ -78,9 +80,18 @@
                             </select>
                             <span>registros</span>
                         </div>
-                        <small class="text-muted">
-                            Total: {{ $extras->total() }} servicios
-                        </small>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <small class="text-muted">
+                                Total: {{ $extras->total() }} servicios
+                            </small>
+
+                            {{-- BOTÓN GUARDAR --}}
+                            <button type="button" id="btn-guardar" class="btn btn-primary btn-sm" style="display: none;"
+                                    data-bs-toggle="modal" data-bs-target="#confirmModal">
+                                <i class="fas fa-save me-1"></i> Guardar
+                            </button>
+                        </div>
                     </div>
 
                     {{-- TARJETAS DE SERVICIOS --}}
@@ -156,8 +167,8 @@
                             </div>
                         </div>
                     </div>
-                </form>
 
+                </form>
             </div>
         </div>
     </div>
@@ -175,6 +186,7 @@
         .pagination .page-item.disabled .page-link { color: #9ca3af; background: #f3f4f6; border-color: #e5e7eb; }
     </style>
 
+    {{-- SCRIPT --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const btnGuardar = document.getElementById('btn-guardar');
@@ -184,13 +196,10 @@
             function mostrarBoton() {
                 const reservaSeleccionada = reserva.value !== "";
                 const alMenosUnoSeleccionado = Array.from(checkboxes).some(cb => cb.checked);
-
-                if (reservaSeleccionada && alMenosUnoSeleccionado) {
-                    btnGuardar.style.display = 'block';
-                } else {
-                    btnGuardar.style.display = 'none';
-                }
+                btnGuardar.style.display = (reservaSeleccionada && alMenosUnoSeleccionado) ? 'inline-block' : 'none';
             }
+
+            mostrarBoton();
 
             reserva.addEventListener('change', mostrarBoton);
             checkboxes.forEach(cb => cb.addEventListener('change', mostrarBoton));
