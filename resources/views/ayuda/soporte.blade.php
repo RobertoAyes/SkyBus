@@ -1,169 +1,156 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
-
 @extends('layouts.layoutuser')
 
 @section('contenido')
-    <div class="d-flex justify-content-center">
-        <div style="width: 100%; max-width: 700px;">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="fas fa-headset me-2"></i>
-                        Ayuda y Soporte
-                    </h4>
-                </div>
-                <div class="card-body">
+    <div class="container mt-3">
+        <div class="card shadow-sm border-0">
 
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
+            {{-- HEADER --}}
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0" style="color:#1e63b8; font-weight:600;">
+                    <i class="fas fa-headset me-2"></i> Ayuda y Soporte
+                </h5>
+            </div>
 
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
+            <div class="card-body py-3">
 
-                    @if($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <strong>¡Errores en el formulario!</strong>
-                            <ul class="mb-0 mt-2">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
+                {{-- ALERTAS --}}
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-circle-check me-2"></i>
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
-                    <form id="soporteForm" method="POST" action="{{ route('soporte.enviar') }}" autocomplete="off">
-                        @csrf
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-circle-exclamation me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
 
-                        <div class="mb-4">
-                            <label for="nombre" class="form-label fw-bold">
-                                Nombre Completo <span class="text-danger">*</span>
-                            </label>
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>¡Errores en el formulario!</strong>
+                        <ul class="mb-0 mt-1">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                {{-- FORMULARIO --}}
+                <form id="soporteForm" method="POST" action="{{ route('soporte.enviar') }}" autocomplete="off">
+                    @csrf
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label fw-semibold">Nombre</label>
                             <input type="text"
                                    class="form-control @error('nombre') is-invalid @enderror"
-                                   id="nombre"
                                    name="nombre"
                                    value="{{ auth()->user()->name ?? '' }}"
-                                   placeholder="Tu nombre completo"
+                                   placeholder="Ej: Juan Pérez"
+                                   maxlength="50"
+                                   autocomplete="off"
                                    required>
                             @error('nombre')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-4">
-                            <label for="correo" class="form-label fw-bold">
-                                Correo Electrónico <span class="text-danger">*</span>
-                            </label>
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label fw-semibold">Correo</label>
                             <input type="email"
                                    class="form-control @error('correo') is-invalid @enderror"
-                                   id="correo"
                                    name="correo"
                                    value="{{ auth()->user()->email ?? '' }}"
-                                   placeholder="tu@email.com"
+                                   placeholder="Ej: juanperez@email.com"
+                                   maxlength="50"
+                                   autocomplete="off"
                                    required>
                             @error('correo')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="asunto" class="form-label fw-bold">
-                                Asunto <span class="text-danger">*</span>
-                            </label>
-                            <input type="text"
-                                   class="form-control @error('asunto') is-invalid @enderror"
-                                   id="asunto"
-                                   name="asunto"
-                                   placeholder="Asunto de tu consulta"
-                                   required
-                                   autocomplete="off">
-                            @error('asunto')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Asunto</label>
+                        <input type="text"
+                               class="form-control @error('asunto') is-invalid @enderror"
+                               name="asunto"
+                               placeholder="Ej: Problema con mi reserva"
+                               maxlength="50"
+                               autocomplete="off"
+                               required>
+                        @error('asunto')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="mensaje" class="form-label fw-bold">
-                                Mensaje <span class="text-danger">*</span>
-                            </label>
-                            <textarea class="form-control @error('mensaje') is-invalid @enderror"
-                                      id="mensaje"
-                                      name="mensaje"
-                                      rows="4"
-                                      placeholder="Cuéntanos tu problema o duda en detalle..."
-                                      maxlength="1000"
-                                      required
-                                      autocomplete="off"></textarea>
-                            @error('mensaje')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                            <div class="d-flex justify-content-between mt-2">
-                                <small class="text-muted">Máximo 1000 caracteres</small>
-                                <small class="text-muted">
-                                    <span id="char-counter">0</span>/1000 caracteres
-                                </small>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mensaje</label>
+                        <textarea class="form-control @error('mensaje') is-invalid @enderror"
+                                  id="mensaje"
+                                  name="mensaje"
+                                  rows="4"
+                                  style="resize:none;"
+                                  maxlength="1000"
+                                  placeholder="Ej: Tengo un inconveniente con mi reserva #12345, no puedo ver los detalles..."
+                                  autocomplete="off"
+                                  required></textarea>
+                        @error('mensaje')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
 
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="fas fa-paper-plane me-1"></i> Enviar Consulta
-                            </button>
-                            <button type="reset" class="btn btn-secondary flex-grow-1">
-                                <i class="fas fa-times me-1"></i> Cancelar
-                            </button>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted">Máx 1000 caracteres</small>
+                            <small class="text-muted">
+                                <span id="char-counter">0</span>/1000
+                            </small>
                         </div>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary flex-fill">
+                            <i class="fas fa-paper-plane me-1"></i> Enviar
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary flex-fill">
+                            <i class="fas fa-times me-1"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <div class="alert alert-info mt-4" role="alert">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>Importante:</strong> Completa todos los campos correctamente. Nos pondremos en contacto contigo lo antes posible.
-            </div>
+        <div class="alert alert-info mt-3" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            Completa todos los campos correctamente. <br>
+            <span style="font-size:0.875rem;">Nos pondremos en contacto cuanto antes.</span>
         </div>
     </div>
 
     <script>
-        // Limpiar todos los campos del formulario al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             const soporteForm = document.getElementById('soporteForm');
             const charCounter = document.getElementById('char-counter');
 
-            // Resetear el formulario completamente
-            if (soporteForm) {
-                soporteForm.reset();
-            }
+            if (soporteForm) soporteForm.reset();
 
-            // Limpiar todos los inputs y textareas
             const inputs = document.querySelectorAll('input[type="text"], input[type="email"], textarea');
-            inputs.forEach(input => {
-                input.value = '';
-            });
+            inputs.forEach(input => input.value = '');
 
-            // Reinicializar contador de caracteres
-            if (charCounter) {
-                charCounter.textContent = '0';
-            }
+            if (charCounter) charCounter.textContent = '0';
 
-            // Contador de caracteres
             const mensajeTextarea = document.getElementById('mensaje');
             if (mensajeTextarea && charCounter) {
                 mensajeTextarea.addEventListener('input', function() {
-                    const length = this.value.length;
-                    charCounter.textContent = length;
+                    charCounter.textContent = this.value.length;
                 });
             }
         });

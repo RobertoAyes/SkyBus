@@ -73,7 +73,9 @@
                         <div style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Miembro Desde</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">{{ $usuario->created_at->format('d \d\e F \d\e Y') }}</p>
+                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
+                                    {{ \Carbon\Carbon::parse($usuario->created_at)->locale('es')->translatedFormat('d \d\e F \d\e Y') }}
+                                </p>
                             </div>
                             <i class="fas fa-calendar-check" style="color: #5cb3ff; font-size: 24px;"></i>
                         </div>
