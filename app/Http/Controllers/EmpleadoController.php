@@ -141,4 +141,11 @@ class EmpleadoController extends Controller
 
         return back()->with('success', 'Empleado activado');
     }
+
+    public function perfil()
+    {
+        $user = auth()->user();
+
+        return view('empleados.perfil', compact('user'));
+    }
 }
