@@ -62,9 +62,9 @@
                         <thead class="table-primary">
                         <tr>
                             <th>#</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th class="text-center">Imagen</th>
+                            <th>Código de Reserva</th>
+                            <th>Fecha</th>
+                            <th>Extras</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -72,18 +72,23 @@
                             <tr>
                                 <td>{{ $extras->firstItem() + $loop->index }}</td>
                                 <td>{{ $servicio->reserva->codigo_reserva ?? 'Sin reserva' }}</td>
+                                <td>{{ $servicio->fecha ? date('d-m-Y', strtotime($servicio->fecha)) : 'N/D' }}</td>
                                 <td>
-                                    @forelse($servicio->extras ?? [] as $extra)
-                                        <span class="badge bg-primary me-1 mb-1" style="font-size:0.85rem;">{{ $extra->nombre }}</span>
-                                    @empty
+                                    @if($servicio->extras && $servicio->extras->count() > 0)
+                                        @foreach($servicio->extras as $extra)
+                                            <span class="badge bg-primary me-1 mb-1" style="font-size:0.85rem;">
+                                    {{ $extra->nombre }}
+                                </span>
+                                        @endforeach
+                                    @else
                                         <span class="text-muted">No hay extras asociados</span>
-                                    @endforelse
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="4" class="text-center py-5 text-muted">
-                                    <i class="fas fa-concierge-bell fa-2x mb-2 d-block"></i>
+                                    <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
                                     No hay servicios adicionales registrados.
                                 </td>
                             </tr>
