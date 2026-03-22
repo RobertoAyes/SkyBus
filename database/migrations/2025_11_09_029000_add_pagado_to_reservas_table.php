@@ -6,13 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
-
     }
 
-    public function down(): void
+    public function down()
     {
-
     }
 };

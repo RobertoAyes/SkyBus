@@ -101,4 +101,60 @@ class IncidenteController extends Controller
             return view('empleados.incidentes.mis_incidentes', compact('incidentes'));
     }
 
+    public function historial(Request $request)
+    {
+        $query = Incidente::query();
+
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('conductor_nombre', 'like', "%{$buscar}%")
+                    ->orWhere('ruta',           'like', "%{$buscar}%")
+                    ->orWhere('bus_numero',     'like', "%{$buscar}%");
+            });
+        }
+
+
+        if ($request->filled('estado')) {
+            if ($request->estado === 'respondido') {
+                $query->whereNotNull('acciones_tomadas')
+                    ->where('acciones_tomadas', '!=', '');
+            } elseif ($request->estado === 'pendiente') {
+                $query->where(function ($q) {
+                    $q->whereNull('acciones_tomadas')
+                        ->orWhere('acciones_tomadas', '');
+                });
+            }
+        }
+
+        if ($request->filled('tipo_incidente')) {
+            $query->where('tipo_incidente', $request->tipo_incidente);
+        }
+
+
+        if ($request->filled('fecha')) {
+            $query->whereDate('fecha_hora', $request->fecha);
+        }
+
+        $incidentes = $query->orderBy('fecha_hora', 'desc')->paginate(5)->withQueryString();
+
+        return view('empleados.incidentes.historial_incidentes', compact('incidentes'));
+    }
+
+    public function responder(Request $request, $id)
+    {
+        $request->validate([
+            'acciones_tomadas' => 'required'
+        ]);
+
+        $incidente = Incidente::findOrFail($id);
+
+        $incidente->acciones_tomadas = $request->acciones_tomadas;
+
+        $incidente->save();
+
+        return redirect()->back()->with('success' , ' Respuesta enviada correctamente.');
+
+    }
 }

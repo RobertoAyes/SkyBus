@@ -140,12 +140,45 @@ class EmpleadoController extends Controller
             ->update(['estado' => 'activo']);
 
         return back()->with('success', 'Empleado activado');
+
     }
 
     public function perfil()
     {
         $user = auth()->user();
-
         return view('empleados.perfil', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $empleado = Empleado::findOrFail($id);
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'dni' => 'required|string|unique:empleados,dni,' . $empleado->id,
+            'cargo' => 'required|string|max:255',
+            'fecha_ingreso' => 'required|date',
+            'rol' => 'required|string',
+            'estado' => 'required|string',
+            'foto' => 'nullable|image|max:2048',
+        ]);
+
+        $empleado->nombre = $request->nombre;
+        $empleado->apellido = $request->apellido;
+        $empleado->dni = $request->dni;
+        $empleado->cargo = $request->cargo;
+        $empleado->fecha_ingreso = $request->fecha_ingreso;
+        $empleado->rol = $request->rol;
+        $empleado->estado = $request->estado;
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('empleados', 'public');
+            $empleado->foto = $path;
+        }
+
+        $empleado->save();
+
+        return redirect()->route('empleados.hu5')
+            ->with('success', 'Empleado actualizado correctamente.');
     }
 }

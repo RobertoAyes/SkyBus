@@ -44,9 +44,48 @@ class RutaController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $rutas = Ruta::all();
+        $query = Ruta::query();
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('origen', 'like', "%{$buscar}%")
+                    ->orWhere('destino', 'like', "%{$buscar}%");
+            });
+        }
+
+        if ($request->filled('estado')) {
+            if ($request->estado === 'activa') {
+                $query->where('estado', true);
+            } elseif ($request->estado === 'bloqueada') {
+                $query->where('estado', false);
+            }
+        }
+
+        if ($request->filled('distancia')) {
+            if ($request->distancia === 'corta') {
+                $query->where('distancia', '<', 50);
+            } elseif ($request->distancia === 'media') {
+                $query->whereBetween('distancia', [50, 150]);
+            } elseif ($request->distancia === 'larga') {
+                $query->where('distancia', '>', 150);
+            }
+        }
+
+        if ($request->filled('duracion')) {
+            if ($request->duracion === 'rapida') {
+                $query->where('duracion_estimada', '<', 60);
+            } elseif ($request->duracion === 'normal') {
+                $query->whereBetween('duracion_estimada', [60, 180]);
+            } elseif ($request->duracion === 'larga') {
+                $query->where('duracion_estimada', '>', 180);
+            }
+        }
+
+        $rutas = $query->paginate(5)->withQueryString();
+
         return view('rutas.index', compact('rutas'));
     }
 
@@ -56,8 +95,8 @@ class RutaController extends Controller
         $request->validate([
             'origen' => 'required|string',
             'destino' => 'required|string|different:origen',
-            'distancia' => 'required|numeric|min:0.5',
-            'duracion_estimada' => 'required|integer|min:5',
+            'distancia' => 'required|numeric|min:5',
+            'duracion_estimada' => 'required|integer|min:15',
         ], [
             'destino.different' => 'El destino debe ser diferente al origen.',
             'distancia.min' => 'La distancia mínima permitida es 5 km.',
@@ -80,5 +119,16 @@ class RutaController extends Controller
 
         return redirect()->route('rutas.index')
             ->with('success', 'Ruta actualizada correctamente');
+    }
+
+    public function bloquear($id)
+    {
+        $ruta = Ruta::findOrFail($id);
+
+        $ruta->estado = !$ruta->estado; // cambia true a false y viceversa
+        $ruta->save();
+
+        return redirect()->route('rutas.index')
+            ->with('success', 'Estado de la ruta actualizado');
     }
 }

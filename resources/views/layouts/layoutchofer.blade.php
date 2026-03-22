@@ -176,6 +176,9 @@
                 </a>            </div>
         </div>
 
+
+        <!-- Incidentes -->
+        <div class="nav-section">
         <div class="nav-section">
 
             <button class="btn-toggle"
@@ -196,9 +199,39 @@
                 </a>
 
                 <a href="{{ route('empleado.misIncidentes') }}"
-                   class="{{ request()->routeIs('empleado.misIncidentes') ? 'active':'' }}">
-                    Mis incidentes
+                   class="nav-link {{ request()->routeIs('empleado.misIncidentes') ? 'active' : '' }}">
+                    Ver mis incidentes
                 </a>
+
+            </div>
+        </div>
+
+        <!-- Soporte Técnico -->
+        <div class="nav-section">
+            <button class="btn-toggle"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#soporteTecnico"
+                    aria-expanded="{{ request()->routeIs('chofer.soporte.*') ? 'true':'false' }}">
+                <span><i class="fas fa-headset"></i> Soporte Técnico</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('chofer.soporte.*') ? 'show':'' }}" id="soporteTecnico">
+
+                <!-- Crear nueva solicitud -->
+                <a href="{{ route('chofer.soporte.crear') }}"
+                   class="{{ request()->routeIs('chofer.soporte.crear') ? 'active':'' }}">
+                    Solicitar soporte
+                </a>
+
+                <!-- Ver solicitudes -->
+                <a href="{{ route('chofer.soporte.index') }}"
+                   class="{{ request()->routeIs('chofer.soporte.index') ? 'active':'' }}">
+                    Mis solicitudes
+                </a>
+
+            </div>
+
             </div>
 
         </div>

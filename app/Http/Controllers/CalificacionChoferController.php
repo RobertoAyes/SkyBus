@@ -16,10 +16,10 @@ class CalificacionChoferController extends Controller
 
     public function index()
     {
-        // Obtener todos los choferes con estadísticas
         $estadisticas = User::where('role', 'Chofer')
-            ->withCount('calificacionesRecibidas')          // total de calificaciones
-            ->withAvg('calificacionesRecibidas', 'estrellas') // promedio de estrellas
+            ->withCount('calificacionesRecibidas')
+            ->withAvg('calificacionesRecibidas', 'estrellas')
+            ->with(['calificacionesRecibidas.usuario']) // traer comentarios y cliente
             ->get();
 
         return view('admin.calificaciones.index', compact('estadisticas'));
@@ -37,7 +37,7 @@ class CalificacionChoferController extends Controller
             'estrellas'  => 'required|integer|min:1|max:5',
             'comentario' => 'nullable|string|max:500',
         ]);
-        
+
 
         // Guardar calificación
         CalificacionChofer::create([

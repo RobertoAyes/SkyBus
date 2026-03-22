@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Controladores
+use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\ChoferConfirmacionController;
 use App\Http\Controllers\HomeController;
@@ -43,6 +44,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\ServicioExtraController;
 use App\Http\Controllers\PerfilChoferController;
 use App\Http\Controllers\ItinerarioChoferController;
+use App\Http\Controllers\IndicadorEnCursoController;
 
 
 // Toggle activar/inactivar
@@ -579,4 +581,68 @@ Route::middleware(['auth'])->group(function () {
         ->name('viaje.llegada');
 
 });
+//Indicador de viaje en curso
+Route::resource('indicador_en_curso', IndicadorEnCursoController::class);
 
+//bloquear rutas
+Route::put('/rutas/{id}/bloquear', [RutaController::class, 'bloquear'])->name('rutas.bloquear');
+
+
+// ----------------- Soporte Técnico Chofer -----------------
+// ===============================
+// CHOFER
+// ===============================
+/*Route::prefix('chofer')->middleware('auth')->group(function () {
+
+    // Historial de solicitudes propias
+    Route::get('soporte', [SoporteController::class,'indexChofer'])
+        ->name('chofer.soporte.index');
+
+    // Crear nueva solicitud
+    Route::get('soporte/crear', [SoporteController::class,'crear'])
+        ->name('chofer.soporte.crear');
+
+    // Guardar nueva solicitud (el form del chofer usa esta ruta)
+    Route::post('soporte', [SoporteController::class,'store'])
+        ->name('chofer.soporte.store');
+
+});*/
+
+Route::prefix('chofer')->middleware('auth')->group(function () {
+
+    Route::get('soporte', [SoporteController::class,'indexChofer'])
+        ->name('chofer.soporte.index');
+
+    Route::get('soporte/crear', [SoporteController::class,'crear'])
+        ->name('chofer.soporte.crear');
+
+    Route::post('soporte', [SoporteController::class,'store'])
+        ->name('chofer.soporte.store');
+
+    Route::get('admin/soportes', [SoporteController::class, 'indexAdmin'])
+        ->name('admin.soportes');
+
+});
+
+// ===============================
+// ADMIN
+// ===============================
+Route::prefix('admin')->middleware('auth')->group(function () {
+
+    // Historial de todas las solicitudes (admin)
+    Route::get('soportes', [SoporteController::class,'indexAdmin'])
+        ->name('admin.soportes');
+
+    // Opcional: otras rutas admin aquí
+});
+//editar empleado
+Route::get('/empleados-hu5', [EmpleadoHU5Controller::class, 'index'])->name('empleados.hu5');
+Route::put('/empleados-hu5/{empleado}', [EmpleadoHU5Controller::class, 'update'])->name('empleados.hu5.update');
+
+// historial de incidentes
+Route::get('/historial-incidentes', [\App\Http\Controllers\IncidenteController::class, 'historial'])
+    ->name('empleados.incidentes.historial');
+
+// Ruta para responder un incidente
+Route::post('/incidentes/{id}/responder', [\App\Http\Controllers\IncidenteController::class, 'responder'])
+    ->name('incidentes.responder');

@@ -25,10 +25,9 @@ class ItinerarioChoferController extends Controller
     public function create()
     {
         $choferes = User::where('role', 'Chofer')->get();
-        $rutas = Ruta::all();
+        $rutas = Ruta::where('estado', true)->get(); // solo rutas activas
         return view('itinerarioChofer.create', compact('choferes', 'rutas'));
     }
-
 
         public function store(Request $request)
     {
@@ -85,41 +84,58 @@ class ItinerarioChoferController extends Controller
     public function edit(ItinerarioChofer $itinerarioChofer)
     {
         $choferes = User::where('role', 'Chofer')->get();
-        $rutas = Ruta::all();
-        return view('itinerarioChofer.edit', compact('itinerarioChofer', 'choferes', 'rutas'));
+        $rutas = Ruta::where('estado', true)->get();
+
+        $itinerarioChofer->load('paradas');
+
+        return view('itinerarioChofer.edit', compact(
+            'itinerarioChofer',
+            'choferes',
+            'rutas'
+        ));
     }
 
     public function update(Request $request, ItinerarioChofer $itinerarioChofer)
     {
+
         $request->validate([
             'chofer_id' => 'required|exists:users,id',
-            'ruta_id'   => 'required|exists:rutas,id',
-            'fecha'     => 'required|date',
+            'ruta_id' => 'required|exists:rutas,id',
+            'fecha' => 'required|date',
         ]);
 
         $fecha = Carbon::parse($request->fecha)->format('Y-m-d H:i:s');
 
-        // Validación: evitar duplicado excepto el registro actual
-        $existe = ItinerarioChofer::where('chofer_id', $request->chofer_id)
-            ->where('ruta_id', $request->ruta_id)
-            ->where('fecha', $fecha)
-            ->where('id', '!=', $itinerarioChofer->id)
-            ->exists();
-
-        if ($existe) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['chofer_id' => 'Este chofer ya tiene asignada esta ruta en la misma fecha y hora.']);
-        }
-
         $itinerarioChofer->update([
-            'chofer_id' => $request->chofer_id,
-            'ruta_id'   => $request->ruta_id,
-            'fecha'     => $fecha,
+            'chofer_id'=>$request->chofer_id,
+            'ruta_id'=>$request->ruta_id,
+            'fecha'=>$fecha
         ]);
 
+// eliminar paradas anteriores
+        ParadaItinerario::where('itinerario_chofer_id',$itinerarioChofer->id)->delete();
+
+        if($request->has('paradas')){
+
+            foreach($request->paradas['lugar'] as $index=>$lugar){
+
+                if(!empty($lugar) && !empty($request->paradas['tiempo'][$index])){
+
+                    ParadaItinerario::create([
+                        'itinerario_chofer_id'=>$itinerarioChofer->id,
+                        'lugar_parada'=>$lugar,
+                        'tiempo_parada'=>$request->paradas['tiempo'][$index]
+                    ]);
+
+                }
+
+            }
+
+        }
+
         return redirect()->route('itinerarioChofer.index')
-            ->with('success', 'Itinerario actualizado correctamente.');
+            ->with('success','Itinerario actualizado correctamente');
+
     }
 
     public function destroy(ItinerarioChofer $itinerarioChofer)

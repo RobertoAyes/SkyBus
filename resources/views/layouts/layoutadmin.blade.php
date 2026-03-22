@@ -139,6 +139,14 @@
             <i class="fas fa-chevron-left"></i>
         </button>
 
+        <div class="brand-logo">
+            <h2>
+                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
+                     alt="Logo"
+                     style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
+            </h2>
+        </div>
+
         <div class="user-info">
             <h3>Panel </h3>
             <h3> Administrador</h3>
@@ -185,8 +193,14 @@
         </div>
         <!-- Documentacion de buses -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#documentacionBuses">
-                <span><i class="fas fa-file-contract"></i> Documentación de Buses</span>
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse" data-bs-target="#documentacionBuses">
+
+        <span class="d-flex align-items-center">
+            <i class="fas fa-file-contract"></i>
+            <span class="ms-1">Doc. de Buses</span> <!-- Margen mínimo a la izquierda del icono -->
+        </span>
+
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
 
@@ -196,24 +210,47 @@
                 </a>
             </div>
         </div>
-
-        <!-- Consultas -->
+        <!-- Soporte Tecnico -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#consultas">
-                <span><i class="fas fa-comments"></i> Consultas</span>
+                <span><i class="fas fa-comments"></i> Soporte Tecnico</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
+
             <div class="collapse btn-toggle-nav" id="consultas">
+
+                <!-- Consultas de Clientes -->
                 <a href="{{ route('consultas.listar') }}"
                    class="{{ request()->routeIs('consultas.listar') ? 'active' : '' }}">
-                    Ver Consultas
+                    Ver Consultas Clientes
+                </a>
+
+                <!-- Soporte de Chofer -->
+                <a href="{{ route('admin.soportes') }}"
+                   class="{{ request()->routeIs('admin.soportes') ? 'active' : '' }}">
+                    Ver Consultas Chofer
+                </a>
+            </div>
+        </div>
+
+        <!-- Incidentes -->
+        <div class="nav-section">
+            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#incidentes"
+                    aria-expanded="{{ request()->routeIs('empleados.incidentes.historial') ? 'true' : 'false' }}">
+                <span><i class="fas fa-exclamation-triangle"></i> Incidentes</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleados.incidentes.historial') ? 'show' : '' }}" id="incidentes">
+                <a href="{{ route('empleados.incidentes.historial') }}"
+                   class="{{ request()->routeIs('empleados.incidentes.historial') ? 'active' : '' }}">
+                    Ver Incidentes
                 </a>
             </div>
         </div>
         <!-- Rentas -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#Renta">
-                <span><i class="fas fa-map-marker-alt"></i> Registro Renta</span>
+                <span><i class="fas fa-receipt"></i> Registro Renta</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav" id="Renta">
@@ -231,7 +268,7 @@
         <!-- Terminales -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#terminales">
-                <span><i class="fas fa-map-marker-alt"></i> Terminales</span>
+                <span><i class="fas fa-bus"></i> Terminales</span>
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
             <div class="collapse btn-toggle-nav" id="terminales">
@@ -249,9 +286,15 @@
 
         <!-- Servicios Adicionales -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#extras"
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse" data-bs-target="#extras"
                     aria-expanded="{{ request()->routeIs('usuario.servicios_adicionales*') ? 'true' : 'false' }}">
-                <span><i class="fas fa-star"></i> S. Adicionales</span>
+
+        <span class="d-flex align-items-center">
+            <i class="fas fa-plus-circle"></i>
+            <span class="ms-1">S.Adicionales</span> <!-- ms-1 agrega un margen mínimo a la izquierda -->
+        </span>
+
                 <i class="fas fa-chevron-right chevron"></i>
             </button>
 
@@ -298,6 +341,25 @@
             <div class="collapse btn-toggle-nav {{ request()->routeIs('itinerarioChofer.*') ? 'show' : '' }}" id="itinerarioChofer">
                 <a href="{{ route('itinerarioChofer.index') }}" class="{{ request()->routeIs('itinerarioChofer.index') ? 'active fw-bold' : '' }}">
                     Listado de itinerarios
+                </a>
+            </div>
+        </div>
+
+        <!-- Informes de viaje -->
+        <div class="nav-section">
+            <button class="btn-toggle d-flex align-items-center justify-content-between"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#indicador_en_curso"
+                    aria-expanded="{{ request()->routeIs('indicador_en_curso.*') ? 'true' : 'false' }}">
+        <span class="d-flex align-items-center fw-bold fs-6">
+           <i class="fas fa-calendar-alt me-1 fa-sm"></i> Informes de viajes
+        </span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </button>
+
+            <div class="collapse btn-toggle-nav {{ request()->routeIs('indicador_en_curso.*') ? 'show' : '' }}" id="indicador_en_curso">
+                <a href="{{ route('indicador_en_curso.index') }}" class="{{ request()->routeIs('indicador_en_curso.index') ? 'active fw-bold' : '' }}">
+                    Informe de viajes en curso
                 </a>
             </div>
         </div>
@@ -361,6 +423,8 @@
             </div>
         </div>
 
+
+
         <!-- Cerrar sesión -->
         <div class="nav-section">
             <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#sesion">
@@ -384,35 +448,7 @@
     </nav>
 
     <div class="content-area">
-        <div class="d-flex justify-content-end align-items-center gap-2 mb-4 p-3 rounded shadow-sm"
-             style="background-color: #0d1f3f; border-left: 5px solid #0dcaf0;">
 
-            <a href="{{ route('interfaces.principal') }}"
-               class="btn btn-outline-light btn-sm px-3 rounded-pill shadow-sm">
-                <i class="fas fa-home me-1"></i> Inicio
-            </a>
-
-
-
-            @php
-                $adminNotiCount = \App\Models\Notificacion::where('usuario_id', auth()->id())
-                    ->where('leida', false)
-                    ->count();
-            @endphp
-
-            <a href="{{ route('admin.notificaciones') }}"
-               class="btn btn-outline-light btn-sm position-relative rounded-circle shadow-sm"
-               style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-bell"></i>
-
-                @if($adminNotiCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $adminNotiCount }}
-                        <span class="visually-hidden">notificaciones no leídas</span>
-                    </span>
-                @endif
-            </a>
-        </div>
 
         @yield('content')
     </div>

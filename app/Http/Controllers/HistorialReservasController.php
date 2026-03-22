@@ -18,8 +18,8 @@ class HistorialReservasController extends Controller
     {
         $usuario = Auth::user();
 
-        // Traer reservas del usuario con información del viaje
-        $reservas = Reserva::with('viaje')
+        // Traer reservas del usuario con información del viaje y asiento
+        $reservas = Reserva::with(['viaje.origen', 'viaje.destino', 'asiento'])
             ->where('user_id', $usuario->id)
             ->orderBy('fecha_reserva', 'desc')
             ->paginate(10);
@@ -27,4 +27,3 @@ class HistorialReservasController extends Controller
         return view('cliente.historial', compact('reservas'));
     }
 }
-
