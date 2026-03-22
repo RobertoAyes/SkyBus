@@ -142,6 +142,13 @@ class EmpleadoController extends Controller
         return back()->with('success', 'Empleado activado');
 
     }
+
+    public function perfil()
+    {
+        $user = auth()->user();
+        return view('empleados.perfil', compact('user'));
+    }
+
     public function update(Request $request, $id)
     {
         $empleado = Empleado::findOrFail($id);
@@ -174,5 +181,4 @@ class EmpleadoController extends Controller
         return redirect()->route('empleados.hu5')
             ->with('success', 'Empleado actualizado correctamente.');
     }
-
 }

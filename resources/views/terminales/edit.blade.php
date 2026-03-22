@@ -275,16 +275,18 @@
 
 
                         {{-- ⚙️ Botones de Acción --}}
-                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('terminales.index') }}'">
-                                <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+
+                            <button type="button" class="btn btn-secondary"
+                                    onclick="window.location.href='{{ route('terminales.index') }}'">
+                                Cancelar
                             </button>
 
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary submit-btn">
-                                    <i class="fas fa-sync-alt me-2"></i> Actualizar
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-primary submit-btn">
+                                Guardar
+                            </button>
+
+                        </div>
                         </div>
                     </form>
                 </div>
