@@ -39,9 +39,12 @@ class DocumentoBusController extends Controller
                     });
             });
         }
+        if ($request->filled('fecha_emision')) {
+            $query->whereDate('fecha_emision', $request->fecha_emision);
+        }
 
         $documentos = $query->orderBy('fecha_vencimiento', 'asc')
-            ->paginate(15)
+            ->paginate(5)
             ->appends($request->all());
 
         $estadisticas = [
@@ -426,7 +429,6 @@ class DocumentoBusController extends Controller
         };
     }
 
-// ── Scopes ──────────────────────────────────────────────────────────────────
 
     public function documentoVigentes($query)
     {
