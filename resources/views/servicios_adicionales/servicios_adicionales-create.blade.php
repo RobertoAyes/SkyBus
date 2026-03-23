@@ -21,7 +21,7 @@
 
                     {{-- NOMBRE --}}
                     <div class="mb-3">
-                        <label for="nombre" class="form-label"><i class="fas fa-tag me-1"></i>Nombre</label>
+                        <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" name="nombre" id="nombre" maxlength="25"
                                class="form-control" value="{{ old('nombre') }}" required>
                         @error('nombre')
@@ -31,7 +31,7 @@
 
                     {{-- IMAGEN --}}
                     <div class="mb-3">
-                        <label for="imagen" class="form-label"><i class="fas fa-image me-1"></i>Imagen</label>
+                        <label for="imagen" class="form-label">Imagen</label>
                         <input type="file" name="imagen" id="imagen" accept="image/*" class="form-control">
                         @error('imagen')
                         <small class="text-danger">{{ $message }}</small>
@@ -40,7 +40,7 @@
 
                     {{-- DESCRIPCIÓN --}}
                     <div class="mb-3">
-                        <label for="descripcion" class="form-label"><i class="fas fa-align-left me-1"></i>Descripción</label>
+                        <label for="descripcion" class="form-label">Descripción</label>
                         <textarea name="descripcion" id="descripcion" rows="3" maxlength="75"
                                   class="form-control" placeholder="Describa el servicio..." required>{{ old('descripcion') }}</textarea>
                         @error('descripcion')
@@ -57,10 +57,10 @@
                     {{-- BOTONES --}}
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('servicios_adicionales.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                            Cancelar
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i>Guardar Servicio
+                            Guardar Servicio
                         </button>
                     </div>
                 </form>

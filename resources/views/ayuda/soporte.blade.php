@@ -1,45 +1,47 @@
 @extends('layouts.layoutuser')
 
+@section('title', 'Ayuda y Soporte')
+
 @section('contenido')
-    <div class="container mt-3">
+    <div class="container mt-4">
         <div class="card shadow-sm border-0">
 
             {{-- HEADER --}}
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0" style="color:#1e63b8; font-weight:600;">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
                     <i class="fas fa-headset me-2"></i> Ayuda y Soporte
-                </h5>
+                </h2>
             </div>
 
-            <div class="card-body py-3">
+            <div class="card-body">
 
                 {{-- ALERTAS --}}
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
                         <i class="fas fa-circle-check me-2"></i>
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong class="me-2">¡Éxito!</strong> {{ session('success') }}
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
                         <i class="fas fa-circle-exclamation me-2"></i>
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong class="me-2">Error:</strong> {{ session('error') }}
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
                 @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>¡Errores en el formulario!</strong>
+                        <strong class="me-2">¡Errores en el formulario!</strong>
                         <ul class="mb-0 mt-1">
                             @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
@@ -47,9 +49,9 @@
                 <form id="soporteForm" method="POST" action="{{ route('soporte.enviar') }}" autocomplete="off">
                     @csrf
 
-                    <div class="row">
-                        <div class="mb-3 col-md-6">
-                            <label class="form-label fw-semibold">Nombre</label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Nombre</label>
                             <input type="text"
                                    class="form-control @error('nombre') is-invalid @enderror"
                                    name="nombre"
@@ -63,8 +65,8 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3 col-md-6">
-                            <label class="form-label fw-semibold">Correo</label>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Correo</label>
                             <input type="email"
                                    class="form-control @error('correo') is-invalid @enderror"
                                    name="correo"
@@ -79,8 +81,8 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Asunto</label>
+                    <div class="mb-3 mt-3">
+                        <label class="form-label fw-bold">Asunto</label>
                         <input type="text"
                                class="form-control @error('asunto') is-invalid @enderror"
                                name="asunto"
@@ -94,20 +96,19 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Mensaje</label>
+                        <label class="form-label fw-bold">Mensaje</label>
                         <textarea class="form-control @error('mensaje') is-invalid @enderror"
                                   id="mensaje"
                                   name="mensaje"
-                                  rows="4"
+                                  rows="5"
                                   style="resize:none;"
                                   maxlength="1000"
-                                  placeholder="Ej: Tengo un inconveniente con mi reserva #12345, no puedo ver los detalles..."
+                                  placeholder="Ej: Tengo un inconveniente con mi reserva #12345..."
                                   autocomplete="off"
                                   required></textarea>
                         @error('mensaje')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
-
                         <div class="d-flex justify-content-between mt-2">
                             <small class="text-muted">Máx 1000 caracteres</small>
                             <small class="text-muted">
@@ -116,14 +117,12 @@
                         </div>
                     </div>
 
-                    <div class="d-flex gap-2 mt-3">
-                        <button type="submit" class="btn btn-primary flex-fill">
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-paper-plane me-1"></i> Enviar
                         </button>
-                        <button type="reset" class="btn btn-outline-secondary flex-fill">
-                            <i class="fas fa-times me-1"></i> Cancelar
-                        </button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -135,24 +134,36 @@
         </div>
     </div>
 
+    {{-- SCRIPT PARA CONTADOR DE CARACTERES --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const soporteForm = document.getElementById('soporteForm');
             const charCounter = document.getElementById('char-counter');
-
-            if (soporteForm) soporteForm.reset();
-
-            const inputs = document.querySelectorAll('input[type="text"], input[type="email"], textarea');
-            inputs.forEach(input => input.value = '');
-
-            if (charCounter) charCounter.textContent = '0';
-
             const mensajeTextarea = document.getElementById('mensaje');
-            if (mensajeTextarea && charCounter) {
-                mensajeTextarea.addEventListener('input', function() {
+            if(mensajeTextarea && charCounter){
+                mensajeTextarea.addEventListener('input', function(){
                     charCounter.textContent = this.value.length;
                 });
             }
         });
     </script>
+
+    {{-- ESTILOS SIMILARES A SERVICIOS ADICIONALES --}}
+    <style>
+        .card-header h2, .card-header h5 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e63b8;
+        }
+
+        .form-label.fw-bold { font-weight: 600; }
+        .btn-primary { background-color: #1e63b8; border-color: #1e63b8; }
+        .btn-primary:hover { background-color: #164b8f; border-color: #164b8f; }
+        .btn-outline-secondary { border-color: #1e63b8; color: #1e63b8; }
+        .btn-outline-secondary:hover { background-color: #1e63b8; color: #fff; }
+
+        .table {
+            table-layout: fixed;
+            width: 100%;
+        }
+    </style>
 @endsection

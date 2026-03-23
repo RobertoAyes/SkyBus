@@ -108,7 +108,7 @@
                     <table class="table table-hover table-bordered align-middle">
                         <thead class="table-primary">
                         <tr>
-                            <th>#</th>
+                            <th style="width:60px;" class="text-center">#</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
                             <th class="text-center">Imagen</th>
@@ -119,7 +119,9 @@
                         <tbody>
                         @forelse($extras as $key => $extra)
                             <tr>
-                                <td>{{ ($extras->currentPage() - 1) * $extras->perPage() + $key + 1 }}</td>
+                                <td class="text-center">
+                                    {{ ($extras->currentPage() - 1) * $extras->perPage() + $key + 1 }}
+                                </td>
                                 <td>{{ $extra->nombre }}</td>
                                 <td>{{ $extra->descripcion }}</td>
                                 <td class="text-center">
