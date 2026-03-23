@@ -281,13 +281,20 @@
             </div>
         </div>
 
-        <!-- Servicios Adicionales -->
-        <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}"
-               href="{{ route('servicios_adicionales.index') }}">
-                <i class="fas fa-star me-1"></i> Servicios Adicionales
-            </a>
-        </li>
+        <!-- servicios adicionales -->
+        <div class="nav-section">
+            <button class="btn-toggle d-flex align-items-center w-100" data-bs-toggle="collapse" data-bs-target="#servicios">
+                <i class="fas fa-star me-2"></i>
+                <span>S. Adicionales</span>
+                <i class="fas fa-chevron-right ms-auto chevron"></i>
+            </button>
+            <div class="collapse btn-toggle-nav" id="servicios">
+                <a href="{{ route('servicios_adicionales.index') }}"
+                   class="{{ request()->routeIs('servicios_adicionales.*') ? 'active' : '' }}">
+                    Ver Servicios
+                </a>
+            </div>
+        </div>
 
         <!-- Rutas -->
         <div class="nav-section">

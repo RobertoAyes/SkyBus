@@ -11,9 +11,9 @@
                 <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
                     <i class="fas fa-concierge-bell me-2"></i> Servicios Adicionales
                 </h2>
-                <a href="{{ route('servicios_adicionales.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i> Agregar
-                </a>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarServicio">
+                    <i class="fas fa-plus me-1"></i> Agregar Servicio
+                </button>
             </div>
 
             <div class="card-body">
@@ -253,6 +253,96 @@
             });
         });
     </script>
+    {{-- MODAL AGREGAR SERVICIO ADICIONAL --}}
+    <div class="modal fade" id="modalAgregarServicio" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-3" style="overflow: hidden;">
+                <form action="{{ route('servicios_adicionales.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
+                    {{-- HEADER DEL MODAL --}}
+                    <div class="modal-header text-white border-0" style="background: #1e63b8; padding: 1.25rem 1.5rem;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width:34px; height:34px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-concierge-bell" style="font-size:13px;"></i>
+                            </div>
+                            <span style="font-size:15px; font-weight:500;">Agregar Servicio Adicional</span>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
 
+                    {{-- BODY DEL MODAL --}}
+                    <div class="modal-body" style="padding: 1.5rem;">
+
+                        {{-- NOMBRE --}}
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" name="nombre" id="nombre" maxlength="25"
+                                   class="form-control" value="{{ old('nombre') }}" required>
+                            @error('nombre')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- IMAGEN --}}
+                        <div class="mb-3">
+                            <label for="imagen" class="form-label">Imagen</label>
+                            <input type="file" name="imagen" id="imagen" accept="image/*" class="form-control">
+                            @error('imagen')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- DESCRIPCIÓN --}}
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea name="descripcion" id="descripcion" rows="3" maxlength="75"
+                                      class="form-control" placeholder="Describa el servicio..." required>{{ old('descripcion') }}</textarea>
+                            @error('descripcion')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- VISTA PREVIA --}}
+                        <div class="mb-3 text-center">
+                            <img id="vista_previa" src="#" alt="Vista previa"
+                                 class="rounded" style="display:none; max-height:200px; object-fit:contain; border:1px solid #ddd; padding:5px;">
+                        </div>
+
+                    </div>
+
+                    {{-- FOOTER DEL MODAL --}}
+                    <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color: #e5e7eb !important; padding: 1rem 1.5rem;">
+                        <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal" style="min-width: 100px; justify-content: center;">
+                            <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center gap-2" style="min-width: 100px; justify-content: center;">
+                            <i class="fas fa-save" style="font-size:12px;"></i> Guardar
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- SCRIPT VISTA PREVIA IMAGEN --}}
+    <script>
+        document.getElementById('imagen').addEventListener('change', function(evento) {
+            const imagenVista = document.getElementById('vista_previa');
+            const archivoSeleccionado = evento.target.files[0];
+
+            if (archivoSeleccionado) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    imagenVista.src = e.target.result;
+                    imagenVista.style.display = 'block';
+                }
+                lector.readAsDataURL(archivoSeleccionado);
+            } else {
+                imagenVista.style.display = 'none';
+            }
+        });
+    </script>
 @endsection
