@@ -183,9 +183,6 @@
                 <a href="{{ route('empleados.hu5') }}" class="{{ request()->routeIs('empleados.hu5') ? 'active' : '' }}">
                     Ver empleados
                 </a>
-                <a href="{{ route('empleados.create') }}" class="{{ request()->routeIs('empleados.create') ? 'active' : '' }}">
-                    Registrar empleado
-                </a>
                 <a href="{{ route('abordajes.historial') }}" class="{{ request()->routeIs('abordajes.historial') ? 'active' : '' }}">
                     Check-in
                 </a>
@@ -206,7 +203,7 @@
 
             <div class="collapse btn-toggle-nav" id="documentacionBuses">
                 <a href="{{ route('documentos-buses.index') }}" class="{{ request()->routeIs('documentos-buses.index') ? 'active' : '' }}">
-                    Gestionar Documentacion
+                    Ver Documentos de Buses
                 </a>
             </div>
         </div>
@@ -434,7 +431,7 @@
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 <script>
@@ -482,6 +479,7 @@
 </script>
 //sidebar
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.querySelector('.sidebar');

@@ -43,8 +43,14 @@ class DocumentoBusController extends Controller
             $query->whereDate('fecha_emision', $request->fecha_emision);
         }
 
+        // Capturamos el valor del select (por defecto 10)
+        $perPage = $request->get('per_page', 10);
+
+        // Valor por defecto 5 registros
+        $perPage = $request->get('per_page', 5);
+
         $documentos = $query->orderBy('fecha_vencimiento', 'asc')
-            ->paginate(5)
+            ->paginate($perPage)
             ->appends($request->all());
 
         $estadisticas = [
