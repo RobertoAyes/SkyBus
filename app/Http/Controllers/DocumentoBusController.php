@@ -17,7 +17,6 @@ class DocumentoBusController extends Controller
     {
         $query = DocumentoBus::with(['bus', 'registradoPor']);
 
-        // Filtros
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
@@ -32,25 +31,27 @@ class DocumentoBusController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('numero_documento', 'like', "%{$search}%")
-                    ->orWhereHas('bus', function($busQuery) use ($search) {
+                    ->orWhereHas('bus', function ($busQuery) use ($search) {
                         $busQuery->where('placa', 'like', "%{$search}%")
                             ->orWhere('numero_bus', 'like', "%{$search}%");
                     });
             });
         }
+        if ($request->filled('fecha_emision')) {
+            $query->whereDate('fecha_emision', $request->fecha_emision);
+        }
 
         $documentos = $query->orderBy('fecha_vencimiento', 'asc')
-            ->paginate(15)
+            ->paginate(5)
             ->appends($request->all());
 
-        // Estadísticas del dashboard
         $estadisticas = [
-            'total' => DocumentoBus::count(),
-            'vigentes' => DocumentoBus::vigentes()->count(),
+            'total'      => DocumentoBus::count(),
+            'vigentes'   => DocumentoBus::vigentes()->count(),
             'por_vencer' => DocumentoBus::porVencer()->count(),
-            'vencidos' => DocumentoBus::vencidos()->count(),
+            'vencidos'   => DocumentoBus::vencidos()->count(),
         ];
 
         $buses = Bus::all();
@@ -59,16 +60,16 @@ class DocumentoBusController extends Controller
     }
 
     /**
-     * Muestra el formulario para crear un nuevo documento
+     * Muestra el formulario para crear un nuevo documento (página completa — ya no se usa)
      */
     public function create()
     {
         $buses = Bus::all();
         $tiposDocumento = [
             'permiso_operacion' => 'Permiso de Operación',
-            'revision_tecnica' => 'Revisión Técnica',
-            'seguro_vehicular' => 'Seguro Vehicular',
-            'matricula' => 'Matrícula',
+            'revision_tecnica'  => 'Revisión Técnica',
+            'seguro_vehicular'  => 'Seguro Vehicular',
+            'matricula'         => 'Matrícula',
         ];
 
         return view('documentos-buses.create', compact('buses', 'tiposDocumento'));
@@ -80,33 +81,32 @@ class DocumentoBusController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'bus_id' => 'required|exists:buses,id',
-            'tipo_documento' => 'required|in:permiso_operacion,revision_tecnica,seguro_vehicular,matricula',
+            'bus_id'           => 'required|exists:buses,id',
+            'tipo_documento'   => 'required|in:permiso_operacion,revision_tecnica,seguro_vehicular,matricula',
             'numero_documento' => 'required|string|max:100',
-            'fecha_emision' => 'required|date|before_or_equal:today',
-            'fecha_vencimiento' => 'required|date|after:fecha_emision',
-            'archivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB máximo
-            'observaciones' => 'nullable|string|max:500',
+            'fecha_emision'    => 'required|date|before_or_equal:today',
+            'fecha_vencimiento'=> 'required|date|after:fecha_emision',
+            'archivo'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'observaciones'    => 'nullable|string|max:500',
         ], [
-            'bus_id.required' => 'Debe seleccionar un bus',
-            'bus_id.exists' => 'El bus seleccionado no existe',
-            'tipo_documento.required' => 'Debe seleccionar el tipo de documento',
-            'numero_documento.required' => 'El número de documento es obligatorio',
-            'fecha_emision.required' => 'La fecha de emisión es obligatoria',
-            'fecha_emision.before_or_equal' => 'La fecha de emisión no puede ser futura',
-            'fecha_vencimiento.required' => 'La fecha de vencimiento es obligatoria',
-            'fecha_vencimiento.after' => 'La fecha de vencimiento debe ser posterior a la fecha de emisión',
-            'archivo.mimes' => 'El archivo debe ser PDF, JPG, JPEG o PNG',
-            'archivo.max' => 'El archivo no debe superar 5MB',
+            'bus_id.required'              => 'Debe seleccionar un bus',
+            'bus_id.exists'                => 'El bus seleccionado no existe',
+            'tipo_documento.required'      => 'Debe seleccionar el tipo de documento',
+            'numero_documento.required'    => 'El número de documento es obligatorio',
+            'fecha_emision.required'       => 'La fecha de emisión es obligatoria',
+            'fecha_emision.before_or_equal'=> 'La fecha de emisión no puede ser futura',
+            'fecha_vencimiento.required'   => 'La fecha de vencimiento es obligatoria',
+            'fecha_vencimiento.after'      => 'La fecha de vencimiento debe ser posterior a la fecha de emisión',
+            'archivo.mimes'                => 'El archivo debe ser PDF, JPG, JPEG o PNG',
+            'archivo.max'                  => 'El archivo no debe superar 5MB',
         ]);
 
         $documento = new DocumentoBus($request->except('archivo'));
 
-        // Subir archivo si existe
         if ($request->hasFile('archivo')) {
-            $archivo = $request->file('archivo');
+            $archivo      = $request->file('archivo');
             $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
-            $ruta = $archivo->storeAs('documentos-buses', $nombreArchivo, 'public');
+            $ruta          = $archivo->storeAs('documentos-buses', $nombreArchivo, 'public');
             $documento->archivo_url = $ruta;
         }
 
@@ -117,34 +117,69 @@ class DocumentoBusController extends Controller
     }
 
     /**
-     * Muestra los detalles de un documento específico
+     * Muestra los detalles de un documento (página completa — se mantiene por compatibilidad)
      */
     public function show($id)
     {
         $documento = DocumentoBus::with([
             'bus',
             'registradoPor',
-            'historial.usuario'
+            'historial.usuario',
         ])->findOrFail($id);
 
         return view('documentos-buses.show', compact('documento'));
     }
 
     /**
-     * Muestra el formulario para editar un documento
+     * Retorna el HTML parcial para el MODAL de detalles (sin layout).
+     * Ruta sugerida: GET /documentos-buses/{id}/detalle-modal
+     */
+    public function showModal($id)
+    {
+        $documento = DocumentoBus::with([
+            'bus',
+            'registradoPor',
+            'historial.usuario',
+        ])->findOrFail($id);
+
+        // Retorna la vista parcial sin el layout de administración
+        return view('documentos-buses.show-modal', compact('documento'));
+    }
+
+    /**
+     * Muestra el formulario de edición (página completa — se mantiene por compatibilidad)
      */
     public function edit($id)
     {
         $documento = DocumentoBus::findOrFail($id);
-        $buses = Bus::all();
+        $buses     = Bus::all();
         $tiposDocumento = [
             'permiso_operacion' => 'Permiso de Operación',
-            'revision_tecnica' => 'Revisión Técnica',
-            'seguro_vehicular' => 'Seguro Vehicular',
-            'matricula' => 'Matrícula',
+            'revision_tecnica'  => 'Revisión Técnica',
+            'seguro_vehicular'  => 'Seguro Vehicular',
+            'matricula'         => 'Matrícula',
         ];
 
         return view('documentos-buses.Editar', compact('documento', 'buses', 'tiposDocumento'));
+    }
+
+    /**
+     * Retorna el HTML parcial para el MODAL de edición (sin layout).
+     * Ruta sugerida: GET /documentos-buses/{id}/editar-modal
+     */
+    public function editModal($id)
+    {
+        $documento = DocumentoBus::with(['bus', 'historial.usuario'])->findOrFail($id);
+        $buses     = Bus::all();
+        $tiposDocumento = [
+            'permiso_operacion' => 'Permiso de Operación',
+            'revision_tecnica'  => 'Revisión Técnica',
+            'seguro_vehicular'  => 'Seguro Vehicular',
+            'matricula'         => 'Matrícula',
+        ];
+
+        // Retorna la vista parcial sin el layout de administración
+        return view('documentos-buses.edit-modal', compact('documento', 'buses', 'tiposDocumento'));
     }
 
     /**
@@ -155,27 +190,25 @@ class DocumentoBusController extends Controller
         $documento = DocumentoBus::findOrFail($id);
 
         $request->validate([
-            'bus_id' => 'required|exists:buses,id',
-            'tipo_documento' => 'required|in:permiso_operacion,revision_tecnica,seguro_vehicular,matricula',
+            'bus_id'           => 'required|exists:buses,id',
+            'tipo_documento'   => 'required|in:permiso_operacion,revision_tecnica,seguro_vehicular,matricula',
             'numero_documento' => 'required|string|max:100',
-            'fecha_emision' => 'required|date|before_or_equal:today',
-            'fecha_vencimiento' => 'required|date|after:fecha_emision',
-            'archivo' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'observaciones' => 'nullable|string|max:500',
+            'fecha_emision'    => 'required|date|before_or_equal:today',
+            'fecha_vencimiento'=> 'required|date|after:fecha_emision',
+            'archivo'          => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'observaciones'    => 'nullable|string|max:500',
         ]);
 
         $documento->fill($request->except('archivo'));
 
-        // Actualizar archivo si se subió uno nuevo
         if ($request->hasFile('archivo')) {
-            // Eliminar archivo anterior si existe
             if ($documento->archivo_url && Storage::disk('public')->exists($documento->archivo_url)) {
                 Storage::disk('public')->delete($documento->archivo_url);
             }
 
-            $archivo = $request->file('archivo');
+            $archivo       = $request->file('archivo');
             $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
-            $ruta = $archivo->storeAs('documentos-buses', $nombreArchivo, 'public');
+            $ruta          = $archivo->storeAs('documentos-buses', $nombreArchivo, 'public');
             $documento->archivo_url = $ruta;
         }
 
@@ -193,7 +226,6 @@ class DocumentoBusController extends Controller
     {
         $documento = DocumentoBus::findOrFail($id);
 
-        // Eliminar archivo asociado
         if ($documento->archivo_url && Storage::disk('public')->exists($documento->archivo_url)) {
             Storage::disk('public')->delete($documento->archivo_url);
         }
@@ -224,38 +256,32 @@ class DocumentoBusController extends Controller
     public function dashboard()
     {
         $estadisticas = [
-            'total' => DocumentoBus::count(),
-            'vigentes' => DocumentoBus::vigentes()->count(),
+            'total'      => DocumentoBus::count(),
+            'vigentes'   => DocumentoBus::vigentes()->count(),
             'por_vencer' => DocumentoBus::porVencer()->count(),
-            'vencidos' => DocumentoBus::vencidos()->count(),
+            'vencidos'   => DocumentoBus::vencidos()->count(),
         ];
 
-        // Documentos próximos a vencer (30 días)
         $proximosVencer = DocumentoBus::with(['bus'])
             ->porVencer()
             ->orderBy('fecha_vencimiento', 'asc')
             ->take(10)
             ->get();
 
-        // Documentos vencidos
         $vencidos = DocumentoBus::with(['bus'])
             ->vencidos()
             ->orderBy('fecha_vencimiento', 'desc')
             ->take(10)
             ->get();
 
-        // Buses con documentos pendientes
-        $busesAlerta = Bus::whereHas('documentos', function($query) {
+        $busesAlerta = Bus::whereHas('documentos', function ($query) {
             $query->where('estado', '!=', 'vigente');
-        })->with(['documentos' => function($query) {
+        })->with(['documentos' => function ($query) {
             $query->where('estado', '!=', 'vigente');
         }])->get();
 
         return view('documentos-buses.dashboard', compact(
-            'estadisticas',
-            'proximosVencer',
-            'vencidos',
-            'busesAlerta'
+            'estadisticas', 'proximosVencer', 'vencidos', 'busesAlerta'
         ));
     }
 
@@ -264,13 +290,12 @@ class DocumentoBusController extends Controller
      */
     public function actualizarEstados()
     {
-        $documentos = DocumentoBus::all();
+        $documentos  = DocumentoBus::all();
         $actualizados = 0;
 
         foreach ($documentos as $documento) {
             $estadoAnterior = $documento->estado;
             $documento->actualizarEstado();
-
             if ($estadoAnterior !== $documento->estado) {
                 $actualizados++;
             }
@@ -303,10 +328,10 @@ class DocumentoBusController extends Controller
             ->get();
 
         $estadisticas = [
-            'total' => DocumentoBus::count(),
-            'vigentes' => DocumentoBus::vigentes()->count(),
+            'total'      => DocumentoBus::count(),
+            'vigentes'   => DocumentoBus::vigentes()->count(),
             'por_vencer' => DocumentoBus::porVencer()->count(),
-            'vencidos' => DocumentoBus::vencidos()->count(),
+            'vencidos'   => DocumentoBus::vencidos()->count(),
         ];
 
         $pdf = \PDF::loadView('documentos-buses.pdf', compact('documentos', 'estadisticas'))
@@ -315,34 +340,108 @@ class DocumentoBusController extends Controller
         return $pdf->download('Reporte_Documentos_Buses_' . now()->format('Y-m-d') . '.pdf');
     }
     /**
-     * Mostrar vista de detalles para modal
+     * Verifica si el documento está vencido
      */
-    public function modalShow($id)
+    public function estaVencido(): bool
     {
-        $documento = DocumentoBus::with(['bus', 'registradoPor', 'historial.usuario'])
-            ->findOrFail($id);
-
-        // Retornar la misma vista show pero sin el layout
-        return view('documentos-buses.show-content', compact('documento'));
+        return $this->fecha_vencimiento->isPast();
     }
 
     /**
-     * Mostrar formulario de edición para modal
+     * Verifica si el documento está próximo a vencer (menos de 30 días)
      */
-    public function modalEdit($id)
+    public function estaPorVencer(): bool
     {
-        $documento = DocumentoBus::with(['bus', 'historial.usuario'])->findOrFail($id);
-        $buses = Bus::all();
-        $tiposDocumento = [
-            'permiso_operacion' => 'Permiso de Operación',
-            'revision_tecnica' => 'Revisión Técnica',
-            'seguro_vehicular' => 'Seguro Vehicular',
-            'matricula' => 'Matrícula',
-        ];
+        if ($this->estaVencido()) return false;
+        return $this->fecha_vencimiento->diffInDays(now()) <= 30;
+    }
 
-        // Retornar la misma vista edit pero sin el layout
-        return view('documentos-buses.edit-content', compact('documento', 'buses', 'tiposDocumento'));
+    /**
+     * Días hasta el vencimiento (negativo si ya venció)
+     */
+    public function getDiasHastaVencimientoAttribute(): int
+    {
+        return (int) now()->diffInDays($this->fecha_vencimiento, false);
+    }
+
+    /**
+     * Nombre legible del tipo de documento
+     */
+    public function getTipoDocumentoNombreAttribute(): string
+    {
+        $tipos = [
+            'permiso_operacion' => 'Permiso de Operación',
+            'revision_tecnica'  => 'Revisión Técnica',
+            'seguro_vehicular'  => 'Seguro Vehicular',
+            'matricula'         => 'Matrícula',
+        ];
+        return $tipos[$this->tipo_documento] ?? $this->tipo_documento;
+    }
+
+    /**
+     * Badge HTML del estado
+     */
+    public function getEstadoBadgeAttribute(): string
+    {
+        return match($this->estado) {
+            'vigente'    => '<span class="badge bg-success">Vigente</span>',
+            'por_vencer' => '<span class="badge bg-warning text-dark">Por Vencer</span>',
+            'vencido'    => '<span class="badge bg-danger">Vencido</span>',
+            default      => '<span class="badge bg-secondary">Desconocido</span>',
+        };
+    }
+
+    /**
+     * Actualiza el estado según la fecha de vencimiento
+     */
+    public function actualizarEstado(): void
+    {
+        if ($this->estaVencido()) {
+            $this->estado = 'vencido';
+        } elseif ($this->estaPorVencer()) {
+            $this->estado = 'por_vencer';
+        } else {
+            $this->estado = 'vigente';
+        }
+    }
+
+    /**
+     * Color Bootstrap según estado (para alertas)
+     */
+    public function getColorEstado(): string
+    {
+        return match($this->estado) {
+            'vencido'    => 'danger',
+            'por_vencer' => 'warning',
+            default      => 'success',
+        };
+    }
+
+    /**
+     * Ícono FontAwesome según estado
+     */
+    public function getIconoEstado(): string
+    {
+        return match($this->estado) {
+            'vencido'    => 'fa-times-circle',
+            'por_vencer' => 'fa-exclamation-triangle',
+            default      => 'fa-check-circle',
+        };
+    }
+
+
+    public function documentoVigentes($query)
+    {
+        return $query->where('estado', 'vigente');
+    }
+
+    public function documentoPorVencer($query)
+    {
+        return $query->where('estado', 'por_vencer');
+    }
+
+    public function scopeVencidos($query)
+    {
+        return $query->where('estado', 'vencido');
     }
 }
-
-

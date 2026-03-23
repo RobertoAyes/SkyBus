@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItinerarioChofer;
+use App\Models\Ruta;
 use Illuminate\Http\Request;
 
 class IndicadorEnCursoController extends Controller
@@ -14,42 +15,63 @@ class IndicadorEnCursoController extends Controller
 
     public function index(Request $request)
     {
-        // Opciones permitidas de registros por página
-        $perPageOptions = [5, 10, 25, 50];
-        $perPage = $request->get('per_page', 5);
-        if (!in_array($perPage, $perPageOptions)) {
-            $perPage = 5;
-        }
-
-        // FECHA: usar la enviada en la request si existe, si no usar hoy
-        $fecha = $request->filled('fecha') ? $request->get('fecha') : date('Y-m-d');
+        $ahora = now();
 
         $query = ItinerarioChofer::with(['chofer', 'ruta'])
-            ->whereDate('fecha', $fecha); // siempre limitar a la fecha seleccionada o hoy
+            ->whereDate('fecha', today());
 
-        // BUSQUEDA GENERAL (chofer o ruta)
-        if ($buscar = $request->get('buscar')) {
-            $query->where(function ($q) use ($buscar) {
-                $q->whereHas('chofer', function ($q2) use ($buscar) {
-                    $q2->where('name', 'like', "%{$buscar}%");
-                })
-                    ->orWhereHas('ruta', function ($q3) use ($buscar) {
-                        $q3->where('origen', 'like', "%{$buscar}%")
-                            ->orWhere('destino', 'like', "%{$buscar}%");
-                    });
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->whereHas('chofer', function ($q) use ($buscar) {
+                $q->where('name', 'like', "%{$buscar}%");
             });
         }
 
-        // FILTRO POR ESTADO (Pendiente, En ruta, Atrasado, Finalizado)
-        if ($estado = $request->get('estado')) {
-            $query->where('estado_viaje', $estado);
+
+        if ($request->filled('ruta_id')) {
+            $query->where('ruta_id', $request->ruta_id);
         }
 
-        // Ordenar por hora estimada
-        $viajes = $query->orderBy('fecha', 'asc')
-            ->paginate($perPage)
-            ->appends($request->except('page')); // mantener filtros en paginación
 
-        return view('indicadores.indicador_curso', compact('viajes', 'perPage', 'fecha'));
+        if ($request->filled('hora')) {
+            $query->whereTime('fecha', $request->hora);
+        }
+
+
+        if ($request->filled('estado')) {
+            switch ($request->estado) {
+
+                case 'en_curso':
+
+                    $query->whereNotNull('hora_salida')
+                        ->whereNull('hora_llegada');
+                    break;
+
+                case 'completado':
+
+                    $query->whereNotNull('hora_salida')
+                        ->whereNotNull('hora_llegada');
+                    break;
+
+                case 'atrasado':
+
+                    $query->whereNull('hora_salida')
+                        ->where('fecha', '<', $ahora);
+                    break;
+
+                case 'pendiente':
+
+                    $query->whereNull('hora_salida')
+                        ->where('fecha', '>=', $ahora);
+                    break;
+            }
+        }
+
+        $viajes = $query->orderBy('fecha', 'asc')->paginate(5)->withQueryString();
+
+        $rutas = Ruta::orderBy('origen')->get();
+
+        return view('indicadores.indicador_curso', compact('viajes', 'rutas'));
     }
 }
