@@ -133,14 +133,11 @@
                 </li>
 
                 <!-- Servicios Adicionales -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('servicios_reserva.*') ? 'active' : '' }}"
-                       href="#" role="button" data-bs-toggle="dropdown">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('servicios_reserva.*') ? 'active' : '' }}"
+                       href="{{ route('servicios_reserva.index') }}">
                         <i class="fas fa-star me-1"></i> Servicios Adicionales
                     </a>
-                    <ul class="dropdown-menu">
-
-                    </ul>
                 </li>
 
                 <!-- Soporte -->

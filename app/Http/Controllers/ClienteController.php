@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Ruta;
+use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
