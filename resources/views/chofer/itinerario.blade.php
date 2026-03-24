@@ -176,7 +176,7 @@
                         data-upcoming="{{ $itinerario->fecha && \Carbon\Carbon::parse($itinerario->fecha)->isFuture() ? '1' : '0' }}"
                     >
                         <td>
-                            <div class="ch-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
+                            <div class="ch-num ch-index">00</div>
                         </td>
                         <td>
                         <span class="ch-route">
@@ -259,7 +259,7 @@
             var pto      = document.getElementById('ch-pto');
             var ptotal   = document.getElementById('ch-ptotal');
             var plinks   = document.getElementById('ch-plinks');
-            var badge    = document.getElementById('ch-counter');
+
 
             function getRows() {
                 return Array.from(tbody.querySelectorAll('tr[data-search]'));
@@ -283,7 +283,7 @@
                 all.forEach(function(r) { r.style.display = 'none'; });
                 noRes.style.display = visibleRows.length === 0 ? '' : 'none';
                 fCount.textContent = (q || dt || hoy) ? visibleRows.length + ' resultado(s)' : '';
-                badge.textContent  = visibleRows.length;
+
                 currentPage = 1;
                 renderPage();
             }
@@ -297,6 +297,17 @@
                 visibleRows.forEach(function(r, i) {
                     r.style.display = (i >= start && i < end) ? '' : 'none';
                 });
+
+
+                visibleRows.forEach(function(r, i) {
+                    if (i >= start && i < end) {
+                        var num = r.querySelector('.ch-index');
+                        if (num) {
+                            num.textContent = String(i + 1).padStart(2, '0');
+                        }
+                    }
+                });
+
                 pfrom.textContent  = total ? start + 1 : 0;
                 pto.textContent    = end;
                 ptotal.textContent = total;
