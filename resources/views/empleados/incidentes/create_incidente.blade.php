@@ -42,13 +42,33 @@
         .frm-btn-save { font-family: 'DM Sans', sans-serif; font-size: .83rem; font-weight: 600; color: #fff; background: #0284c7; border: none; border-radius: 8px; padding: .55rem 1.4rem; cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; transition: all .18s; box-shadow: 0 2px 8px rgba(2,132,199,.25); }
         .frm-btn-save:hover { background: #0369a1; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(2,132,199,.35); }
         .frm-btn-save i { font-size: .75rem; }
+        .greeting-banner {
+            background: linear-gradient(135deg,#3a9fd6 0%,#5bb8e8 100%);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.8rem;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 28px rgba(58,159,214,0.25);
+        }
+        .greeting-title { font-weight: 800; font-size: 1.5rem; }
+        .greeting-sub   { font-size: 0.9rem; opacity: 0.85; }
+        .greeting-icon-wrap { font-size: 1.6rem; }
     </style>
 
     <div class="frm-wrap">
         <div class="frm-inner">
 
-            <div class="frm-topbar">
-                <h1 class="frm-title">Registrar Incidente</h1>
+            <div class="greeting-banner">
+                <div class="greeting-text">
+                    <div class="greeting-title">Registrar Incidente</div>
+                    <div class="greeting-sub">Por favor de ser detallado al momento de llenar el formulario.</div>
+                </div>
+                <div class="greeting-icon-wrap">
+                    <i class="fas fa-bus"></i>
+                </div>
             </div>
 
             @if(session('success'))

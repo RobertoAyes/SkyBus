@@ -1,127 +1,199 @@
 @extends('layouts.layoutchofer')
 @section('contenido')
 
+    <style>
+        html, body {
+            height: auto !important;
+            overflow: visible !important;
+            background: #f3f6fb;
+        }
 
+        .container-profile {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 15px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        /* CARD IZQUIERDA: Foto, perfil, correo */
+        .card-left {
+            flex: 0 0 260px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
 
-    <div class="container-fluid px-4">
-        <!-- Breadcrumb -->
-        <!-- Barra superior -->
-        <div class="d-flex justify-content-end align-items-center gap-2 mb-4 p-3 rounded shadow-sm"
-             style="background-color: #0d1f3f; border-left: 5px solid #0dcaf0;">
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+        }
 
-            <a href="{{ route('interfaces.principal') }}"
-               class="btn btn-outline-light btn-sm px-3 rounded-pill shadow-sm">
-                <i class="fas fa-home me-1"></i> Inicio
-            </a>
+        .avatar-lg {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #dfe6f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            font-weight: bold;
+            margin: auto 0 10px 0;
+            object-fit: cover;
+        }
 
-            @php
-                $adminNotiCount = \App\Models\Notificacion::where('usuario_id', auth()->id())
-                    ->where('leida', false)
-                    ->count();
-            @endphp
+        .card-left .value {
+            font-weight: 700;
+            margin-top: 10px;
+            font-size: 16px;
+        }
 
-            <a href="{{ route('usuario.notificaciones') }}"
-               class="btn btn-outline-light btn-sm position-relative rounded-circle shadow-sm"
-               style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-bell"></i>
+        .card-left .info-item {
+            margin-top: 15px;
+            background: #eef2ff;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 14px;
+            color: #3b5bdb;
+        }
 
-                @if($adminNotiCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ $adminNotiCount }}
-                <span class="visually-hidden">notificaciones no leídas</span>
-            </span>
-                @endif
-            </a>
+        /* CARD DERECHA: Información del chofer */
+        .card-right {
+            flex: 1;
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .top-card {
+            background: linear-gradient(90deg, #4f6edb, #6ea8fe);
+            color: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-top: 5px;
+            display: block; /* fuerza salto de línea */
+        }
+
+        .badge-status, .badge-type {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .badge-type {
+            background: #e7f0ff;
+            color: #3b5bdb;
+        }
+
+        .badge-status {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        @media (max-width: 768px) {
+            .container-profile {
+                flex-direction: column;
+            }
+            .card-left {
+                width: 100%;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 15px 0;
+            }
+        }
+    </style>
+
+    <div class="container-profile">
+
+        <!-- Card izquierda: Foto, perfil, correo -->
+        <div class="card-left">
+            @if($chofer->foto && file_exists(public_path('storage/' . $chofer->foto)))
+                <img src="{{ asset('storage/' . $chofer->foto) }}" class="avatar-lg">
+            @else
+                <div class="avatar-lg">{{ strtoupper(substr($chofer->nombre_completo,0,1)) }}</div>
+            @endif
+            <div class="value">{{ $chofer->nombre_completo }}</div>
+            <div class="info-item">Perfil</div>
+            <div class="info-item">{{ $chofer->email ?? 'No registrado' }}</div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-9 mx-auto">
+        <!-- Card derecha: Información del chofer -->
+        <div class="card-right">
+            <div class="top-card">
+                <h4>Información del Chofer</h4>
+                <small>Detalles generales de su cuenta</small>
+            </div>
 
-                <!-- Header Card con Gradiente -->
-                <div style="background: linear-gradient(135deg, #5cb3ff 0%, #1e63b8 100%); border-radius: 16px; padding: 40px; color: white; margin-bottom: 30px; display: flex; align-items: center; gap: 30px;">
-
-                    {{-- Foto o inicial --}}
-                    @if($chofer->foto && file_exists(public_path('storage/' . $chofer->foto)))
-                        <img src="{{ asset('storage/' . $chofer->foto) }}"
-                             style="width: 110px; height: 110px; object-fit: cover; border-radius: 50%; border: 4px solid rgba(255,255,255,0.4);">
-                    @else
-                        <div style="width: 110px; height: 110px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: bold; border: 4px solid rgba(255,255,255,0.4); flex-shrink: 0;">
-                            {{ strtoupper(substr($chofer->nombre, 0, 1)) }}
-                        </div>
-                    @endif
-
-                    <div style="flex-grow: 1;">
-                        <h2 style="margin: 0; font-size: 28px; font-weight: 700; text-transform: capitalize;">
-                            {{ $chofer->nombre_completo }}
-                        </h2>
-                        <p style="margin: 12px 0 0 0; font-size: 14px; opacity: 0.95;">
-                            <i class="fas fa-id-badge me-2"></i> Chofer Verificado
-                        </p>
+            <div class="info-grid">
+                <!-- Columna izquierda de info -->
+                <div class="info-group">
+                    <div>
+                        <span class="label">Nombre Completo</span>
+                        <span class="value">{{ $chofer->nombre_completo }}</span>
+                    </div>
+                    <div>
+                        <span class="label">Teléfono</span>
+                        <span class="value">{{ $chofer->telefono ?? 'No registrado' }}</span>
+                    </div>
+                    <div>
+                        <span class="label">Tipo de Cuenta</span>
+                        <span class="badge-type">Chofer</span>
                     </div>
                 </div>
 
-                <!-- Card de Información -->
-                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-                    <div class="card-body p-4">
-
-                        <!-- Nombre Completo -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Nombre Completo</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
-                                    {{ $chofer->nombre_completo }}
-                                </p>
-                            </div>
-                            <i class="fas fa-user" style="color: #5cb3ff; font-size: 24px;"></i>
-                        </div>
-
-                        <!-- DNI -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">DNI</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
-                                    {{ $chofer->dni }}
-                                </p>
-                            </div>
-                            <i class="fas fa-id-card" style="color: #5cb3ff; font-size: 24px;"></i>
-                        </div>
-
-                        <!-- Fecha de Ingreso -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Fecha de Ingreso</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
-                                    {{-- Fecha de ingreso --}}
-                                    {{ $chofer->fecha_ingreso
-                                        ? $chofer->fecha_ingreso->locale('es')->translatedFormat('d \d\e F \d\e Y')
-                                            : 'No registrada'
-                                    }}
-                                </p>
-                            </div>
-                            <i class="fas fa-calendar-check" style="color: #5cb3ff; font-size: 24px;"></i>
-                        </div>
-
-                        <!-- Edad -->
-                        <!--
-<div style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Edad</p>
-        <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
-            {{ $chofer->edad ? $chofer->edad . ' años' : 'No registrada' }}
-                        </p>
+                <!-- Columna derecha de info -->
+                <div class="info-group">
+                    <div>
+                        <span class="label">Miembro Desde</span>
+                        <span class="value">{{ $chofer->fecha_ingreso ? $chofer->fecha_ingreso->format('d/m/Y') : 'No registrada' }}</span>
                     </div>
-                    <i class="fas fa-hourglass-half" style="color: #5cb3ff; font-size: 24px;"></i>
-                </div>
--->
-
+                    <div>
+                        <span class="label">DNI</span>
+                        <span class="value">{{ $chofer->dni ?? 'No registrado' }}</span>
                     </div>
-
-                    <!-- Footer (opcional, por ahora solo ver perfil) -->
-
+                    <div>
+                        <span class="label">Estado</span>
+                        <span class="badge-status">{{ ucfirst($chofer->estado) }}</span>
+                    </div>
                 </div>
-
             </div>
         </div>
+
     </div>
 
 @endsection

@@ -11,7 +11,7 @@
 
         .travel-section {
             background: linear-gradient(135deg, #e3f2fd, #f8fbff);
-        }
+        } hola
 
         .travel-card {
             background: #ffffff;
@@ -224,13 +224,19 @@
 
                     <!-- Servicios Adicionales -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {{ request()->routeIs('servicios_adicionales.*') ? 'active' : '' }}"
+                        <a class="nav-link dropdown-toggle {{ request()->routeIs('servicios_reserva.*') ? 'active' : '' }}"
                            href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-star me-1"></i> Servicios Adicionales
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item {{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}" href="{{ route('servicios_adicionales.index') }}">Historial</a></li>
-                            <li><a class="dropdown-item {{ request()->routeIs('servicios_adicionales.create') ? 'active' : '' }}" href="{{ route('servicios_adicionales.create') }}">Registrar</a></li>
+                            <li>
+                                <a class="dropdown-item {{ request()->routeIs('servicios_reserva.index') ? 'active' : '' }}"
+                                   href="{{ route('servicios_reserva.index') }}">Historial</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{ request()->routeIs('servicios_reserva.create') ? 'active' : '' }}"
+                                   href="{{ route('servicios_reserva.create') }}">Agregar servicio</a>
+                            </li>
                         </ul>
                     </li>
 

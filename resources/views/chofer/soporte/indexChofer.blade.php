@@ -7,12 +7,9 @@
     <style>
         .sop-wrap { font-family: 'DM Sans', sans-serif; background: #f0f9ff; min-height: 100vh; padding: 1.75rem 1.5rem; }
 
-        .sop-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
-        .sop-topbar-left { display: flex; align-items: baseline; gap: .5rem; }
-        .sop-title { font-size: 1.3rem; font-weight: 700; color: #0c1a2e; letter-spacing: -.02em; margin: 0; }
-        .sop-badge { font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 500; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: .15rem .55rem; border-radius: 20px; }
-        .sop-btn-new { display: inline-flex; align-items: center; gap: .4rem; background: #0284c7; color: #fff; border: none; padding: .5rem 1.1rem; border-radius: 8px; font-size: .82rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 8px rgba(2,132,199,.25); transition: background .18s, transform .15s, box-shadow .18s; }
-        .sop-btn-new:hover { background: #0369a1; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(2,132,199,.35); color: #fff; }
+        .sop-greeting-banner { background: linear-gradient(135deg,#3a9fd6 0%,#5bb8e8 100%); border-radius: 20px; padding: 1.8rem 2rem; margin-bottom: 1.25rem; color: #fff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 28px rgba(58,159,214,0.25); }
+        .sop-btn-new { display: inline-flex; align-items: center; gap: .4rem; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4); padding: .5rem 1.1rem; border-radius: 8px; font-size: .82rem; font-weight: 600; text-decoration: none; transition: background .18s; }
+        .sop-btn-new:hover { background: rgba(255,255,255,0.35); color: #fff; }
         .sop-btn-new i { font-size: .75rem; }
 
         .sop-flash { display: flex; align-items: center; gap: .5rem; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: .65rem 1rem; border-radius: 8px; font-size: .83rem; font-weight: 500; margin-bottom: 1rem; }
@@ -92,14 +89,17 @@
 
     <div class="sop-wrap">
 
-        <div class="sop-topbar">
-            <div class="sop-topbar-left">
-                <h1 class="sop-title">Solicitudes de Soporte</h1>
-                <span class="sop-badge">{{ $solicitudes->total() }}</span>
+        <div class="sop-greeting-banner">
+            <div>
+                <div style="font-weight:800;font-size:1.5rem;">Solicitudes de Soporte</div>
+                <div style="font-size:0.9rem;opacity:0.85;">Gestiona y revisa el estado de tus solicitudes.</div>
             </div>
-            <a href="{{ route('chofer.soporte.crear') }}" class="sop-btn-new">
-                <i class="fas fa-plus"></i> Nueva Solicitud
-            </a>
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <a href="{{ route('chofer.soporte.crear') }}" class="sop-btn-new">
+                    <i class="fas fa-plus"></i> Nueva Solicitud
+                </a>
+                <i class="fas fa-bus" style="font-size:1.6rem;"></i>
+            </div>
         </div>
 
         @if(session('success'))

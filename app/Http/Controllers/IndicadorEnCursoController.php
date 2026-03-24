@@ -67,8 +67,9 @@ class IndicadorEnCursoController extends Controller
                     break;
             }
         }
+        $perPage = $request->input('per_page', 5);
 
-        $viajes = $query->orderBy('fecha', 'asc')->paginate(5)->withQueryString();
+        $viajes = $query->orderBy('fecha', 'asc')->paginate($perPage)->withQueryString();
 
         $rutas = Ruta::orderBy('origen')->get();
 
