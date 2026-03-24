@@ -25,7 +25,6 @@
                     </div>
                 @endif
 
-
                 <form method="GET" action="{{ route('rutas.index') }}" id="formFiltros">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Búsqueda General</label>
@@ -114,7 +113,6 @@
                     </div>
                 </form>
 
-
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered align-middle" id="tablaRutas">
                         <thead class="table-primary">
@@ -145,13 +143,10 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
-
-
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{ $ruta->id }}">
                                             <i class="fas fa-edit me-1"></i> Editar
                                         </button>
-
 
                                         <form action="{{ route('rutas.bloquear', $ruta->id) }}" method="POST" style="display:inline;">
                                             @csrf
@@ -166,164 +161,9 @@
                                                 </button>
                                             @endif
                                         </form>
-
                                     </div>
                                 </td>
                             </tr>
-
-
-                            <div class="modal fade" id="modalNuevaRuta" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                    <div class="modal-content border-0 rounded-3" style="overflow:hidden;">
-                                        <form action="{{ route('rutas.store') }}" method="POST">
-                                            @csrf
-
-                                            <div class="modal-header text-white border-0" style="background:#1e63b8; padding:1.25rem 1.5rem;">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                                         style="width:34px; height:34px; background:rgba(255,255,255,0.2);">
-                                                        <i class="fas fa-plus" style="font-size:13px;"></i>
-                                                    </div>
-                                                    <span style="font-size:15px; font-weight:500;">Nueva Ruta</span>
-                                                </div>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                            </div>
-
-                                            <div class="modal-body" style="padding:1.5rem;">
-
-                                                @if($errors->has('duplicado'))
-                                                    <div class="alert alert-danger py-2 mb-3">
-                                                        <i class="fas fa-exclamation-circle me-1"></i>
-                                                        {{ $errors->first('duplicado') }}
-                                                    </div>
-                                                @endif
-
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Origen</label>
-                                                        <input type="text" name="origen" class="form-control"
-                                                               value="{{ old('origen') }}"
-                                                               onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
-                                                               placeholder="Ej: Tegucigalpa" required>
-                                                        @error('origen') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Destino</label>
-                                                        <input type="text" name="destino" class="form-control"
-                                                               value="{{ old('destino') }}"
-                                                               onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
-                                                               placeholder="Ej: San Pedro Sula" required>
-                                                        @error('destino') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Distancia (km)</label>
-                                                        <input type="number" step="0.01" name="distancia" class="form-control"
-                                                               value="{{ old('distancia') }}" min="5"
-                                                               placeholder="Ej: 250" required>
-                                                        @error('distancia') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Duración estimada (min)</label>
-                                                        <input type="number" name="duracion_estimada" class="form-control"
-                                                               value="{{ old('duracion_estimada') }}" min="15"
-                                                               placeholder="Ej: 180" required>
-                                                        @error('duracion_estimada') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color:#e5e7eb !important; padding:1rem 1.5rem;">
-                                                <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal" style="min-width:100px; justify-content:center;">
-                                                    <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
-                                                </button>
-                                                <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center gap-2" style="min-width:100px; justify-content:center;">
-                                                    <i class="fas fa-save" style="font-size:12px;"></i> Guardar
-                                                </button>
-                                            </div>
-
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="modal fade" id="editModal{{ $ruta->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                    <div class="modal-content border-0 rounded-3" style="overflow:hidden;">
-                                        <form action="{{ route('rutas.update', $ruta->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-
-                                            <div class="modal-header text-white border-0" style="background:#1e63b8; padding:1.25rem 1.5rem;">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                                         style="width:34px; height:34px; background:rgba(255,255,255,0.2);">
-                                                        <i class="fas fa-edit" style="font-size:13px;"></i>
-                                                    </div>
-                                                    <span style="font-size:15px; font-weight:500;">Editar Ruta</span>
-                                                </div>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                            </div>
-
-                                            <div class="modal-body" style="padding:1.5rem;">
-
-                                                @if($errors->has('duplicado'))
-                                                    <div class="alert alert-danger py-2 mb-3">
-                                                        <i class="fas fa-exclamation-circle me-1"></i>
-                                                        {{ $errors->first('duplicado') }}
-                                                    </div>
-                                                @endif
-
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Origen</label>
-                                                        <input type="text" name="origen" class="form-control"
-                                                               value="{{ old('origen', $ruta->origen) }}"
-                                                               onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
-                                                               required>
-                                                        @error('origen') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Destino</label>
-                                                        <input type="text" name="destino" class="form-control"
-                                                               value="{{ old('destino', $ruta->destino) }}"
-                                                               onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
-                                                               required>
-                                                        @error('destino') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label text-muted small mb-1">Distancia (km)</label>
-                                                        <input type="number" step="0.01" name="distancia" class="form-control"
-                                                               value="{{ old('distancia', $ruta->distancia) }}" min="5" required>
-                                                        @error('distancia') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label fw-semibold">
-                                                        </label>
-                                                        <label class="form-label text-muted small mb-1">Duración estimada (min)</label>
-                                                        <input type="number" name="duracion_estimada" class="form-control"
-                                                               value="{{ old('duracion_estimada', $ruta->duracion_estimada) }}" min="15" required>
-                                                        @error('duracion_estimada') <small class="text-danger">{{ $message }}</small> @enderror
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color:#e5e7eb !important; padding:1rem 1.5rem;">
-                                                <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal" style="min-width:100px; justify-content:center;">
-                                                    <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
-                                                </button>
-                                                <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center gap-2" style="min-width:100px; justify-content:center;">
-                                                    <i class="fas fa-save" style="font-size:12px;"></i> Guardar
-                                                </button>
-                                            </div>
-
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center text-muted py-5">
@@ -335,7 +175,6 @@
                         </tbody>
                     </table>
                 </div>
-
 
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="text-muted small">
@@ -370,6 +209,165 @@
             </div>
         </div>
     </div>
+
+    {{-- ============================================================
+         MODAL: NUEVA RUTA
+         ✅ Fuera del @forelse — se renderiza siempre, sin duplicados
+         ============================================================ --}}
+    <div class="modal fade" id="modalNuevaRuta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 rounded-3" style="overflow:hidden;">
+                <form action="{{ route('rutas.store') }}" method="POST">
+                    @csrf
+
+                    <div class="modal-header text-white border-0" style="background:#1e63b8; padding:1.25rem 1.5rem;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width:34px; height:34px; background:rgba(255,255,255,0.2);">
+                                <i class="fas fa-plus" style="font-size:13px;"></i>
+                            </div>
+                            <span style="font-size:15px; font-weight:500;">Nueva Ruta</span>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body" style="padding:1.5rem;">
+
+                        @if($errors->has('duplicado'))
+                            <div class="alert alert-danger py-2 mb-3">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ $errors->first('duplicado') }}
+                            </div>
+                        @endif
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">Origen</label>
+                                <input type="text" name="origen" class="form-control"
+                                       value="{{ old('origen') }}"
+                                       onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                                       placeholder="Ej: Tegucigalpa" required>
+                                @error('origen') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">Destino</label>
+                                <input type="text" name="destino" class="form-control"
+                                       value="{{ old('destino') }}"
+                                       onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                                       placeholder="Ej: San Pedro Sula" required>
+                                @error('destino') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">Distancia (km)</label>
+                                <input type="number" step="0.01" name="distancia" class="form-control"
+                                       value="{{ old('distancia') }}" min="5"
+                                       placeholder="Ej: 250" required>
+                                @error('distancia') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">Duración estimada (min)</label>
+                                <input type="number" name="duracion_estimada" class="form-control"
+                                       value="{{ old('duracion_estimada') }}" min="15"
+                                       placeholder="Ej: 180" required>
+                                @error('duracion_estimada') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color:#e5e7eb !important; padding:1rem 1.5rem;">
+                        <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal" style="min-width:100px; justify-content:center;">
+                            <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center gap-2" style="min-width:100px; justify-content:center;">
+                            <i class="fas fa-save" style="font-size:12px;"></i> Guardar
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- ============================================================
+         MODALES: EDITAR RUTA (uno por cada ruta)
+         ✅ Fuera del @forelse pero dentro del @section para acceder a $rutas
+         ============================================================ --}}
+    @foreach($rutas as $ruta)
+        <div class="modal fade" id="editModal{{ $ruta->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 rounded-3" style="overflow:hidden;">
+                    <form action="{{ route('rutas.update', $ruta->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="modal-header text-white border-0" style="background:#1e63b8; padding:1.25rem 1.5rem;">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width:34px; height:34px; background:rgba(255,255,255,0.2);">
+                                    <i class="fas fa-edit" style="font-size:13px;"></i>
+                                </div>
+                                <span style="font-size:15px; font-weight:500;">Editar Ruta</span>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body" style="padding:1.5rem;">
+
+                            @if($errors->has('duplicado'))
+                                <div class="alert alert-danger py-2 mb-3">
+                                    <i class="fas fa-exclamation-circle me-1"></i>
+                                    {{ $errors->first('duplicado') }}
+                                </div>
+                            @endif
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small mb-1">Origen</label>
+                                    <input type="text" name="origen" class="form-control"
+                                           value="{{ old('origen', $ruta->origen) }}"
+                                           onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                                           required>
+                                    @error('origen') <small class="text-danger">{{ $message }}</small> @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small mb-1">Destino</label>
+                                    <input type="text" name="destino" class="form-control"
+                                           value="{{ old('destino', $ruta->destino) }}"
+                                           onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(String.fromCharCode(event.keyCode || event.which))"
+                                           required>
+                                    @error('destino') <small class="text-danger">{{ $message }}</small> @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small mb-1">Distancia (km)</label>
+                                    <input type="number" step="0.01" name="distancia" class="form-control"
+                                           value="{{ old('distancia', $ruta->distancia) }}" min="5" required>
+                                    @error('distancia') <small class="text-danger">{{ $message }}</small> @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small mb-1">Duración estimada (min)</label>
+                                    <input type="number" name="duracion_estimada" class="form-control"
+                                           value="{{ old('duracion_estimada', $ruta->duracion_estimada) }}" min="15" required>
+                                    @error('duracion_estimada') <small class="text-danger">{{ $message }}</small> @enderror
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color:#e5e7eb !important; padding:1rem 1.5rem;">
+                            <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal" style="min-width:100px; justify-content:center;">
+                                <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center gap-2" style="min-width:100px; justify-content:center;">
+                                <i class="fas fa-save" style="font-size:12px;"></i> Guardar
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
     <style>
         .btn-bloquear {
