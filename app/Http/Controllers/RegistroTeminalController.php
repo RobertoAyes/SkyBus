@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\RegistroTerminal;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 use App\Models\Servicio;
 
 class RegistroTeminalController extends Controller
@@ -19,24 +18,24 @@ class RegistroTeminalController extends Controller
     ];
 
     private $municipiosHonduras = [
-        'Atlántida' => ['La Ceiba', 'El Porvenir', 'Esparta', 'Jutiapa', 'La Másica', 'San Francisco', 'Tela', 'Arizona'],
-        'Colón' => ['Trujillo', 'Balfate', 'Iriona', 'Limón', 'Sabá', 'Santa Fe', 'Santa Rosa de Aguán', 'Sonaguera', 'Tocoa', 'Bonito Oriental'],
-        'Comayagua' => ['Comayagua', 'Ajuterique', 'El Porvenir', 'Esquías', 'Humuya', 'La Libertad', 'Lamaní', 'La Paz', 'Las Lajas', 'Lejamaní', 'Meámbar', 'Minas de Oro', 'Ojo de Agua', 'San Jerónimo', 'San José de Comayagua', 'San José del Potrero', 'San Luis', 'San Sebastián', 'Siguatepeque', 'Taulabé', 'Villa de San Antonio'],
-        'Copán' => ['Santa Rosa de Copán', 'Cabañas', 'Concepción', 'Copán Ruinas', 'Corquín', 'Dolores', 'Dulce Nombre', 'El Paraíso', 'Florida', 'La Jigua', 'La Unión', 'Lucerna', 'Mercedes', 'San Agustín', 'San Fernando', 'San Francisco del Valle', 'San Jerónimo', 'San José', 'San Juan de Opoa', 'San Nicolás', 'San Pedro de Copán', 'Santa Rita', 'Trinidad de Copán', 'Veracruz'],
-        'Cortés' => ['San Pedro Sula', 'Choloma', 'La Lima', 'Omoa', 'Pimienta', 'Potrerillos', 'Puerto Cortés', 'San Antonio de Cortés', 'San Manuel', 'Santa Cruz de Yojoa', 'Villanueva'],
-        'Choluteca' => ['Choluteca', 'Apacilagua', 'Concepción de María', 'Corpus', 'Duyure', 'El Triunfo', 'Marcovia', 'Morolica', 'Namasigüe', 'Orocuina', 'Pespire', 'San Antonio de Flores', 'San Isidro', 'San José', 'San Marcos de Colón', 'Santa Ana de Yusguare'],
-        'El Paraíso' => ['Yuscarán', 'Alauca', 'Danlí', 'El Paraíso', 'Güinope', 'Jacaleapa', 'Liure', 'Morocelí', 'Oropolí', 'Potrerillos', 'San Antonio de Flores', 'San Lucas', 'San Matías', 'Soledad', 'Teupasenti', 'Texiguat', 'Trojes', 'Vado Ancho', 'Yauyupe'],
+        'Atlántida'         => ['La Ceiba', 'El Porvenir', 'Esparta', 'Jutiapa', 'La Másica', 'San Francisco', 'Tela', 'Arizona'],
+        'Colón'             => ['Trujillo', 'Balfate', 'Iriona', 'Limón', 'Sabá', 'Santa Fe', 'Santa Rosa de Aguán', 'Sonaguera', 'Tocoa', 'Bonito Oriental'],
+        'Comayagua'         => ['Comayagua', 'Ajuterique', 'El Porvenir', 'Esquías', 'Humuya', 'La Libertad', 'Lamaní', 'La Paz', 'Las Lajas', 'Lejamaní', 'Meámbar', 'Minas de Oro', 'Ojo de Agua', 'San Jerónimo', 'San José de Comayagua', 'San José del Potrero', 'San Luis', 'San Sebastián', 'Siguatepeque', 'Taulabé', 'Villa de San Antonio'],
+        'Copán'             => ['Santa Rosa de Copán', 'Cabañas', 'Concepción', 'Copán Ruinas', 'Corquín', 'Dolores', 'Dulce Nombre', 'El Paraíso', 'Florida', 'La Jigua', 'La Unión', 'Lucerna', 'Mercedes', 'San Agustín', 'San Fernando', 'San Francisco del Valle', 'San Jerónimo', 'San José', 'San Juan de Opoa', 'San Nicolás', 'San Pedro de Copán', 'Santa Rita', 'Trinidad de Copán', 'Veracruz'],
+        'Cortés'            => ['San Pedro Sula', 'Choloma', 'La Lima', 'Omoa', 'Pimienta', 'Potrerillos', 'Puerto Cortés', 'San Antonio de Cortés', 'San Manuel', 'Santa Cruz de Yojoa', 'Villanueva'],
+        'Choluteca'         => ['Choluteca', 'Apacilagua', 'Concepción de María', 'Corpus', 'Duyure', 'El Triunfo', 'Marcovia', 'Morolica', 'Namasigüe', 'Orocuina', 'Pespire', 'San Antonio de Flores', 'San Isidro', 'San José', 'San Marcos de Colón', 'Santa Ana de Yusguare'],
+        'El Paraíso'        => ['Yuscarán', 'Alauca', 'Danlí', 'El Paraíso', 'Güinope', 'Jacaleapa', 'Liure', 'Morocelí', 'Oropolí', 'Potrerillos', 'San Antonio de Flores', 'San Lucas', 'San Matías', 'Soledad', 'Teupasenti', 'Texiguat', 'Trojes', 'Vado Ancho', 'Yauyupe'],
         'Francisco Morazán' => ['Distrito Central (Tegucigalpa y Comayagüela)', 'Alubarén', 'Cedros', 'Curarén', 'El Porvenir', 'Guaimaca', 'La Libertad', 'La Venta', 'Lepaterique', 'Maraita', 'Marale', 'Nueva Armenia', 'Ojojona', 'Orica', 'Reitoca', 'Sabana Grande', 'San Antonio de Oriente', 'San Buenaventura', 'San Ignacio', 'San Juan de Flores (Cantarranas)', 'San Miguelito', 'Santa Ana', 'Santa Lucía', 'Talanga', 'Tatumbla', 'Valle de Ángeles', 'Vallecillo', 'Villa de San Francisco'],
-        'Gracias a Dios' => ['Puerto Lempira', 'Ahuas', 'Brus Laguna', 'Juan Francisco Bulnes', 'Ramón Villeda Morales', 'Wampusirpi'],
-        'Intibucá' => ['La Esperanza', 'Camasca', 'Colomoncagua', 'Concepción', 'Dolores', 'Intibucá', 'Jesús de Otoro', 'Magdalena', 'Masaguara', 'San Antonio', 'San Francisco de Opalaca', 'San Isidro', 'San Juan', 'San Marco de la Sierra', 'San Miguelito', 'Santa Lucía', 'Yamaranguila'],
+        'Gracias a Dios'    => ['Puerto Lempira', 'Ahuas', 'Brus Laguna', 'Juan Francisco Bulnes', 'Ramón Villeda Morales', 'Wampusirpi'],
+        'Intibucá'          => ['La Esperanza', 'Camasca', 'Colomoncagua', 'Concepción', 'Dolores', 'Intibucá', 'Jesús de Otoro', 'Magdalena', 'Masaguara', 'San Antonio', 'San Francisco de Opalaca', 'San Isidro', 'San Juan', 'San Marco de la Sierra', 'San Miguelito', 'Santa Lucía', 'Yamaranguila'],
         'Islas de la Bahía' => ['Roatán', 'Guanaja', 'José Santos Guardiola', 'Útila'],
-        'La Paz' => ['La Paz', 'Aguanqueterique', 'Cabañas', 'Cane', 'Chinacla', 'Guajiquiro', 'Lauterique', 'Marcala', 'Mercedes de Oriente', 'Opatoro', 'San Antonio del Norte', 'San José', 'San Juan', 'San Pedro de Tutule', 'Santa Ana', 'Santa Elena', 'Santa María', 'Santiago de Puringla', 'Yarula'],
-        'Lempira' => ['Gracias', 'Belén', 'Candelaria', 'Cololaca', 'Erandique', 'Gualcince', 'Guarita', 'La Campa', 'La Iguala', 'Las Flores', 'La Unión', 'La Virtud', 'Lepaera', 'Mapulaca', 'Piraera', 'San Andrés', 'San Francisco', 'San Juan Guarita', 'San Manuel Colohete', 'San Marcos de Caiquín', 'San Rafael', 'San Sebastián', 'Santa Cruz', 'Talgua', 'Tambla', 'Tomalá', 'Valladolid', 'Virginia'],
-        'Ocotepeque' => ['Nueva Ocotepeque', 'Belén Gualcho', 'Concepción', 'Dolores Merendón', 'Fraternidad', 'La Encarnación', 'La Labor', 'Lucerna', 'Mercedes', 'San Fernando', 'San Francisco del Valle', 'San Jorge', 'San Marcos', 'Santa Fe', 'Sensenti', 'Sinuapa'],
-        'Olancho' => ['Juticalpa', 'Campamento', 'Catacamas', 'Concordia', 'Dulce Nombre de Culmí', 'El Rosario', 'Esquipulas del Norte', 'Gualaco', 'Guarizama', 'Guata', 'Guayape', 'Jano', 'La Unión', 'Mangulile', 'Manto', 'Potrerillos', 'Salamá', 'San Esteban', 'San Francisco de Becerra', 'San Francisco de la Paz', 'Santa María del Real', 'Silca', 'Yocón'],
-        'Santa Bárbara' => ['Santa Bárbara', 'Arada', 'Atima', 'Azacualpa', 'Ceguaca', 'Chinda', 'Concepción del Norte', 'Concepción del Sur', 'El Níspero', 'Gualala', 'Ilama', 'Las Vegas', 'Macuelizo', 'Naranjito', 'Nueva Frontera', 'Nuevo Celilac', 'Petoa', 'Protección', 'Quimistán', 'San Francisco de Ojuera', 'San Luis', 'San Marcos', 'San Nicolás', 'San Pedro Zacapa', 'San Vicente Centenario', 'Santa Rita', 'Trinidad', 'Tencoa'],
-        'Valle' => ['Nacaome', 'Alianza', 'Amapala', 'Aramecina', 'Caridad', 'Goascorán', 'Langue', 'San Francisco de Coray', 'San Lorenzo'],
-        'Yoro' => ['Yoro', 'Arenal', 'El Negrito', 'El Progreso', 'Jocón', 'Morazán', 'Olanchito', 'Santa Rita', 'Sulaco', 'Victoria', 'Yorito']
+        'La Paz'            => ['La Paz', 'Aguanqueterique', 'Cabañas', 'Cane', 'Chinacla', 'Guajiquiro', 'Lauterique', 'Marcala', 'Mercedes de Oriente', 'Opatoro', 'San Antonio del Norte', 'San José', 'San Juan', 'San Pedro de Tutule', 'Santa Ana', 'Santa Elena', 'Santa María', 'Santiago de Puringla', 'Yarula'],
+        'Lempira'           => ['Gracias', 'Belén', 'Candelaria', 'Cololaca', 'Erandique', 'Gualcince', 'Guarita', 'La Campa', 'La Iguala', 'Las Flores', 'La Unión', 'La Virtud', 'Lepaera', 'Mapulaca', 'Piraera', 'San Andrés', 'San Francisco', 'San Juan Guarita', 'San Manuel Colohete', 'San Marcos de Caiquín', 'San Rafael', 'San Sebastián', 'Santa Cruz', 'Talgua', 'Tambla', 'Tomalá', 'Valladolid', 'Virginia'],
+        'Ocotepeque'        => ['Nueva Ocotepeque', 'Belén Gualcho', 'Concepción', 'Dolores Merendón', 'Fraternidad', 'La Encarnación', 'La Labor', 'Lucerna', 'Mercedes', 'San Fernando', 'San Francisco del Valle', 'San Jorge', 'San Marcos', 'Santa Fe', 'Sensenti', 'Sinuapa'],
+        'Olancho'           => ['Juticalpa', 'Campamento', 'Catacamas', 'Concordia', 'Dulce Nombre de Culmí', 'El Rosario', 'Esquipulas del Norte', 'Gualaco', 'Guarizama', 'Guata', 'Guayape', 'Jano', 'La Unión', 'Mangulile', 'Manto', 'Potrerillos', 'Salamá', 'San Esteban', 'San Francisco de Becerra', 'San Francisco de la Paz', 'Santa María del Real', 'Silca', 'Yocón'],
+        'Santa Bárbara'     => ['Santa Bárbara', 'Arada', 'Atima', 'Azacualpa', 'Ceguaca', 'Chinda', 'Concepción del Norte', 'Concepción del Sur', 'El Níspero', 'Gualala', 'Ilama', 'Las Vegas', 'Macuelizo', 'Naranjito', 'Nueva Frontera', 'Nuevo Celilac', 'Petoa', 'Protección', 'Quimistán', 'San Francisco de Ojuera', 'San Luis', 'San Marcos', 'San Nicolás', 'San Pedro Zacapa', 'San Vicente Centenario', 'Santa Rita', 'Trinidad', 'Tencoa'],
+        'Valle'             => ['Nacaome', 'Alianza', 'Amapala', 'Aramecina', 'Caridad', 'Goascorán', 'Langue', 'San Francisco de Coray', 'San Lorenzo'],
+        'Yoro'              => ['Yoro', 'Arenal', 'El Negrito', 'El Progreso', 'Jocón', 'Morazán', 'Olanchito', 'Santa Rita', 'Sulaco', 'Victoria', 'Yorito'],
     ];
 
     public function index(Request $request)
@@ -46,82 +45,74 @@ class RegistroTeminalController extends Controller
         if ($request->filled('nombre')) {
             $query->where('nombre', 'like', '%' . $request->nombre . '%');
         }
-
         if ($request->filled('contacto')) {
             $query->where(function ($q) use ($request) {
                 $q->where('telefono', 'like', '%' . $request->contacto . '%')
-                    ->orWhere('correo', 'like', '%' . $request->contacto . '%');
+                    ->orWhere('correo',  'like', '%' . $request->contacto . '%');
             });
         }
-
         if ($request->filled('ubicacion')) {
             $query->where(function ($q) use ($request) {
                 $q->where('departamento', 'like', '%' . $request->ubicacion . '%')
-                    ->orWhere('municipio', 'like', '%' . $request->ubicacion . '%')
-                    ->orWhere('direccion', 'like', '%' . $request->ubicacion . '%');
+                    ->orWhere('municipio',  'like', '%' . $request->ubicacion . '%')
+                    ->orWhere('direccion',  'like', '%' . $request->ubicacion . '%');
             });
         }
 
-        $terminales = $query->paginate(5);
+        $terminales         = $query->paginate(5);
+        $departamentos      = $this->departamentosHonduras;
+        $municipiosHonduras = $this->municipiosHonduras;
 
-        return view('terminales.index', compact('terminales'))
-            ->with('nombre', $request->nombre)
-            ->with('contacto', $request->contacto)
+        return view('terminales.index', compact('terminales', 'departamentos', 'municipiosHonduras'))
+            ->with('nombre',    $request->nombre)
+            ->with('contacto',  $request->contacto)
             ->with('ubicacion', $request->ubicacion);
     }
 
     public function create()
     {
-        $departamentos = $this->departamentosHonduras;
+        $departamentos      = $this->departamentosHonduras;
         $municipiosHonduras = $this->municipiosHonduras;
         return view('terminales.create', compact('departamentos', 'municipiosHonduras'));
     }
 
     public function store(Request $request)
     {
+        // Forzar respuesta JSON para el fetch del modal
+        $request->headers->set('Accept', 'application/json');
+
         $validatedData = $request->validate([
-            'nombre' => 'required|string|max:100|regex:/^\S.*$/',
-            'codigo' => 'required|string|max:10|unique:registro_terminal,codigo|regex:/^\S.*$/',
-            'direccion' => 'required|string|max:150|regex:/^\S.*$/',
-            'departamento' => [
-                'required',
-                'string',
-                Rule::in($this->departamentosHonduras),
-            ],
-            'municipio' => 'required|string|max:50|regex:/^\S.*$/',
-            'telefono' => 'required|string|max:8|regex:/^[983]\d{7}$/|unique:registro_terminal,telefono',
-            'correo' => 'required|email:rfc,dns|max:50|unique:registro_terminal,correo|regex:/^\S.*$/',
+            'nombre'           => 'required|string|max:100|regex:/^\S.*$/',
+            'codigo'           => 'required|string|max:10|unique:registro_terminal,codigo|regex:/^\S.*$/',
+            'direccion'        => 'required|string|max:150|regex:/^\S.*$/',
+            'departamento'     => ['required', 'string', Rule::in($this->departamentosHonduras)],
+            'municipio'        => 'required|string|max:50|regex:/^\S.*$/',
+            'telefono'         => 'required|string|max:8|regex:/^[983]\d{7}$/|unique:registro_terminal,telefono',
+            'correo'           => 'required|email:rfc|max:50|unique:registro_terminal,correo|regex:/^\S.*$/',
             'horario_apertura' => 'required|date_format:H:i',
-            'horario_cierre' => 'required|date_format:H:i|after:horario_apertura',
-            'descripcion' => 'required|string',
-            'latitud' => 'nullable|numeric|between:-90,90',
-            'longitud' => 'nullable|numeric|between:-180,180',
+            'horario_cierre'   => 'required|date_format:H:i|after:horario_apertura',
+            'descripcion'      => 'required|string',
+            'latitud'          => 'nullable|numeric|between:-90,90',
+            'longitud'         => 'nullable|numeric|between:-180,180',
         ]);
 
         try {
-            // SOLO CREAR EN registro_terminal
             $terminal = RegistroTerminal::create($validatedData);
 
             if ($request->has('servicios')) {
-
                 foreach ($request->servicios as $servicio) {
-
-                    \DB::table('servicios_extras')->insert([
-                        'registro_terminal_id' => $terminal->id,
-                        'nombre' => $servicio,
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                    $terminal->servicios()->create([
+                        'nombre'      => $servicio,
+                        'descripcion' => $servicio,
                     ]);
-
                 }
-
             }
 
-            return redirect()->route('terminales.index')->with('success', 'Terminal creada correctamente.');
+            return response()->json(['success' => true, 'message' => 'Terminal creada correctamente.']);
 
         } catch (\Exception $e) {
-            Log::error('Error FATAL al crear la terminal: ' . $e->getMessage());
-            return back()->withInput()->with('error', 'Error del sistema al guardar: ' . $e->getMessage());
+            Log::error('Error al crear terminal: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -132,68 +123,58 @@ class RegistroTeminalController extends Controller
 
     public function edit(RegistroTerminal $terminal)
     {
-        $terminal->load('servicios');   // ← agregar esta línea
-
-        $departamentos = $this->departamentosHonduras;
+        $terminal->load('servicios');
+        $departamentos      = $this->departamentosHonduras;
         $municipiosHonduras = $this->municipiosHonduras;
-
         return view('terminales.edit', compact('terminal', 'departamentos', 'municipiosHonduras'));
     }
 
     public function update(Request $request, RegistroTerminal $terminal)
     {
+        $request->headers->set('Accept', 'application/json');
         try {
             $validatedData = $request->validate([
-                'nombre' => 'required|string|max:100|regex:/^\S.*$/',
-                'codigo' => 'required|string|max:10|unique:registro_terminal,codigo,' . $terminal->id . '|regex:/^\S.*$/',
-                'direccion' => 'required|string|max:150|regex:/^\S.*$/',
-                'departamento' => [
-                    'required',
-                    'string',
-                    Rule::in($this->departamentosHonduras),
-                ],
-                'municipio' => 'required|string|max:50|regex:/^\S.*$/',
-                'telefono' => 'required|string|max:8|regex:/^[983]\d{7}$/|unique:registro_terminal,telefono,' . $terminal->id,
-                'correo' => 'required|email:rfc,dns|max:50|unique:registro_terminal,correo,' . $terminal->id . '|regex:/^\S.*$/',
+                'nombre'           => 'required|string|max:100|regex:/^\S.*$/',
+                'codigo'           => 'required|string|max:10|unique:registro_terminal,codigo,' . $terminal->id . '|regex:/^\S.*$/',
+                'direccion'        => 'required|string|max:150|regex:/^\S.*$/',
+                'departamento'     => ['required', 'string', Rule::in($this->departamentosHonduras)],
+                'municipio'        => 'required|string|max:50|regex:/^\S.*$/',
+                'telefono'         => 'required|string|max:8|regex:/^[983]\d{7}$/|unique:registro_terminal,telefono,' . $terminal->id,
+                'correo'           => 'required|email:rfc|max:50|unique:registro_terminal,correo,' . $terminal->id . '|regex:/^\S.*$/',
                 'horario_apertura' => 'required|date_format:H:i',
-                'horario_cierre' => 'required|date_format:H:i|after:horario_apertura',
-                'descripcion' => 'required|string',
-                'latitud' => 'nullable|numeric|between:-90,90',
-                'longitud' => 'nullable|numeric|between:-180,180',
-
-                //  ESTA LINEA NUEVA
-                'servicios' => 'nullable|array',
+                'horario_cierre'   => 'required|date_format:H:i|after:horario_apertura',
+                'descripcion'      => 'required|string',
+                'latitud'          => 'nullable|numeric|between:-90,90',
+                'longitud'         => 'nullable|numeric|between:-180,180',
+                'servicios'        => 'nullable|array',
             ]);
 
-            //  SOLO ACTUALIZAR EN registro_terminal
             $terminal->update($validatedData);
 
-            // eliminar servicios anteriores
             $terminal->servicios()->delete();
 
-            // guardar servicios nuevos
             if ($request->has('servicios')) {
-
                 foreach ($request->servicios as $servicio) {
-
                     $terminal->servicios()->create([
-                        'nombre' => $servicio,
-                        'descripcion' => $servicio
+                        'nombre'      => $servicio,
+                        'descripcion' => $servicio,
                     ]);
                 }
             }
 
+            // JSON si viene del modal AJAX, redirect normal si viene de la página de edición
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Terminal actualizada correctamente.']);
+            }
             return redirect()->route('terminales.index')->with('success', 'Terminal actualizada correctamente.');
 
         } catch (\Exception $e) {
-            Log::error('Error FATAL al actualizar la terminal: ' . $e->getMessage());
-            return back()->with('error', 'Error crítico del sistema: ' . $e->getMessage())->withInput();
+            Log::error('Error al actualizar terminal: ' . $e->getMessage());
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            }
+            return back()->with('error', 'Error del sistema: ' . $e->getMessage())->withInput();
         }
-    }
-
-    public function servicios()
-    {
-        return $this->hasMany(Servicio::class, 'registro_terminal_id');
     }
 
     public function destroy()
