@@ -5,6 +5,26 @@
 @section('contenido')
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+
+
+        .greeting-banner {
+            background: linear-gradient(135deg,#3a9fd6 0%,#5bb8e8 100%);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.8rem;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 28px rgba(58,159,214,0.25);
+        }
+        .greeting-title { font-weight: 800; font-size: 1.5rem; }
+        .greeting-sub   { font-size: 0.9rem; opacity: 0.85; }
+        .greeting-icon-wrap { font-size: 1.6rem; }
+
+
+
+
         .ch-wrap { font-family: 'DM Sans', sans-serif; background: #f0f9ff; min-height: 100vh; padding: 1.75rem 1.5rem; }
 
         .ch-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
@@ -75,10 +95,13 @@
 
     <div class="ch-wrap">
 
-        <div class="ch-topbar">
-            <div class="ch-topbar-left">
-                <h1 class="ch-title">Mi Itinerario</h1>
-                <span class="ch-badge" id="ch-counter">{{ $itinerarios->count() }}</span>
+        <div class="greeting-banner" style="background: linear-gradient(135deg,#3a9fd6 0%,#5bb8e8 100%); color: #fff;">
+            <div class="greeting-text">
+                <div class="greeting-title">Mi Itinerario</div>
+                <div class="greeting-sub">Aquí podrás gestionar tus viajes y marcar su estado en tiempo real.</div>
+            </div>
+            <div class="greeting-icon-wrap">
+                <i class="fas fa-bus"></i>
             </div>
         </div>
 

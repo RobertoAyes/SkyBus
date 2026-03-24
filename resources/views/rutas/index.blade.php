@@ -94,6 +94,23 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="mb-0 fw-semibold">Mostrar:</label>
+                            <select name="per_page"
+                                    class="form-select form-select-sm border-primary"
+                                    style="width:90px;"
+                                    onchange="this.form.submit()">
+                                <option value="5"  {{ request('per_page') == 5  ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                            <span>registros</span>
+                        </div>
+                    </div>
                 </form>
 
                 <div class="table-responsive">
@@ -174,15 +191,15 @@
                         <nav aria-label="Paginación de rutas">
                             <ul class="pagination pagination-sm mb-0">
                                 <li class="page-item {{ $rutas->onFirstPage() ? 'disabled' : '' }}">
-                                    <a class="page-link" href="{{ $rutas->previousPageUrl() }}">Anterior</a>
+                                    <a class="page-link" href="{{ $rutas->appends(request()->all())->previousPageUrl() }}">Anterior</a>
                                 </li>
                                 @for($page = 1; $page <= $rutas->lastPage(); $page++)
                                     <li class="page-item {{ $page == $rutas->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $rutas->url($page) }}">{{ $page }}</a>
+                                        <a class="page-link" href="{{ $rutas->appends(request()->all())->url($page) }}">{{ $page }}</a>
                                     </li>
                                 @endfor
                                 <li class="page-item {{ $rutas->hasMorePages() ? '' : 'disabled' }}">
-                                    <a class="page-link" href="{{ $rutas->nextPageUrl() }}">Siguiente</a>
+                                    <a class="page-link" href="{{ $rutas->appends(request()->all())->nextPageUrl() }}">Siguiente</a>
                                 </li>
                             </ul>
                         </nav>

@@ -8,8 +8,7 @@
         .frm-wrap { font-family: 'DM Sans', sans-serif; background: #f0f9ff; min-height: 100vh; padding: 1.75rem 1.5rem; }
         .frm-inner { max-width: 860px; margin: 0 auto; }
 
-        .frm-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-        .frm-title { font-size: 1.3rem; font-weight: 700; color: #0c1a2e; letter-spacing: -.02em; margin: 0; }
+        .frm-greeting-banner { background: linear-gradient(135deg,#3a9fd6 0%,#5bb8e8 100%); border-radius: 20px; padding: 1.8rem 2rem; margin-bottom: 1.25rem; color: #fff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 28px rgba(58,159,214,0.25); }
 
         .frm-flash-ok { display: flex; align-items: center; gap: .5rem; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: .65rem 1rem; border-radius: 8px; font-size: .83rem; font-weight: 500; margin-bottom: 1rem; }
         .frm-err { background: #fff1f0; border: 1px solid #fecaca; border-radius: 9px; padding: .7rem 1rem; margin-bottom: 1.1rem; font-size: .82rem; color: #dc2626; }
@@ -41,8 +40,14 @@
     <div class="frm-wrap">
         <div class="frm-inner">
 
-            <div class="frm-topbar">
-                <h1 class="frm-title">Solicitar Soporte Técnico</h1>
+            <div class="frm-greeting-banner">
+                <div>
+                    <div style="font-weight:800;font-size:1.5rem;">Solicitar Soporte Técnico</div>
+                    <div style="font-size:0.9rem;opacity:0.85;">Envía tu solicitud y te atenderemos a la brevedad.</div>
+                </div>
+                <div style="font-size:1.6rem;">
+                    <i class="fas fa-bus"></i>
+                </div>
             </div>
 
             @if(session('success'))

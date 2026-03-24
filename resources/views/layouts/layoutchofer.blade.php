@@ -161,6 +161,13 @@
                 <a href="{{ route('chofer.perfil') }}" class="{{ request()->routeIs('chofer.perfil') ? 'active':'' }}">Ver perfil</a>
 
             </div>
+            <div class="collapse btn-toggle-nav" id="soporte">
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Cerrar sesión
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+            </div>
         </div>
 
         <div class="nav-section">
@@ -234,21 +241,6 @@
 
             </div>
 
-        </div>
-
-        <!-- Cerrar sesión -->
-        <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#soporte" aria-expanded="false">
-                <span><i class="fas fa-headset"></i> Cerrar sesion</span>
-                <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav" id="soporte">
-                <a href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    Cerrar sesión
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-            </div>
         </div>
 
     </nav>

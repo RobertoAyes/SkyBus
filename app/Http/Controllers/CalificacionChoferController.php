@@ -14,16 +14,45 @@ class CalificacionChoferController extends Controller
      */
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $estadisticas = User::where('role', 'Chofer')
-            ->withCount('calificacionesRecibidas')
-            ->withAvg('calificacionesRecibidas', 'estrellas')
-            ->with(['calificacionesRecibidas.usuario']) // traer comentarios y cliente
-            ->get();
+        $query = CalificacionChofer::query()
+            ->join('users as chofer', 'calificaciones_chofer.chofer_id', '=', 'chofer.id')
+            ->join('users as usuario', 'calificaciones_chofer.usuario_id', '=', 'usuario.id')
+            ->select(
+                'calificaciones_chofer.*',
+                'chofer.name as chofer_nombre',
+                'usuario.name as usuario_nombre'
+            );
 
-        return view('admin.calificaciones.index', compact('estadisticas'));
+
+        if ($request->buscar) {
+            $q = $request->buscar;
+            $query->where(function($sub) use ($q) {
+                $sub->where('chofer.name', 'like', "%$q%")
+                    ->orWhere('usuario.name', 'like', "%$q%")
+                    ->orWhere('calificaciones_chofer.comentario', 'like', "%$q%");
+            });
+        }
+
+
+        if ($request->estrellas) {
+            $query->where('calificaciones_chofer.estrellas', $request->estrellas);
+        }
+
+        if ($request->fecha) {
+            $query->whereDate('calificaciones_chofer.created_at', $request->fecha);
+        }
+
+
+        $comentarios = $query
+            ->orderBy('calificaciones_chofer.created_at', 'desc')
+            ->paginate($request->per_page ?? 10)
+            ->appends($request->all());
+
+        return view('admin.calificaciones.index', compact('comentarios'));
     }
+
 
 
 
