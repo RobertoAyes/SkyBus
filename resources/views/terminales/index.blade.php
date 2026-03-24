@@ -81,7 +81,27 @@
                     {{-- Mantener perPage en búsqueda general --}}
                     <input type="hidden" name="perPage" value="{{ request('perPage', 10) }}">
                 </form>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <form method="GET" id="formCantidad">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="mb-0 fw-semibold">Mostrar:</label>
 
+                            <select name="per_page"
+                                    class="form-select form-select-sm"
+                                    style="width:90px;"
+                                    onchange="this.form.submit()">
+
+                                <option value="5"  {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+
+                            </select>
+
+                            <span>registros</span>
+                        </div>
+                    </form>
+                </div>
                 {{-- Tabla --}}
                 <div class="table-responsive w-100">
                     <table class="table table-hover table-bordered w-100 align-middle text-center">
