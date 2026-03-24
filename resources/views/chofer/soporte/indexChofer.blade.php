@@ -171,7 +171,12 @@
                 <tbody>
                 @forelse($solicitudes as $solicitud)
                     <tr>
-                        <td><div class="sop-num">{{ $solicitud->id }}</div></td>
+                        <td>
+                            <div class="sop-num">
+                                {{ str_pad($loop->iteration + ($solicitudes->firstItem() - 1), 2, '0', STR_PAD_LEFT) }}
+                            </div>
+                        </td>
+
                         <td>
                             <div class="sop-titulo">{{ $solicitud->titulo }}</div>
                             <div class="sop-desc">{{ \Illuminate\Support\Str::limit($solicitud->descripcion, 60) }}</div>

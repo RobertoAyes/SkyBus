@@ -174,7 +174,7 @@
                         data-tipo="{{ $tipoKey }}"
                         data-date="{{ $incidente->fecha_hora ? \Carbon\Carbon::parse($incidente->fecha_hora)->format('Y-m-d') : '' }}"
                     >
-                        <td><div class="inc-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div></td>
+                        <td><div class="inc-num inc-index">00</div></td>
                         <td>
                             <span class="inc-tipo-plain">{{ $incidente->tipo_incidente ?? 'Otro' }}</span>
                         </td>
@@ -302,6 +302,17 @@
                 visibleRows.forEach(function(r, i) {
                     r.style.display = (i >= start && i < end) ? '' : 'none';
                 });
+
+
+                visibleRows.forEach(function(r, i) {
+                    if (i >= start && i < end) {
+                        var num = r.querySelector('.inc-index');
+                        if (num) {
+                            num.textContent = String(i + 1).padStart(2, '0');
+                        }
+                    }
+                });
+
                 pfrom.textContent  = total ? start + 1 : 0;
                 pto.textContent    = end;
                 ptotal.textContent = total;
