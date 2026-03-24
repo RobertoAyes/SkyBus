@@ -66,7 +66,7 @@ class EmpleadoController extends Controller
             'cargo' => 'required',
             'fecha_ingreso' => 'required|date',
             'rol' => 'required|in:Empleado,Administrador,Chofer',
-            'foto' => 'required|image|max:2048',
+            'foto' => 'nullable|image|max:2048',
         ]);
 
         $foto = $request->file('foto')->store('empleados', 'public');
