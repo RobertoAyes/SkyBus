@@ -31,13 +31,13 @@
                 <form method="GET" action="{{ route('empleados.hu5') }}" class="mb-4">
                     <div class="mb-3">
                         <label class="form-label fw-bold">
-                            <i class="fas fa-search text-primary me-2"></i>Búsqueda General
+                            Búsqueda General
                         </label>
                         <div class="row g-3 mb-3">
                             <div class="col-md-7">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-primary text-white">
-                                        <i class="fas fa-search"></i>
+
+
                                     </span>
                                     <input type="text" name="buscar" class="form-control"
                                            placeholder="Buscar por nombre, apellido o cargo"
