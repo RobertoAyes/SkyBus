@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\RegistroTerminal;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use App\Models\Servicio;
 
 class RegistroTeminalController extends Controller
 {
@@ -39,7 +41,7 @@ class RegistroTeminalController extends Controller
 
     public function index(Request $request)
     {
-        $query = RegistroTerminal::query();
+        $query = RegistroTerminal::with('servicios');
 
         if ($request->filled('nombre')) {
             $query->where('nombre', 'like', '%' . $request->nombre . '%');
@@ -97,8 +99,23 @@ class RegistroTeminalController extends Controller
         ]);
 
         try {
-            // ✅ SOLO CREAR EN registro_terminal
-            RegistroTerminal::create($validatedData);
+            // SOLO CREAR EN registro_terminal
+            $terminal = RegistroTerminal::create($validatedData);
+
+            if ($request->has('servicios')) {
+
+                foreach ($request->servicios as $servicio) {
+
+                    \DB::table('servicios_extras')->insert([
+                        'registro_terminal_id' => $terminal->id,
+                        'nombre' => $servicio,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                }
+
+            }
 
             return redirect()->route('terminales.index')->with('success', 'Terminal creada correctamente.');
 
@@ -115,6 +132,8 @@ class RegistroTeminalController extends Controller
 
     public function edit(RegistroTerminal $terminal)
     {
+        $terminal->load('servicios');   // ← agregar esta línea
+
         $departamentos = $this->departamentosHonduras;
         $municipiosHonduras = $this->municipiosHonduras;
 
@@ -141,10 +160,28 @@ class RegistroTeminalController extends Controller
                 'descripcion' => 'required|string',
                 'latitud' => 'nullable|numeric|between:-90,90',
                 'longitud' => 'nullable|numeric|between:-180,180',
+
+                //  ESTA LINEA NUEVA
+                'servicios' => 'nullable|array',
             ]);
 
-            // ✅ SOLO ACTUALIZAR EN registro_terminal
+            //  SOLO ACTUALIZAR EN registro_terminal
             $terminal->update($validatedData);
+
+            // eliminar servicios anteriores
+            $terminal->servicios()->delete();
+
+            // guardar servicios nuevos
+            if ($request->has('servicios')) {
+
+                foreach ($request->servicios as $servicio) {
+
+                    $terminal->servicios()->create([
+                        'nombre' => $servicio,
+                        'descripcion' => $servicio
+                    ]);
+                }
+            }
 
             return redirect()->route('terminales.index')->with('success', 'Terminal actualizada correctamente.');
 

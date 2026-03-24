@@ -39,5 +39,6 @@ class Incidente extends Model
 
         // Esta fecha se pone sola desde la base de datos.
         'fecha_hora',
+        'acciones_tomadas',
     ];
 }

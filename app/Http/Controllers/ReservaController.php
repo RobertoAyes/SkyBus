@@ -117,7 +117,7 @@ class ReservaController extends Controller
         $codigo = strtoupper(uniqid('SKY-'));
 
         $reserva = Reserva::create([
-            'user_id' => Auth::id(),
+            'user_id' => Auth::id(), // <-- CORREGIDO: user_id en lugar de usuario_id
             'viaje_id' => $request->viaje_id,
             'asiento_id' => $request->asiento_id,
             'codigo_reserva' => $codigo,
@@ -125,11 +125,13 @@ class ReservaController extends Controller
             'estado' => 'confirmada',
         ]);
 
+        // Marcar asiento como no disponible
         $asiento->update([
             'disponible' => false,
             'reserva_id' => $reserva->id,
         ]);
 
+        // Generar QR
         $qrCode = DNS2D::getBarcodeSVG($codigo, 'QRCODE', 8, 8);
 
         $ciudades = Ciudad::all();

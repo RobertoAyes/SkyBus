@@ -43,9 +43,9 @@ class ConsultaController extends Controller
                 'mensaje' => $request->mensaje
             ]);
 
-            return redirect()->back()->with('success', ' ¡Consulta enviada exitosamente! Te responderemos pronto.');
+            return redirect()->back()->with('success', '¡Consulta enviada exitosamente! Te responderemos pronto.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', ' Hubo un error al enviar tu consulta. Intenta nuevamente.');
+            return redirect()->back()->with('error', 'Hubo un error al enviar tu consulta. Intenta nuevamente.');
         }
     }
 
@@ -56,7 +56,6 @@ class ConsultaController extends Controller
     {
         $query = Consulta::query();
 
-
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function($q) use ($buscar) {
@@ -65,29 +64,59 @@ class ConsultaController extends Controller
             });
         }
 
-
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
 
-        $consultas = $query->orderBy('created_at', 'desc')->paginate(10);
-
-
-        $consultas->appends($request->all());
+        $consultas = $query->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->appends($request->all());
 
         return view('ayuda.consultas_admin', compact('consultas'));
     }
 
-
-    public function misConsultas()
+    /**
+     * CONSULTAS DEL USUARIO (Mejorado: buscador, filtro fechas, paginación estilo extras)
+     */
+    public function misConsultas(Request $request)
     {
-        $consultas = Consulta::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // Permitir solo estos valores de paginación
+        $allowedPerPage = [5, 10, 25, 50];
+        $per_page = $request->input('per_page', 10);
+        if (!in_array($per_page, $allowedPerPage)) {
+            $per_page = 10;
+        }
+
+        $query = Consulta::where('user_id', auth()->id());
+
+        // 🔍 Buscador
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+            $query->where(function($q) use ($buscar) {
+                $q->where('asunto', 'like', "%{$buscar}%")
+                    ->orWhere('mensaje', 'like', "%{$buscar}%");
+            });
+        }
+
+        // 📅 Filtro por fechas
+        if ($request->filled('fecha_inicio')) {
+            $query->whereDate('created_at', '>=', $request->fecha_inicio);
+        }
+        if ($request->filled('fecha_fin')) {
+            $query->whereDate('created_at', '<=', $request->fecha_fin);
+        }
+
+        // 📄 Ordenar y paginar
+        $consultas = $query->orderBy('created_at', 'desc')
+            ->paginate($per_page)
+            ->appends($request->all());
 
         return view('ayuda.indexh44', compact('consultas'));
     }
 
+    /**
+     * Responder consulta (admin)
+     */
     public function responderConsulta(Request $request, $id)
     {
         $request->validate([
@@ -102,3 +131,6 @@ class ConsultaController extends Controller
         return redirect()->back()->with('success', '¡Respuesta enviada correctamente!');
     }
 }
+/**
+ * sirve
+ */

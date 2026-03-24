@@ -1,346 +1,324 @@
 @extends('layouts.layoutadmin')
 
-@section('title', 'Gestión de Documentación de Buses')
+@section('title', 'Gestión de Documentos')
 
 @section('content')
-    <div class="container-fluid mt-4">
+    <div class="container mt-4">
+        <div class="card shadow-sm border-0">
 
-        <!-- Alertas de éxito -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        <!-- Tarjeta Principal (Dashboard, Filtros y Tabla Consolidados) -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <h2 class="h4 m-0 font-weight-bold text-primary">
-                    <i class="fas fa-file-alt"></i> Gestión de Documentación de Buses
+            <!-- HEADER -->
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
+                    <i class="fas fa-file-alt me-2"></i> Registros de Documentos de Buses
                 </h2>
-                <a href="{{ route('documentos-buses.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Nuevo Documento
-                </a>
+
+                <!-- BOTÓN NUEVO -->
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrear">
+                    <i class="fas fa-plus me-2"></i>Nuevo Documento
+                </button>
             </div>
 
             <div class="card-body">
 
-                <!-- 1. Tarjetas de Estadísticas -->
-                <div class="row mb-4">
-                    <!-- Total Documentos -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col me-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            Total Documentos
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $estadisticas['total'] }}</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- ALERTA -->
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center">
+                        <i class="fas fa-circle-check me-2"></i>
+                        <strong class="me-2">¡Éxito!</strong> {{ session('success') }}
+                        <button class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                     </div>
+                @endif
 
-                    <!-- Vigentes -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col me-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Vigentes
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $estadisticas['vigentes'] }}</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- FILTROS -->
+                <form method="GET" action="{{ route('documentos-buses.index') }}">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Búsqueda General</label>
 
-                    <!-- Por Vencer -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col me-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                            Por Vencer
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $estadisticas['por_vencer'] }}</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Vencidos -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="card border-left-danger shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col me-2">
-                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                            Vencidos
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $estadisticas['vencidos'] }}</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-times-circle fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="mb-4">
-
-                <!-- 2. Filtros y Búsqueda -->
-                <div class="mb-4 p-3 bg-light rounded shadow-sm">
-                    <h5 class="font-weight-bold text-dark mb-3">
-                        <i class="fas fa-filter"></i> Opciones de Filtrado
-                    </h5>
-                    <form method="GET" action="{{ route('documentos-buses.index') }}">
-                        <div class="row g-3">
-                            <div class="col-md-4 col-lg-3">
-                                <label for="search" class="form-label">Buscar:</label>
-                                <input type="text" name="search" id="search" class="form-control"
-                                       placeholder="Placa o N de documento..."
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-7">
+                                <input type="text" name="search" class="form-control"
+                                       placeholder="Buscar por placa o documento..."
                                        value="{{ request('search') }}">
                             </div>
 
-                            <div class="col-md-4 col-lg-2">
-                                <label for="estado" class="form-label">Estado:</label>
-                                <select name="estado" id="estado" class="form-select">
-                                    <option value="">Todos</option>
-                                    <option value="vigente" {{ request('estado') == 'vigente' ? 'selected' : '' }}>Vigente</option>
-                                    <option value="por_vencer" {{ request('estado') == 'por_vencer' ? 'selected' : '' }}>Por Vencer</option>
-                                    <option value="vencido" {{ request('estado') == 'vencido' ? 'selected' : '' }}>Vencido</option>
+                            <div class="col-md-5 d-flex gap-2">
+                                <button class="btn btn-primary flex-fill">
+                                    <i class="fas fa-search me-2"></i>Buscar
+                                </button>
+
+                                <button type="button" class="btn btn-outline-primary flex-fill"
+                                        data-bs-toggle="collapse" data-bs-target="#filtrosAvanzados">
+                                    <i class="fas fa-sliders-h me-2"></i>Filtros
+                                </button>
+
+                                @if(request()->hasAny(['search','estado','tipo_documento','fecha_emision']))
+                                    <a href="{{ route('documentos-buses.index') }}" class="btn btn-outline-secondary flex-fill">
+                                        <i class="fas fa-times me-2"></i>Limpiar
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILTROS AVANZADOS -->
+                    <div class="collapse" id="filtrosAvanzados">
+                        <div class="card mb-3 bg-light border-primary">
+                            <div class="card-header bg-primary bg-opacity-10">
+                                <h6 class="mb-0 text-primary">Filtros Adicionales</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold"><i class="fas fa-toggle-on text-success me-1"></i>Estado</label>
+                                        <select name="estado" class="form-select select2" data-placeholder="Todos">
+                                            <option value="">Todos</option>
+                                            <option value="vigente" {{ request('estado')=='vigente'?'selected':'' }}>Vigente</option>
+                                            <option value="por_vencer" {{ request('estado')=='por_vencer'?'selected':'' }}>Por vencer</option>
+                                            <option value="vencido" {{ request('estado')=='vencido'?'selected':'' }}>Vencido</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold"><i class="fas fa-folder"></i> Tipo de Documento</label>
+                                        <select name="tipo_documento" class="form-select select2" data-placeholder="Todos">
+                                            <option value="">Todos</option>
+                                            <option value="permiso_operacion">Permiso</option>
+                                            <option value="revision_tecnica">Revisión</option>
+                                            <option value="seguro_vehicular">Seguro</option>
+                                            <option value="matricula">Matrícula</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold"><i class="fas fa-calendar text-primary me-1"></i>Fecha de Emisión</label>
+                                        <input type="date" name="fecha_emision" class="form-control"
+                                               value="{{ request('fecha_emision') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="mb-0 fw-semibold">Mostrar:</label>
+                            <select name="per_page"
+                                    class="form-select form-select-sm border-primary"
+                                    style="width:90px;"
+                                    onchange="this.form.submit()">
+                                <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                            <span>registros</span>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- TABLA -->
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-primary">
+                        <tr>
+                            <th>#</th>
+                            <th>Bus</th>
+                            <th>Tipo</th>
+                            <th>N° Documento</th>
+                            <th>Emisión</th>
+                            <th>Vencimiento</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        @forelse($documentos as $key => $doc)
+                            <tr>
+                                <td>{{ $documentos->firstItem() + $key }}</td>
+                                <td>{{ $doc->bus->placa ?? '—' }}</td>
+                                <td>{{ $doc->tipo_documento_nombre }}</td>
+                                <td>{{ $doc->numero_documento }}</td>
+                                <td>{{ $doc->fecha_emision->format('d/m/Y') }}</td>
+                                <td>{{ $doc->fecha_vencimiento->format('d/m/Y') }}</td>
+                                <td>{!! $doc->estado_badge !!}</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-id="{{ $doc->id }}">
+                                            <i class="fas fa-eye me-1"></i> Ver
+                                        </button>
+
+                                        <button class="btn btn-primary btn-sm btn-editar" data-id="{{ $doc->id }}">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    No hay documentos registrados
+                                </td>
+                            </tr>
+                        @endforelse
+                        <!-- Select2 CSS -->
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
+
+                        <!-- jQuery y Select2 JS -->
+                        <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+                        </tbody>
+
+                    </table>
+                    <!-- PAGINACIÓN DOCUMENTOS ESTILO INCIDENTES -->
+                    <div class="d-flex justify-content-end align-items-center mt-3">
+                        @if($documentos->hasPages())
+                            <nav aria-label="Paginación de documentos">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <!-- Anterior -->
+                                    <li class="page-item {{ $documentos->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $documentos->previousPageUrl() }}">Anterior</a>
+                                    </li>
+
+                                    <!-- Números de página -->
+                                    @for($page = 1; $page <= $documentos->lastPage(); $page++)
+                                        <li class="page-item {{ $page == $documentos->currentPage() ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $documentos->url($page) }}">{{ $page }}</a>
+                                        </li>
+                                    @endfor
+
+                                    <!-- Siguiente -->
+                                    <li class="page-item {{ $documentos->hasMorePages() ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $documentos->nextPageUrl() }}">Siguiente</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        @endif
+                    </div>
+
+                    <style>
+                        .pagination .page-link {
+                            color: #1e63b8;
+                            border-radius: 0.375rem;
+                            border: 1px solid #dee2e6;
+                            margin: 0 2px;
+                        }
+                        .pagination .page-link:hover {
+                            background-color: #1e63b8;
+                            color: #fff;
+                        }
+                        .pagination .page-item.active .page-link {
+                            background-color: #1e63b8;
+                            border-color: #1e63b8;
+                            color: #fff;
+                        }
+                        .pagination .page-item.disabled .page-link {
+                            color: #9ca3af;
+                            background: #f3f4f6;
+                            border-color: #e5e7eb;
+                        }
+                    </style>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CREAR DOCUMENTO  -->
+    <div class="modal fade" id="modalCrear" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
+            <div class="modal-content border-0 rounded-3 shadow" style="overflow: hidden;">
+
+                <!-- HEADER -->
+                <div class="modal-header text-white border-0" style="background: #1e63b8; padding: 1.25rem 1.5rem;">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:34px; height:34px; background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-file-circle-plus" style="font-size:13px;"></i>
+                        </div>
+                        <span style="font-size:15px; font-weight:500;">Nuevo Documento</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- BODY -->
+                <form action="{{ route('documentos-buses.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body" style="padding: 1.5rem;">
+
+                        <div class="row g-3">
+
+                            <!-- TIPO -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Tipo Documento</label>
+                                <select name="tipo_documento" class="form-select" required>
+                                    <option value="">Seleccione</option>
+                                    <option value="permiso_operacion">Permiso</option>
+                                    <option value="revision_tecnica">Revisión</option>
+                                    <option value="seguro_vehicular">Seguro</option>
+                                    <option value="matricula">Matrícula</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-4 col-lg-3">
-                                <label for="tipo_documento" class="form-label">Tipo de Documento:</label>
-                                <select name="tipo_documento" id="tipo_documento" class="form-select">
-                                    <option value="">Todos</option>
-                                    <option value="permiso_operacion" {{ request('tipo_documento') == 'permiso_operacion' ? 'selected' : '' }}>Permiso de Operación</option>
-                                    <option value="revision_tecnica" {{ request('tipo_documento') == 'revision_tecnica' ? 'selected' : '' }}>Revisión Técnica</option>
-                                    <option value="seguro_vehicular" {{ request('tipo_documento') == 'seguro_vehicular' ? 'selected' : '' }}>Seguro Vehicular</option>
-                                    <option value="matricula" {{ request('tipo_documento') == 'matricula' ? 'selected' : '' }}>Matrícula</option>
-                                </select>
+                            <!-- NÚMERO -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Número Documento</label>
+                                <input type="text" name="numero_documento" class="form-control" required>
                             </div>
 
-                            <div class="col-md-4 col-lg-2">
-                                <label for="bus_id" class="form-label">Bus:</label>
-                                <select name="bus_id" id="bus_id" class="form-select">
-                                    <option value="">Todos</option>
+                            <!-- FECHA EMISIÓN -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha Emisión</label>
+                                <input type="date" name="fecha_emision" class="form-control" required>
+                            </div>
+
+                            <!-- FECHA VENCIMIENTO -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha Vencimiento</label>
+                                <input type="date" name="fecha_vencimiento" class="form-control" required>
+                            </div>
+
+                            <!-- BUS -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Bus</label>
+                                <select name="bus_id" class="form-select" required>
+                                    <option value="">Seleccione</option>
                                     @foreach($buses as $bus)
-                                        <option value="{{ $bus->id }}" {{ request('bus_id') == $bus->id ? 'selected' : '' }}>
+                                        <option value="{{ $bus->id }}">
                                             {{ $bus->numero_bus }} - {{ $bus->placa }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <!-- Botón de Búsqueda a ancho completo -->
-                            <div class="col-md-4 col-lg-2 d-flex align-items-end pt-3 pt-md-0">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-search"></i> Buscar
-                                </button>
-                                {{-- El botón de Limpiar fue eliminado a petición del usuario. --}}
-                            </div>
                         </div>
-                    </form>
-                </div>
-
-                <hr class="mt-4 mb-4">
-
-                <!-- 3. Tabla de Documentos -->
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="font-weight-bold text-dark m-0">
-                        <i class="fas fa-list"></i> Listado de Documentos
-                    </h5>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <!-- CAMBIO: table-dark se reemplaza por table-primary (azul del sistema) -->
-                        <thead class="table-primary text-white">
-                        <tr>
-                            <th>Bus / Placa</th>
-                            <th>Tipo Documento</th>
-                            <th>N° Documento</th>
-                            <th>Emisión</th>
-                            <th>Vencimiento</th>
-                            <th>Días Restantes</th>
-                            <th>Estado</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @forelse($documentos as $documento)
-                            <tr class="{{ $documento->estado === 'vencido' ? 'table-danger' : ($documento->estado === 'por_vencer' ? 'table-warning' : '') }}">
-                                <td>
-                                    <small class="text-muted">{{ $documento->bus->placa ?? 'N/A' }}</small>
-                                </td>
-                                <td>{{ $documento->tipo_documento_nombre }}</td>
-                                <td>{{ $documento->numero_documento }}</td>
-                                <td>{{ $documento->fecha_emision->format('d/m/Y') }}</td>
-                                <td>{{ $documento->fecha_vencimiento->format('d/m/Y') }}</td>
-                                <td>
-                                    @if($documento->dias_hasta_vencimiento < 0)
-                                        <span class="badge bg-danger">
-                                            Vencido ({{ abs($documento->dias_hasta_vencimiento) }} días)
-                                        </span>
-                                    @else
-                                        <span class="badge {{ $documento->dias_hasta_vencimiento <= 30 ? 'bg-warning text-dark' : 'bg-success' }}">
-                                            {{ $documento->dias_hasta_vencimiento }} días
-                                        </span>
-                                    @endif
-                                </td>
-                                <td>{!! $documento->estado_badge !!}</td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('documentos-buses.show', $documento->id) }}"
-                                           class="btn btn-sm primary" title="Ver detalles">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('documentos-buses.edit', $documento->id) }}"
-                                           class="btn btn-sm primary" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        @if($documento->archivo_url)
-                                            <a href="{{ route('documentos-buses.descargar', $documento->id) }}"
-                                               class="btn btn-sm btn-success" title="Descargar archivo">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                        @endif
-                                        <button type="button"
-                                                class="btn btn-sm primary"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteConfirmationModal"
-                                                data-id="{{ $documento->id }}"
-                                                title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-
-                                        <!-- Formulario de eliminación oculto (se usa en el modal) -->
-                                        <form id="delete-form-{{ $documento->id }}"
-                                              action="{{ route('documentos-buses.destroy', $documento->id) }}"
-                                              method="POST" style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-5">
-                                    <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                                    <p class="text-muted h5">No se encontraron documentos que coincidan con los criterios de búsqueda.</p>
-                                    <a href="{{ route('documentos-buses.create') }}" class="btn btn-primary mt-3">
-                                        <i class="fas fa-plus"></i> Registrar documento
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginación -->
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <div class="text-muted">
-                        Mostrando {{ $documentos->firstItem() ?? 0 }} a {{ $documentos->lastItem() ?? 0 }}
-                        de {{ $documentos->total() }} documentos
                     </div>
-                    <div>
-                        {{ $documentos->links() }}
+
+                    <!-- FOOTER -->
+                    <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color: #e5e7eb !important; padding: 1rem 1.5rem;">
+                        <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal" style="min-width: 100px; justify-content: center;">
+                            <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary d-flex align-items-center gap-2" style="min-width: 100px; justify-content: center;">
+                            <i class="fas fa-save" style="font-size:12px;"></i> Guardar
+                        </button>
                     </div>
-                </div>
+                </form>
+
             </div>
         </div>
     </div>
-
-    <!-- Modal de Confirmación de Eliminación -->
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteConfirmationModalLabel"><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p class="h6">¿Está seguro que desea eliminar este documento?</p>
-                    <small class="text-muted">Esta acción no se puede deshacer.</small>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Estilos Adicionales (Mejorados) -->
-    <style>
-        /* Estilos de Card para las estadísticas */
-        .card.border-left-primary { border-left: 0.25rem solid #4e73df !important; }
-        .card.border-left-success { border-left: 0.25rem solid #4e73df !important; }
-        .card.border-left-warning { border-left: 0.25rem solid #4e73df !important; }
-        .card.border-left-danger { border-left: 0.25rem solid #4e73df !important; }
-
-        /* Mejora visual de la tabla en pantallas pequeñas */
-        @media (max-width: 768px) {s
-            .table-responsive .table td:nth-child(5),
-            .table-responsive .table th:nth-child(5),
-            .table-responsive .table td:nth-child(6),
-            .table-responsive .table th:nth-child(6) {
-                /* Ocultar columnas menos importantes para móviles */
-                display: none;
-            }
-        }
-    </style>
-@endsection
-
-@section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
-            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-            let formToSubmit = null;
-
-            // 1. Manejar clic en el botón de eliminar de la tabla
-            document.querySelectorAll('.btn-eliminar').forEach(button => {
-                button.addEventListener('click', function() {
-                    const documentoId = this.getAttribute('data-id');
-                    formToSubmit = document.getElementById(`delete-form-${documentoId}`);
+        $(document).ready(function () {
+            // Inicializar todos los selects con clase .select2
+            $('.select2').each(function() {
+                $(this).select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Seleccionar...',
+                    allowClear: true,
                 });
-            });
-
-            // 2. Manejar clic en el botón 'Eliminar' dentro del modal
-            confirmDeleteButton.addEventListener('click', function() {
-                if (formToSubmit) {
-                    formToSubmit.submit();
-                }
-            });
-
-            // 3. Limpiar la referencia del formulario al cerrar el modal (Buena práctica)
-            deleteConfirmationModal.addEventListener('hidden.bs.modal', function () {
-                formToSubmit = null;
             });
         });
     </script>

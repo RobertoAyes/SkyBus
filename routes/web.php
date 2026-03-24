@@ -354,37 +354,41 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DocumentoBusController::class, 'dashboard'])->name('dashboard');
 
 });
- //Documentos-buses Sindy
+// Documentos-buses
 Route::middleware(['auth'])->prefix('documentos-buses')->name('documentos-buses.')->group(function () {
 
-    // documentos-buses.dashboard, si se requiere en el menú específico de esa sección.
+    // Dashboard
     Route::get('/dashboard', [DocumentoBusController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/crear', [DocumentoBusController::class, 'create'])->name('create');
-    Route::post('/', [DocumentoBusController::class, 'store'])->name('store');
-    Route::post('/actualizar-estados', [DocumentoBusController::class, 'actualizarEstados'])->name('actualizar-estados');
-    Route::get('/exportar/pdf', [DocumentoBusController::class, 'exportarPDF'])->name('exportar-pdf');
+    // Acciones sin parámetro
+    Route::get('/crear',              [DocumentoBusController::class, 'create'])->name('create');
+    Route::post('/',                  [DocumentoBusController::class, 'store'])->name('store');
+    Route::post('/actualizar-estados',[DocumentoBusController::class, 'actualizarEstados'])->name('actualizar-estados');
+    Route::get('/exportar/pdf',       [DocumentoBusController::class, 'exportarPDF'])->name('exportar-pdf');
 
-    // API - Obtener documentos por bus
+    // API
     Route::get('/api/bus/{busId}', [DocumentoBusController::class, 'porBus'])->name('api.por-bus');
 
-    // 2. RUTAS DE LISTADO (SIN PARÁMETROS)
-    // -------------------------------------------------------------------
+    // Listado
     Route::get('/', [DocumentoBusController::class, 'index'])->name('index');
 
-    // 3. RUTAS CON PARÁMETROS (VAN AL FINAL)
-    // -------------------------------------------------------------------
+    // ── Rutas con parámetro ──────────────────────────────────────────────────
+
+    // Descarga de archivo
     Route::get('/{id}/descargar', [DocumentoBusController::class, 'descargarArchivo'])->name('descargar');
+
+    // ── NUEVAS: parciales para modales (deben ir ANTES de /{id}) ────────────
+    Route::get('/{id}/detalle-modal', [DocumentoBusController::class, 'showModal'])->name('show-modal');
+    Route::get('/{id}/editar-modal',  [DocumentoBusController::class, 'editModal'])->name('edit-modal');
+
+    // Editar y ver en página completa (se mantienen por compatibilidad)
     Route::get('/{id}/editar', [DocumentoBusController::class, 'edit'])->name('edit');
-    // Esta ruta siempre debe ser la última dentro del grupo de rutas CRUD con {id}
-    Route::get('/{id}', [DocumentoBusController::class, 'show'])->name('show');
-    Route::put('/{id}', [DocumentoBusController::class, 'update'])->name('update');
+    Route::get('/{id}',        [DocumentoBusController::class, 'show'])->name('show');
+
+    // Actualizar y eliminar
+    Route::put('/{id}',    [DocumentoBusController::class, 'update'])->name('update');
     Route::delete('/{id}', [DocumentoBusController::class, 'destroy'])->name('destroy');
-
-    // Tu ruta resource existente
-    Route::resource('documentos-buses', DocumentoBusController::class);
 });
-
 //Rutas Shirley
 Route::resource('rentas', RegistroRentaController::class);
 Route::put('/reservas/{reserva}', [ReservaController::class, 'update'])->name('reserva.update');
@@ -592,7 +596,7 @@ Route::put('/rutas/{id}/bloquear', [RutaController::class, 'bloquear'])->name('r
 // ===============================
 // CHOFER
 // ===============================
-Route::prefix('chofer')->middleware('auth')->group(function () {
+/*Route::prefix('chofer')->middleware('auth')->group(function () {
 
     // Historial de solicitudes propias
     Route::get('soporte', [SoporteController::class,'indexChofer'])
@@ -605,6 +609,23 @@ Route::prefix('chofer')->middleware('auth')->group(function () {
     // Guardar nueva solicitud (el form del chofer usa esta ruta)
     Route::post('soporte', [SoporteController::class,'store'])
         ->name('chofer.soporte.store');
+
+});*/
+
+Route::prefix('chofer')->middleware('auth')->group(function () {
+
+    Route::get('soporte', [SoporteController::class,'indexChofer'])
+        ->name('chofer.soporte.index');
+
+    Route::get('soporte/crear', [SoporteController::class,'crear'])
+        ->name('chofer.soporte.crear');
+
+    Route::post('soporte', [SoporteController::class,'store'])
+        ->name('chofer.soporte.store');
+
+    Route::get('admin/soportes', [SoporteController::class, 'indexAdmin'])
+        ->name('admin.soportes');
+
 });
 
 // ===============================
@@ -625,3 +646,7 @@ Route::put('/empleados-hu5/{empleado}', [EmpleadoHU5Controller::class, 'update']
 // historial de incidentes
 Route::get('/historial-incidentes', [\App\Http\Controllers\IncidenteController::class, 'historial'])
     ->name('empleados.incidentes.historial');
+
+// Ruta para responder un incidente
+Route::post('/incidentes/{id}/responder', [\App\Http\Controllers\IncidenteController::class, 'responder'])
+    ->name('incidentes.responder');

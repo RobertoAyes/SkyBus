@@ -6,7 +6,7 @@ use App\Models\Extra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ExtraController extends Controller
+class ExtraController extends Controller//usuario
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +16,22 @@ class ExtraController extends Controller
     {
         $this->middleware('auth');
     }
-
-    public function index()
+    public function index(Request $request)
     {
-        $extras = Extra::Paginate(10);
+        $perPage = $request->get('per_page', 5);
+        $perPage = in_array($perPage, [5, 10, 25, 50]) ? $perPage : 5;
+
+        $query = Extra::query();
+
+        if ($request->filled('buscar')) {
+            $query->where('nombre', 'like', '%' . $request->buscar . '%');
+        }
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $extras = $query->paginate($perPage);
 
         return view('servicios_adicionales.servicios_adicionales-index', compact('extras'));
     }

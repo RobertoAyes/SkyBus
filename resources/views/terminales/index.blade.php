@@ -114,7 +114,9 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('terminales.edit', $terminal) }}" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="{{ route('servicios.edit', $terminal) }}" class="btn btn-success btn-sm">Servicios</a>
+                                    {{--
+                                        <a href="{{ route('servicios.edit', $terminal) }}" class="btn btn-success btn-sm">Servicios</a>
+                                    --}}
                                 </td>
                             </tr>
                         @empty

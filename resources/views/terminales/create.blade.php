@@ -225,18 +225,51 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('terminales.index') }}'">
-                                <i class="fas fa-arrow-left me-2"></i> Volver a la lista
-                            </button>
+                        <!-- AQUI VA SERVICIOS ADICIONALES -->
 
+                        <h5 class="mb-3 mt-5" style="color:#1e63b8; font-weight:600; font-size:1.5rem;">
+                            <i class="fas fa-star me-2"></i>4. Servicios adicionales
+                        </h5>
+
+                        <hr class="mt-0 mb-4">
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="servicios[]" value="wifi">
+                                    <label class="form-check-label">WiFi</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="servicios[]" value="banos">
+                                    <label class="form-check-label">Baños</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="servicios[]" value="cafeteria">
+                                    <label class="form-check-label">Cafetería</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="servicios[]" value="parqueo">
+                                    <label class="form-check-label">Parqueo</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end align-items-center pt-3 border-top">
                             <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-warning reset-btn">
-                                    <i class="fas fa-undo me-2"></i> Limpiar formulario
+
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('terminales.index') }}'">
+                                    <i class="fas fa-times me-2"></i> Cancelar
                                 </button>
+
                                 <button type="submit" class="btn btn-primary submit-btn">
                                     <i class="fas fa-save me-2"></i> Guardar
                                 </button>
+
                             </div>
                         </div>
                     </form>

@@ -139,6 +139,14 @@
             <i class="fas fa-chevron-left"></i>
         </button>
 
+        <div class="brand-logo">
+            <h2>
+                <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
+                     alt="Logo"
+                     style="width: 90px; height: auto; border-radius: 0; display: block; margin: 0 auto;">
+            </h2>
+        </div>
+
         <div class="user-info">
             <h3>Panel </h3>
             <h3> Administrador</h3>
@@ -175,9 +183,6 @@
                 <a href="{{ route('empleados.hu5') }}" class="{{ request()->routeIs('empleados.hu5') ? 'active' : '' }}">
                     Ver empleados
                 </a>
-                <a href="{{ route('empleados.create') }}" class="{{ request()->routeIs('empleados.create') ? 'active' : '' }}">
-                    Registrar empleado
-                </a>
                 <a href="{{ route('abordajes.historial') }}" class="{{ request()->routeIs('abordajes.historial') ? 'active' : '' }}">
                     Check-in
                 </a>
@@ -198,7 +203,7 @@
 
             <div class="collapse btn-toggle-nav" id="documentacionBuses">
                 <a href="{{ route('documentos-buses.index') }}" class="{{ request()->routeIs('documentos-buses.index') ? 'active' : '' }}">
-                    Gestionar Documentacion
+                    Ver Documentos de Buses
                 </a>
             </div>
         </div>
@@ -218,8 +223,8 @@
                 </a>
 
                 <!-- Soporte de Chofer -->
-                <a href="{{ route('chofer.soporte.index') }}"
-                   class="{{ request()->routeIs('chofer.soporte.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.soportes') }}"
+                   class="{{ request()->routeIs('admin.soportes') ? 'active' : '' }}">
                     Ver Consultas Chofer
                 </a>
             </div>
@@ -249,9 +254,11 @@
                 <a href="{{ route('rentas.index') }}" class="{{ request()->routeIs('rentas.index') ? 'active' : '' }}">
                     Ver Registro
                 </a>
-                <a href="{{ route('rentas.create') }}" class="{{ request()->routeIs('rentas.create') ? 'active' : '' }}">
+                {{-- <a href="{{ route('rentas.create') }}" class="{{ request()->routeIs('rentas.create') ? 'active' : '' }}">
                     Agregar Renta
-                </a>
+                 </a>
+                 --}}
+
             </div>
         </div>
 
@@ -274,31 +281,17 @@
             </div>
         </div>
 
-        <!-- Servicios Adicionales -->
+        <!-- servicios adicionales -->
         <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center justify-content-between"
-                    data-bs-toggle="collapse" data-bs-target="#extras"
-                    aria-expanded="{{ request()->routeIs('usuario.servicios_adicionales*') ? 'true' : 'false' }}">
-
-        <span class="d-flex align-items-center">
-            <i class="fas fa-plus-circle"></i>
-            <span class="ms-1">S.Adicionales</span> <!-- ms-1 agrega un margen mínimo a la izquierda -->
-        </span>
-
-                <i class="fas fa-chevron-right chevron"></i>
+            <button class="btn-toggle d-flex align-items-center w-100" data-bs-toggle="collapse" data-bs-target="#servicios">
+                <i class="fas fa-star me-2"></i>
+                <span>S. Adicionales</span>
+                <i class="fas fa-chevron-right ms-auto chevron"></i>
             </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('usuario.servicios_adicionales.index') || request()->routeIs('servicios_adicionales.create') ? 'show' : '' }}"
-                 id="extras">
-
+            <div class="collapse btn-toggle-nav" id="servicios">
                 <a href="{{ route('servicios_adicionales.index') }}"
-                   class="{{ request()->routeIs('servicios_adicionales.index') ? 'active' : '' }}">
-                    Lista de servicios adicionales
-                </a>
-
-                <a href="{{ route('servicios_adicionales.create') }}"
-                   class="{{ request()->routeIs('servicios_adicionales.create') ? 'active' : '' }}">
-                    Registrar nuevos servicios adicionales
+                   class="{{ request()->routeIs('servicios_adicionales.*') ? 'active' : '' }}">
+                    Ver Servicios
                 </a>
             </div>
         </div>
@@ -438,37 +431,15 @@
     </nav>
 
     <div class="content-area">
-        <div class="d-flex justify-content-end align-items-center gap-2 mb-4 p-3 rounded shadow-sm"
-             style="background-color: #0d1f3f; border-left: 5px solid #0dcaf0;">
 
-
-
-            @php
-                $adminNotiCount = \App\Models\Notificacion::where('usuario_id', auth()->id())
-                    ->where('leida', false)
-                    ->count();
-            @endphp
-
-            <a href="{{ route('admin.notificaciones') }}"
-               class="btn btn-outline-light btn-sm position-relative rounded-circle shadow-sm"
-               style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-bell"></i>
-
-                @if($adminNotiCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $adminNotiCount }}
-                        <span class="visually-hidden">notificaciones no leídas</span>
-                    </span>
-                @endif
-            </a>
-        </div>
 
         @yield('content')
     </div>
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 
 <script>
     // Mantener grupos abiertos
@@ -513,6 +484,22 @@
         });
     });
 </script>
+//sidebar
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.querySelector('.sidebar');
+
+        // Restaurar posición de scroll guardada
+        const scrollPos = localStorage.getItem('sidebarScroll');
+        if (scrollPos) sidebar.scrollTop = parseInt(scrollPos);
+
+        // Guardar posición de scroll cada vez que el usuario se mueve
+        sidebar.addEventListener('scroll', () => {
+            localStorage.setItem('sidebarScroll', sidebar.scrollTop);
+        });
+    });
+</script>
 </body>
 </html>
