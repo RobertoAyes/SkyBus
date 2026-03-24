@@ -9,7 +9,7 @@
             <!-- HEADER -->
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
-                    <i class="fas fa-file-alt me-2"></i>Gestión de Documentos
+                    <i class="fas fa-file-alt me-2"></i> Registros de Documentos de Buses
                 </h2>
 
                 <!-- BOTÓN NUEVO -->
@@ -70,8 +70,8 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold">Estado</label>
-                                        <select name="estado" class="form-select">
+                                        <label class="form-label fw-bold"><i class="fas fa-toggle-on text-success me-1"></i>Estado</label>
+                                        <select name="estado" class="form-select select2" data-placeholder="Todos">
                                             <option value="">Todos</option>
                                             <option value="vigente" {{ request('estado')=='vigente'?'selected':'' }}>Vigente</option>
                                             <option value="por_vencer" {{ request('estado')=='por_vencer'?'selected':'' }}>Por vencer</option>
@@ -80,8 +80,8 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold">Tipo</label>
-                                        <select name="tipo_documento" class="form-select">
+                                        <label class="form-label fw-bold"><i class="fas fa-folder"></i> Tipo de Documento</label>
+                                        <select name="tipo_documento" class="form-select select2" data-placeholder="Todos">
                                             <option value="">Todos</option>
                                             <option value="permiso_operacion">Permiso</option>
                                             <option value="revision_tecnica">Revisión</option>
@@ -91,12 +91,27 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold">Fecha de Emisión</label>
+                                        <label class="form-label fw-bold"><i class="fas fa-calendar text-primary me-1"></i>Fecha de Emisión</label>
                                         <input type="date" name="fecha_emision" class="form-control"
                                                value="{{ request('fecha_emision') }}">
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="mb-0 fw-semibold">Mostrar:</label>
+                            <select name="per_page"
+                                    class="form-select form-select-sm border-primary"
+                                    style="width:90px;"
+                                    onchange="this.form.submit()">
+                                <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                            <span>registros</span>
                         </div>
                     </div>
                 </form>
@@ -146,6 +161,13 @@
                                 </td>
                             </tr>
                         @endforelse
+                        <!-- Select2 CSS -->
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
+
+                        <!-- jQuery y Select2 JS -->
+                        <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
                         </tbody>
 
                     </table>
@@ -203,9 +225,7 @@
         </div>
     </div>
 
-    <!-- PAGINACIÓN ALINEADA CON LA TABLA -->
-
-    <!-- MODAL CREAR DOCUMENTO ESTILO INCIDENTES -->
+    <!-- MODAL CREAR DOCUMENTO  -->
     <div class="modal fade" id="modalCrear" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
             <div class="modal-content border-0 rounded-3 shadow" style="overflow: hidden;">
@@ -289,4 +309,17 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            // Inicializar todos los selects con clase .select2
+            $('.select2').each(function() {
+                $(this).select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    placeholder: $(this).data('placeholder') || 'Seleccionar...',
+                    allowClear: true,
+                });
+            });
+        });
+    </script>
 @endsection

@@ -9,6 +9,8 @@ class EmpleadoHU5Controller extends Controller
 {
     public function index(Request $request)
     {
+        $perPage = $request->get('per_page', 5); // Por defecto 5
+
         $query = Empleado::query();
 
         // Búsqueda general
@@ -31,12 +33,14 @@ class EmpleadoHU5Controller extends Controller
         }
 
         if ($request->filled('fecha_registro')) {
-            $query->whereDate('created_at', $request->input('fecha_registro'));
+            $query->whereDate('fecha_ingreso', $request->input('fecha_registro'));
         }
 
-        $empleados = $query->orderBy('nombre')->paginate(10);
+        // Paginación dinámica con orden y filtros aplicados
+        $empleados = $query->orderBy('id', 'desc')
+            ->paginate($perPage)
+            ->appends($request->all());
 
-        // Retorna a la vista correcta
         return view('empleados.index_hu5', compact('empleados'));
     }
 
