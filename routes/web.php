@@ -326,10 +326,11 @@ Route::post('usuario/update-password', [AuthController::class, 'updateUserPasswo
 //Servicios adicionales
 Route::resource('(/servicios_adicionales', ExtraController::class );
 Route::resource('/servicios', ServicioController::class);
-//servicios extras
-Route::resource('/servicios_reserva', ServicioExtraController::class);
-Route::resource('/servicios', ServicioController::class);
 
+// SERVICIOS ADICIONALES - CLIENTE (extras en reserva)
+Route::middleware(['auth', 'user.active'])->group(function () {
+    Route::resource('servicios_reserva', ServicioExtraController::class);
+});
 
 // Solicitudes de constancia
 Route::middleware(['auth'])->group(function () {
