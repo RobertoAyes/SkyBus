@@ -41,10 +41,16 @@
                     </div>
                 </form>
 
-                {{-- ALERTA --}}
+                {{-- ALERTA DE RESERVA --}}
                 <div class="alert alert-warning d-flex align-items-center">
                     <i class="fas fa-circle-exclamation me-2"></i>
                     Solo puedes seleccionar servicios si tienes una reserva activa.
+                </div>
+
+                {{-- MENSAJE SOBRE MÁXIMO 3 SERVICIOS --}}
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Recuerde: solo puede seleccionar hasta <strong>3 servicios adicionales</strong> por reserva.
                 </div>
 
                 {{-- FORM --}}
@@ -172,7 +178,7 @@
                         @endif
                     </div>
 
-                    {{-- MODAL --}}
+                    {{-- MODAL DE CONFIRMACIÓN --}}
                     <div class="modal fade" id="confirmModal">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
@@ -191,6 +197,24 @@
                         </div>
                     </div>
 
+                    {{-- MODAL ALERTA MÁXIMO 3 --}}
+                    <div class="modal fade" id="max3Modal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-warning text-dark">
+                                    <h5 class="modal-title">Límite alcanzado</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    Solo puedes seleccionar un máximo de <strong>3 servicios adicionales</strong>.
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </form>
             </div>
         </div>
@@ -203,9 +227,19 @@
             const reserva = document.getElementById('reserva_id');
             const checks = document.querySelectorAll('.servicio-checkbox');
 
+            const max3Modal = new bootstrap.Modal(document.getElementById('max3Modal'));
+
             function toggleBtn() {
                 const okReserva = reserva.value !== "";
-                const alguno = Array.from(checks).some(c => c.checked);
+                const seleccionados = Array.from(checks).filter(c => c.checked);
+                const alguno = seleccionados.length > 0;
+
+                // Limitar máximo 3 servicios y mostrar modal
+                if (seleccionados.length > 3) {
+                    seleccionados[seleccionados.length - 1].checked = false;
+                    max3Modal.show();
+                }
+
                 btn.style.display = (okReserva && alguno) ? 'inline-block' : 'none';
             }
 
