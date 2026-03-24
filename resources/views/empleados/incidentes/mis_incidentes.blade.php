@@ -5,10 +5,7 @@
     <style>
         .inc-wrap { font-family: 'DM Sans', sans-serif; background: #f0f9ff; min-height: 100vh; padding: 1.75rem 1.5rem; }
 
-        .inc-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: .75rem; }
-        .inc-topbar-left { display: flex; align-items: baseline; gap: .5rem; }
-        .inc-title { font-size: 1.3rem; font-weight: 700; color: #0c1a2e; letter-spacing: -.02em; margin: 0; }
-        .inc-badge { font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 500; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: .15rem .55rem; border-radius: 20px; }
+        .inc-greeting-banner { background: linear-gradient(135deg,#3a9fd6 0%,#5bb8e8 100%); border-radius: 20px; padding: 1.8rem 2rem; margin-bottom: 1.25rem; color: #fff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 28px rgba(58,159,214,0.25); }
         .inc-btn-print { display: inline-flex; align-items: center; gap: .4rem; background: #fff; border: 1px solid #c9dff2; color: #0284c7; border-radius: 8px; padding: .45rem 1rem; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .15s; }
         .inc-btn-print:hover { background: #e0f2fe; border-color: #bae6fd; }
 
@@ -79,11 +76,17 @@
 
     <div class="inc-wrap">
 
-        <div class="inc-topbar">
-            <div class="inc-topbar-left">
-                <h1 class="inc-title">Mis Incidentes</h1>
-                <span class="inc-badge" id="inc-counter">{{ $incidentes->count() }}</span>
+        <div class="inc-greeting-banner">
+            <div>
+                <div style="font-weight:800;font-size:1.5rem;">Mis Incidentes</div>
+                <div style="font-size:0.9rem;opacity:0.85;">Historial de incidencias reportadas durante tus rutas.</div>
             </div>
+            <div style="font-size:1.6rem;">
+                <i class="fas fa-bus"></i>
+            </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
             <button onclick="window.print()" class="inc-btn-print">
                 <i class="fas fa-print"></i> Imprimir
             </button>
@@ -264,7 +267,7 @@
             var pto      = document.getElementById('inc-pto');
             var ptotal   = document.getElementById('inc-ptotal');
             var plinks   = document.getElementById('inc-plinks');
-            var badge    = document.getElementById('inc-counter');
+
 
             function getRows() {
                 return Array.from(tbody.querySelectorAll('tr[data-search]'));
@@ -285,7 +288,7 @@
                 all.forEach(function(r) { r.style.display = 'none'; });
                 noRes.style.display = visibleRows.length === 0 ? '' : 'none';
                 fCount.textContent = (q || tp || dt) ? visibleRows.length + ' resultado(s)' : '';
-                badge.textContent  = visibleRows.length;
+
                 currentPage = 1;
                 renderPage();
             }
