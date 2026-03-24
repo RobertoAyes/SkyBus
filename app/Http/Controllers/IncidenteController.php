@@ -136,8 +136,9 @@ class IncidenteController extends Controller
         if ($request->filled('fecha')) {
             $query->whereDate('fecha_hora', $request->fecha);
         }
+        $perPage = $request->input('per_page', 5);
 
-        $incidentes = $query->orderBy('fecha_hora', 'desc')->paginate(5)->withQueryString();
+        $incidentes = $query->orderBy('fecha_hora', 'desc')->paginate($perPage)->withQueryString();
 
         return view('empleados.incidentes.historial_incidentes', compact('incidentes'));
     }
