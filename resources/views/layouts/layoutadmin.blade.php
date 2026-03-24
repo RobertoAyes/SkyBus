@@ -272,12 +272,6 @@
                 <a href="{{ route('terminales.index') }}" class="{{ request()->routeIs('terminales.index') ? 'active' : '' }}">
                     Ver terminales
                 </a>
-                <a href="{{ route('terminales.create') }}" class="{{ request()->routeIs('terminales.create') ? 'active' : '' }}">
-                    Agregar terminal
-                </a>
-                <a href="{{ route('servicios.create') }}" class="{{ request()->routeIs('servicios.create') ? 'active' : '' }}">
-                    Agregar servicios disponibles
-                </a>
             </div>
         </div>
 
