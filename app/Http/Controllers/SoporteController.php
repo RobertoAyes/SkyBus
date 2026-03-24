@@ -80,7 +80,7 @@ class SoporteController extends Controller
             });
         }
 
-        // Filtro por estado (opcional para admin)
+        // Filtro por estado
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
