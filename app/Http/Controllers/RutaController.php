@@ -83,8 +83,9 @@ class RutaController extends Controller
                 $query->where('duracion_estimada', '>', 180);
             }
         }
+        $perPage = $request->input('per_page', 5);
 
-        $rutas = $query->paginate(5)->withQueryString();
+        $rutas = $query->paginate($perPage)->withQueryString();
 
         return view('rutas.index', compact('rutas'));
     }
