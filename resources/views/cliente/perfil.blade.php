@@ -1,161 +1,297 @@
 @extends('layouts.layoutuser')
 @section('contenido')
 
-    <div class="container-fluid px-4">
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb" style="background-color: transparent; padding: 0;">
-                <li class="breadcrumb-item active" aria-current="page">Mi Perfil</li>
-            </ol>
-        </nav>
+    <style>
+        html, body {
+            height: auto !important;
+            overflow: visible !important;
+            background: #f3f6fb;
+        }
 
-        <div class="row">
-            <div class="col-lg-9 mx-auto">
+        .container-profile {
+            max-width: 1100px;
+            margin: auto;
+        }
 
-                <!-- Header Card con Gradiente -->
-                <div style="background: linear-gradient(135deg, #5cb3ff 0%, #1e63b8 100%); border-radius: 16px; padding: 40px; color: white; margin-bottom: 30px; display: flex; align-items: center; gap: 30px;">
-                    <div style="width: 110px; height: 110px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: bold; border: 4px solid rgba(255,255,255,0.4); flex-shrink: 0;">
-                        {{ strtoupper(substr($usuario->name, 0, 1)) }}
-                    </div>
-                    <div style="flex-grow: 1;">
-                        <h2 style="margin: 0; font-size: 28px; font-weight: 700; text-transform: capitalize;">{{ $usuario->name }}</h2>
-                        <p style="margin: 12px 0 0 0; font-size: 14px; opacity: 0.95;">
-                            <i class="fas fa-check-circle me-2"></i> Cliente Verificado
-                        </p>
-                    </div>
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #dfe6f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+            margin: auto;
+            margin-bottom: 10px;
+        }
+
+        .name {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .menu {
+            margin-top: 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #eef2ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #3b5bdb;
+        }
+
+        /* CONTENIDO */
+        .info-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .top-card {
+            background: linear-gradient(90deg, #4f6edb, #6ea8fe);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+
+        .info-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-size: 12px;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-top: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .badge-role {
+            background: #e7f0ff;
+            color: #3b5bdb;
+        }
+
+        .badge-status {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .actions {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+    </style>
+
+    <div class="container mt-4 container-profile">
+
+        <div class="layout">
+
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                <div class="avatar">
+                    {{ strtoupper(substr($usuario->name, 0, 1)) }}
                 </div>
 
-                <!-- Card de Información -->
-                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-                    <div class="card-body p-4">
+                <div class="name">{{ $usuario->name }}</div>
 
-                        <!-- Nombre Completo -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Nombre Completo</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">{{ $usuario->name }}</p>
-                            </div>
-                            <i class="fas fa-user" style="color: #5cb3ff; font-size: 24px;"></i>
+                <div class="menu">
+                    <div class="menu-item">
+                        <i class="fas fa-user"></i> Perfil
+                    </div>
+                    <div class="menu-item">
+                        <i class="fas fa-envelope"></i> {{ $usuario->email }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENIDO -->
+            <div class="info-box">
+
+                <div class="top-card">
+                    <h4>Información del Usuario</h4>
+                    <small>Detalles generales de tu cuenta</small>
+                </div>
+
+                <div class="info-columns">
+
+                    <!-- COLUMNA 1 -->
+                    <div class="info-group">
+
+                        <div class="info-item">
+                            <span class="label">Nombre Completo</span>
+                            <span class="value">{{ $usuario->name }}</span>
                         </div>
 
-                        <!-- Correo Electrónico -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div style="flex-grow: 1;">
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Correo Electrónico</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">{{ $usuario->email }}</p>
-                            </div>
-                            <i class="fas fa-envelope" style="color: #5cb3ff; font-size: 24px; margin-left: 20px;"></i>
+
+
+                        <div class="info-item">
+                            <span class="label">Teléfono</span>
+                            <span class="value">{{ $usuario->telefono ?? 'No registrado' }}</span>
                         </div>
 
-                        <!-- Tipo de Cuenta -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Tipo de Cuenta</p>
-                                <span style="display: inline-block; margin-top: 8px; padding: 6px 14px; background: #e3f2fd; color: #1e63b8; border-radius: 6px; font-size: 13px; font-weight: 600;">
-                                {{ ucfirst($usuario->role) }}
-                            </span>
-                            </div>
-                            <i class="fas fa-id-card" style="color: #5cb3ff; font-size: 24px;"></i>
-                        </div>
-
-                        <!-- Estado de Cuenta -->
-                        <div style="padding: 20px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Estado de Cuenta</p>
-                                <span style="display: inline-block; margin-top: 8px; padding: 6px 14px; background: #d4edda; color: #155724; border-radius: 6px; font-size: 13px; font-weight: 600;">
-                                <i class="fas fa-circle-dot me-1" style="font-size: 8px;"></i> {{ ucfirst($usuario->estado) }}
-                            </span>
-                            </div>
-                            <i class="fas fa-shield-alt" style="color: #155724; font-size: 24px;"></i>
-                        </div>
-
-                        <!-- Miembro Desde -->
-                        <div style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; font-size: 12px; color: #999; font-weight: 700;">Miembro Desde</p>
-                                <p style="margin: 8px 0 0 0; font-size: 16px; color: #333; font-weight: 600;">
-                                    {{ \Carbon\Carbon::parse($usuario->created_at)->locale('es')->translatedFormat('d \d\e F \d\e Y') }}
-                                </p>
-                            </div>
-                            <i class="fas fa-calendar-check" style="color: #5cb3ff; font-size: 24px;"></i>
+                        <div class="info-item">
+                            <span class="label">Tipo de Cuenta</span>
+                            <span class="badge badge-role">{{ ucfirst($usuario->role) }}</span>
                         </div>
 
                     </div>
 
-                    <!-- Footer con Botones -->
-                    <div style="background: #f8f9fa; padding: 20px; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #f0f0f0; border-radius: 0 0 12px 12px;">
-                        <button style="padding: 10px 24px; border: 2px solid #ddd; background: white; color: #333; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.3s ease;"
-                                onmouseover="this.style.background='#f5f5f5'; this.style.borderColor='#bbb';"
-                                onmouseout="this.style.background='white'; this.style.borderColor='#ddd';"
-                                data-bs-toggle="modal" data-bs-target="#editarPerfil">
-                            <i class="fas fa-edit me-2"></i> Editar
-                        </button>
-                        <a href="{{ route('cliente.historial') }}" style="padding: 10px 24px; background: #5cb3ff; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;"
-                           onmouseover="this.style.background='#3d97f0'; this.style.transform='translateY(-2px)';"
-                           onmouseout="this.style.background='#5cb3ff'; this.style.transform='translateY(0)';">
-                            <i class="fas fa-history"></i> Historial de Viajes
-                        </a>
+                    <!-- COLUMNA 2 -->
+                    <div class="info-group">
+
+
+
+                        <div class="info-item">
+                            <span class="label">Miembro Desde</span>
+                            <span class="value">{{ $usuario->created_at->format('d/m/Y') }}</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">DNI</span>
+                            <span class="value">{{ $usuario->dni ?? 'No registrado' }}</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">Estado</span>
+                            <span class="badge badge-status">{{ ucfirst($usuario->estado) }}</span>
+                        </div>
+
                     </div>
+
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-outline-secondary"
+                            data-bs-toggle="modal" data-bs-target="#editarPerfil">
+                        Editar
+                    </button>
+
+                    <a href="{{ route('cliente.historial') }}" class="btn btn-primary">
+                        Historial
+                    </a>
                 </div>
 
             </div>
+
         </div>
     </div>
 
-    <!-- Modal para editar perfil -->
+    <!-- MODAL CORREGIDO -->
     <div class="modal fade" id="editarPerfil" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <h5 id="editarPerfilLabel">Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
                     <form action="{{ route('cliente.update') }}" method="POST">
                         @csrf
                         @method('PUT')
+
                         <div class="row g-3">
 
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nombre Completo</label>
-                            <input type="text" name="name" id="name"
-                                   class="form-control" value="{{ old('name', $usuario->name) }}">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Nombre Completo</label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                       value="{{ old('name', $usuario->name) }}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" name="email" id="email" class="form-control"
+                                       value="{{ old('email', $usuario->email) }}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" name="telefono" id="telefono" class="form-control"
+                                       value="{{ old('telefono', $usuario->telefono) }}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="dni" class="form-label">DNI</label>
+                                <input type="text" name="dni" id="dni" class="form-control"
+                                       value="{{ old('dni', $usuario->dni) }}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">Nueva Contraseña (Opcional)</label>
+                                <input type="password" name="password" id="password" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
+                            </div>
+
                         </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" name="email" id="email"
-                                   class="form-control" value="{{ old('email', $usuario->email) }}">
+                        <div class="mt-3 text-end">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>
-
-                        <div class="col-md-6">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="text" name="telefono" id="telefono"
-                                   class="form-control" value="{{ old('telefono', $usuario->telefono) }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="dni" class="form-label">DNI</label>
-                            <input type="text" name="dni" id="dni"
-                                   class="form-control" value="{{ old('dni', $usuario->dni) }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Nueva Contraseña (Opcional)</label>
-                            <input type="password" name="password" id="password" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="password_confirmation" class="form-label">Confirmar Nueva Contraseña</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
-                        </div>
-                        <!-- Puedes agregar más campos aquí -->
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 @endsection
