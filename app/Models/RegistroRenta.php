@@ -79,8 +79,8 @@ class RegistroRenta extends Model
     }
 
     // Relación con la tabla de Usuarios
-    public function usuarios()
+    public function usuario()
     {
-        return $this->belongsTo(Usuario::class);
+        return $this->belongsTo(Usuario::class, 'usuario_id');
     }
 }

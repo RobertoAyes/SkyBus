@@ -16,11 +16,23 @@ class RegistroRentaController extends Controller
      * Muestra la lista de todas las rentas.
      */
 
-        public function index()
+    public function index(Request $request)
     {
-        // Obtiene las rentas paginadas para el listado
-        $rentas = RegistroRenta::orderBy('id', 'desc')->paginate(5);
-        return view('rentas.index', compact('rentas'));
+        // 1. Corregido: Usar RegistroRenta en lugar de Renta
+        // Se usa 'usuario' porque en tu 'store' guardas en el modelo 'Usuario'
+        $rentas = RegistroRenta::with('usuario')->paginate(10);
+
+        // 2. Traer los clientes para el datalist del modal
+        $clientes = Usuario::all();
+
+        // 3. Lista de departamentos para los select del modal
+        $departamentos = [
+            'Atlántida', 'Colón', 'Copán', 'Cortés', 'Choluteca', 'El Paraíso',
+            'Francisco Morazán', 'Gracias a Dios', 'Intibucá', 'Islas de la Bahía',
+            'La Paz', 'Lempira', 'Ocotepeque', 'Olancho', 'Santa Bárbara', 'Valle', 'Yoro',
+        ];
+
+        return view('rentas.index', compact('rentas', 'departamentos', 'clientes'));
     }
     /**
      * Muestra el formulario para crear una nueva renta.

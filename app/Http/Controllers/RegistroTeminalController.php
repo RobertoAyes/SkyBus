@@ -45,12 +45,14 @@ class RegistroTeminalController extends Controller
         if ($request->filled('nombre')) {
             $query->where('nombre', 'like', '%' . $request->nombre . '%');
         }
+
         if ($request->filled('contacto')) {
             $query->where(function ($q) use ($request) {
                 $q->where('telefono', 'like', '%' . $request->contacto . '%')
                     ->orWhere('correo',  'like', '%' . $request->contacto . '%');
             });
         }
+
         if ($request->filled('ubicacion')) {
             $query->where(function ($q) use ($request) {
                 $q->where('departamento', 'like', '%' . $request->ubicacion . '%')
@@ -59,7 +61,11 @@ class RegistroTeminalController extends Controller
             });
         }
 
-        $terminales         = $query->paginate(5);
+        // 🔥 AQUÍ LA MAGIA
+        $perPage = $request->input('per_page', 5);
+
+        $terminales = $query->paginate($perPage)->appends($request->all());
+
         $departamentos      = $this->departamentosHonduras;
         $municipiosHonduras = $this->municipiosHonduras;
 
