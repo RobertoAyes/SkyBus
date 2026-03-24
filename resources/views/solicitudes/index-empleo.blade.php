@@ -11,7 +11,7 @@
                 <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
                     <i class="fas fa-briefcase me-2"></i> Mis Solicitudes de Empleo
                 </h2>
-                <a href="{{ route('solicitud.empleo.create') }}" class="btn btn-primary btn-sm">
+                <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalNuevaSolicitud">
                     <i class="fas fa-plus me-1"></i> Nueva Solicitud
                 </a>
             </div>
@@ -126,6 +126,92 @@
                     </div>
                 @endif
 
+            </div>
+            {{-- MODAL: Nueva Solicitud --}}
+            <div class="modal fade" id="modalNuevaSolicitud" tabindex="-1" aria-labelledby="modalNuevaSolicitudLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalNuevaSolicitudLabel">
+                                <i class="fas fa-file-alt me-2"></i> Enviar Solicitud de Empleo
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <form action="{{ route('solicitud.empleo.store') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+
+                                {{-- NOMBRE COMPLETO --}}
+                                <div class="mb-3">
+                                    <label for="nombre_completo" class="form-label fw-bold">Nombre Completo <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('nombre_completo') is-invalid @enderror"
+                                           id="nombre_completo" name="nombre_completo" value="{{ old('nombre_completo') }}"
+                                           placeholder="Ingrese su nombre completo"
+                                           pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo se permiten letras y espacios" required>
+                                    @error('nombre_completo')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- CORREO --}}
+                                <div class="mb-3">
+                                    <label for="contacto" class="form-label fw-bold">Correo de Contacto <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control @error('contacto') is-invalid @enderror"
+                                           id="contacto" name="contacto" value="{{ old('contacto') }}"
+                                           placeholder="ejemplo@correo.com" required>
+                                    @error('contacto')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- PUESTO --}}
+                                <div class="mb-3">
+                                    <label for="puesto_deseado" class="form-label fw-bold">Puesto Deseado <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control @error('puesto_deseado') is-invalid @enderror"
+                                           id="puesto_deseado" name="puesto_deseado" value="{{ old('puesto_deseado') }}"
+                                           placeholder="Ej: Conductor, Gerente, etc." required>
+                                    @error('puesto_deseado')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- EXPERIENCIA LABORAL --}}
+                                <div class="mb-3">
+                                    <label for="experiencia_laboral" class="form-label fw-bold">Experiencia Laboral <span class="text-danger">*</span></label>
+                                    <textarea class="form-control @error('experiencia_laboral') is-invalid @enderror"
+                                              id="experiencia_laboral" name="experiencia_laboral" rows="4"
+                                              placeholder="Describa su experiencia laboral..." required>{{ old('experiencia_laboral') }}</textarea>
+                                    @error('experiencia_laboral')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted">Mínimo 10 caracteres</small>
+                                </div>
+
+                                {{-- CV --}}
+                                <div class="mb-3">
+                                    <label for="cv" class="form-label fw-bold">Adjuntar CV <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control @error('cv') is-invalid @enderror"
+                                           id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                                    @error('cv')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted">Formatos aceptados: PDF, DOC, DOCX (máximo 2MB)</small>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary flex-grow-1">
+                                        <i class="fas fa-paper-plane me-1"></i> Enviar Solicitud
+                                    </button>
+                                    <button type="button" class="btn btn-secondary flex-grow-1" data-bs-dismiss="modal">
+                                        <i class="fas fa-times me-1"></i> Cancelar
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
