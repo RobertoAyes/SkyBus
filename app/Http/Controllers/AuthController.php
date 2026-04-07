@@ -218,4 +218,55 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+    public function showAdminChangePasswordForm()
+    {
+        return view('auth.cambiar-contraseña');
+    }
+
+    public function updateAdminPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'La contraseña actual no coincide']);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return back()->with('success', 'Contraseña actualizada correctamente');
+    }
+
+
+    public function showUserChangePasswordForm()
+    {
+        return view('auth.usuario-reset-password');
+    }
+
+    public function updateUserPassword(Request $request)
+    {
+        $request->validate([
+            'password_actual' => 'required',
+            'password_nuevo' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->password_actual, $user->password)) {
+            return back()->withErrors(['password_actual' => 'La contraseña actual no es correcta']);
+        }
+
+        $user->password = Hash::make($request->password_nuevo);
+        $user->save();
+
+        return back()->with('success', 'Contraseña cambiada correctamente.');
+    }
+
+
+
 }
