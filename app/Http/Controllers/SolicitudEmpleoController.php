@@ -71,7 +71,8 @@ class SolicitudEmpleoController extends Controller
         }
 
         if ($request->filled('puesto')) {
-            $query->where('puesto_deseado', 'like', '%' . $request->puesto . '%');
+            $query->where('puesto_deseado', 'like', '%' . $request->puesto . '%')
+                ->orWhere('nombre_completo', 'like', '%' . $request->puesto . '%');
         }
 
         $solicitudes = $query->latest()->paginate(15); // Paginación para admin
