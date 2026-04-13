@@ -70,7 +70,7 @@ class SoporteController extends Controller
     {
         $query = SolicitudSoporte::with('chofer');
 
-        // Filtro de búsqueda (opcional para admin)
+        // BUSQUEDA
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function ($q) use ($buscar) {
@@ -79,12 +79,23 @@ class SoporteController extends Controller
             });
         }
 
-        // Filtro por estado
+        //  FILTRO ESTADO
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
 
-        $solicitudes = $query->latest()->paginate(10);
+        //  FILTRO FECHA
+        if ($request->filled('fecha')) {
+            $query->whereDate('created_at', $request->fecha);
+        }
+
+        //  CANTIDAD DE REGISTROS
+        $perPage = $request->get('per_page', 5);
+
+        $solicitudes = $query
+            ->latest()
+            ->paginate($perPage)
+            ->appends($request->all());
 
         return view('admin.soportes', compact('solicitudes'));
     }
