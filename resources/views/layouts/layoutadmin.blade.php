@@ -154,21 +154,11 @@
 
         <!-- Estadísticas -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse"
-                    data-bs-target="#estadisticas"
-                    aria-expanded="{{ request()->routeIs('admin.estadisticas') ? 'true' : 'false' }}">
+            <a href="{{ route('admin.estadisticas') }}" class="btn-toggle {{ request()->routeIs('admin.estadisticas') ? 'active' : '' }}" style="text-decoration:none;">
                 <span><i class="fas fa-chart-bar"></i> Estadísticas</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('admin.estadisticas') ? 'show' : '' }}"
-                 id="estadisticas">
-                <a href="{{ route('admin.estadisticas') }}"
-                   class="{{ request()->routeIs('admin.estadisticas') ? 'active' : '' }}">
-                    Ver Estadísticas
-                </a>
-            </div>
+            </a>
         </div>
-
 
 
         <!-- Empleados -->
@@ -190,22 +180,10 @@
         </div>
         <!-- Documentacion de buses -->
         <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center justify-content-between"
-                    data-bs-toggle="collapse" data-bs-target="#documentacionBuses">
-
-        <span class="d-flex align-items-center">
-            <i class="fas fa-file-contract"></i>
-            <span class="ms-1">Doc. de Buses</span> <!-- Margen mínimo a la izquierda del icono -->
-        </span>
-
+            <a href="{{ route('documentos-buses.index') }}" class="btn-toggle {{ request()->routeIs('documentos-buses.index') ? 'active' : '' }}" style="text-decoration:none;">
+                <span><i class="fas fa-file-contract"></i> Doc. de Buses</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav" id="documentacionBuses">
-                <a href="{{ route('documentos-buses.index') }}" class="{{ request()->routeIs('documentos-buses.index') ? 'active' : '' }}">
-                    Ver Documentos de Buses
-                </a>
-            </div>
+            </a>
         </div>
         <!-- Soporte Tecnico -->
         <div class="nav-section">
@@ -232,113 +210,54 @@
 
         <!-- Incidentes -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#incidentes"
-                    aria-expanded="{{ request()->routeIs('empleados.incidentes.historial') ? 'true' : 'false' }}">
+            <a href="{{ route('empleados.incidentes.historial') }}" class="btn-toggle {{ request()->routeIs('empleados.incidentes.historial') ? 'active' : '' }}" style="text-decoration:none;">
                 <span><i class="fas fa-exclamation-triangle"></i> Incidentes</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('empleados.incidentes.historial') ? 'show' : '' }}" id="incidentes">
-                <a href="{{ route('empleados.incidentes.historial') }}"
-                   class="{{ request()->routeIs('empleados.incidentes.historial') ? 'active' : '' }}">
-                    Ver Incidentes
-                </a>
-            </div>
+            </a>
         </div>
         <!-- Rentas -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#Renta">
+            <a href="{{ route('rentas.index') }}" class="btn-toggle {{ request()->routeIs('rentas.index') ? 'active' : '' }}" style="text-decoration:none;">
                 <span><i class="fas fa-receipt"></i> Registro Renta</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav" id="Renta">
-                <a href="{{ route('rentas.index') }}" class="{{ request()->routeIs('rentas.index') ? 'active' : '' }}">
-                    Ver Registro
-                </a>
-                {{-- <a href="{{ route('rentas.create') }}" class="{{ request()->routeIs('rentas.create') ? 'active' : '' }}">
-                    Agregar Renta
-                 </a>
-                 --}}
-
-            </div>
+            </a>
         </div>
-
         <!-- Terminales -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#terminales">
+            <a href="{{ route('terminales.index') }}" class="btn-toggle {{ request()->routeIs('terminales.index') ? 'active' : '' }}" style="text-decoration:none;">
                 <span><i class="fas fa-bus"></i> Terminales</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav" id="terminales">
-                <a href="{{ route('terminales.index') }}" class="{{ request()->routeIs('terminales.index') ? 'active' : '' }}">
-                    Ver terminales
-                </a>
-            </div>
+            </a>
         </div>
 
         <!-- servicios adicionales -->
         <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center w-100" data-bs-toggle="collapse" data-bs-target="#servicios">
-                <i class="fas fa-star me-2"></i>
-                <span>S. Adicionales</span>
-                <i class="fas fa-chevron-right ms-auto chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav" id="servicios">
-                <a href="{{ route('servicios_adicionales.index') }}"
-                   class="{{ request()->routeIs('servicios_adicionales.*') ? 'active' : '' }}">
-                    Ver Servicios
-                </a>
-            </div>
+            <a href="{{ route('servicios_adicionales.index') }}" class="btn-toggle {{ request()->routeIs('servicios_adicionales.*') ? 'active' : '' }}" style="text-decoration:none;">
+                <span><i class="fas fa-concierge-bell"></i> S. Adicionales</span>
+                <i class="fas fa-chevron-right chevron"></i>
+            </a>
         </div>
 
         <!-- Rutas -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#rutas">
+            <a href="{{ route('rutas.index') }}" class="btn-toggle {{ request()->routeIs('rutas.*') ? 'active' : '' }}" style="text-decoration:none;">
                 <span><i class="fas fa-route"></i> Rutas</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav" id="rutas">
-                <a href="{{ route('rutas.index') }}">
-                    Ver Rutas
-                </a>
-            </div>
+            </a>
         </div>
-
         <!-- Itinerario Chofer -->
         <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center justify-content-between"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#itinerarioChofer"
-                    aria-expanded="{{ request()->routeIs('itinerarioChofer.*') ? 'true' : 'false' }}">
-        <span class="d-flex align-items-center fw-bold fs-6">
-            <i class="fas fa-road me-1 fa-sm"></i> Itinerario Chofer
-        </span>
+            <a href="{{ route('itinerarioChofer.index') }}" class="btn-toggle {{ request()->routeIs('itinerarioChofer.*') ? 'active' : '' }}" style="text-decoration:none;">
+                <span><i class="fas fa-road"></i> Itinerario Chofer</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('itinerarioChofer.*') ? 'show' : '' }}" id="itinerarioChofer">
-                <a href="{{ route('itinerarioChofer.index') }}" class="{{ request()->routeIs('itinerarioChofer.index') ? 'active fw-bold' : '' }}">
-                    Listado de itinerarios
-                </a>
-            </div>
+            </a>
         </div>
-
         <!-- Informes de viaje -->
         <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center justify-content-between"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#indicador_en_curso"
-                    aria-expanded="{{ request()->routeIs('indicador_en_curso.*') ? 'true' : 'false' }}">
-        <span class="d-flex align-items-center fw-bold fs-6">
-           <i class="fas fa-calendar-alt me-1 fa-sm"></i> Informes de viajes
-        </span>
+            <a href="{{ route('indicador_en_curso.index') }}" class="btn-toggle {{ request()->routeIs('indicador_en_curso.*') ? 'active' : '' }}" style="text-decoration:none;">
+                <span><i class="fas fa-calendar-alt"></i> Informes de viajes</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('indicador_en_curso.*') ? 'show' : '' }}" id="indicador_en_curso">
-                <a href="{{ route('indicador_en_curso.index') }}" class="{{ request()->routeIs('indicador_en_curso.index') ? 'active fw-bold' : '' }}">
-                    Informe de viajes en curso
-                </a>
-            </div>
+            </a>
         </div>
 
 
@@ -363,44 +282,19 @@
 
         <!-- Solicitudes (PARTE DE MAIN) -->
         <div class="nav-section">
-            <button class="btn-toggle" data-bs-toggle="collapse" data-bs-target="#solicitud"
-                    aria-expanded="{{ request()->routeIs('solicitudes.*') ? 'true' : 'false' }}">
+            <a href="{{ route('admin.solicitudes.empleo') }}" class="btn-toggle {{ request()->routeIs('admin.solicitudes.empleo') ? 'active' : '' }}" style="text-decoration:none;">
                 <span><i class="fas fa-file-alt"></i> Solicitud</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('solicitudes.*') ? 'show' : '' }}" id="solicitud">
-
-
-                <a href="{{ route('admin.solicitudes.empleo') }}"
-                   class="{{ request()->routeIs('admin.solicitudes.empleo') ? 'active' : '' }}">
-                    Solicitudes de Empleo
-                </a>
-
-            </div>
+            </a>
         </div>
 
         <!-- Calificaciones Chofer -->
         <div class="nav-section">
-            <button class="btn-toggle d-flex align-items-center justify-content-between"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#calificacionesChofer"
-                    aria-expanded="{{ request()->routeIs('calificaciones.index') ? 'true' : 'false' }}">
-        <span class="d-flex align-items-center fw-bold fs-6">
-        <i class="fas fa-star me-1 fa-sm"></i> <!-- ícono de estrella con margen a la derecha -->
-            Calificación Chofer
-        </span>
-
+            <a href="{{ route('calificaciones.index') }}" class="btn-toggle {{ request()->routeIs('calificaciones.index') ? 'active' : '' }}" style="text-decoration:none;">
+                <span><i class="fas fa-star"></i> Calificación Chofer</span>
                 <i class="fas fa-chevron-right chevron"></i>
-            </button>
-
-            <div class="collapse btn-toggle-nav {{ request()->routeIs('calificaciones.index') ? 'show' : '' }}" id="calificacionesChofer">
-                <a href="{{ route('calificaciones.index') }}" class="{{ request()->routeIs('calificaciones.index') ? 'active fw-bold' : '' }}">
-                    Ver Calificaciones
-                </a>
-            </div>
+            </a>
         </div>
-
-
 
         <!-- Cerrar sesión -->
         <div class="nav-section">
