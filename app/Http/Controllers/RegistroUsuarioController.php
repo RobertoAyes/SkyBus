@@ -14,6 +14,12 @@ class RegistroUsuarioController extends Controller
     {
         $search = $request->input('search');
 
+        // ✅ VALIDACIÓN SEGURA DE per_page
+        $perPage = $request->input('per_page', 10);
+        if (!in_array($perPage, [5, 10, 25, 50])) {
+            $perPage = 10;
+        }
+
         $usuarios = Usuario::query()
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
@@ -22,31 +28,26 @@ class RegistroUsuarioController extends Controller
                         ->orWhere('dni', 'like', "%{$search}%");
                 });
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
         return view('usuarios.index', compact('usuarios'));
     }
 
-    // Cambiado para usar la vista correcta
     public function create()
     {
-        return view('Vista_registro.create'); // <- vista real de tu proyecto
+        return view('Vista_registro.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            //  Solo letras (incluye acentos, ñ) y espacios
             'nombre_completo' => 'required|regex:/^[\pL\s\-]+$/u|max:255',
-            //  DNI: 8 dígitos numéricos, único
             'dni' => 'required|numeric|digits:13|unique:usuarios,dni',
             'email' => 'required|email|unique:usuarios,email|unique:users,email',
-            //  Teléfono: 8 dígitos numéricos
             'telefono' => 'required|numeric|digits:8',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Guardar en tabla usuarios
         $usuario = new Usuario();
         $usuario->nombre_completo = $request->nombre_completo;
         $usuario->dni = $request->dni;
@@ -55,18 +56,16 @@ class RegistroUsuarioController extends Controller
         $usuario->password = Hash::make($request->password);
         $usuario->save();
 
-        // Crear también en tabla users para login
         User::create([
             'name' => $usuario->nombre_completo,
             'email' => $usuario->email,
             'password' => Hash::make($request->password),
             'dni' => $usuario->dni,
             'telefono' => $usuario->telefono,
-            'role' => 'cliente', // Asegúrate de que coincida con tu enum en la migración
+            'role' => 'cliente',
             'estado' => 'activo',
         ]);
 
-        // Redirigir mostrando mensaje de éxito
         return redirect()
             ->back()
             ->with('success', 'Usuario registrado correctamente. Ya puedes iniciar sesión.');
@@ -82,6 +81,12 @@ class RegistroUsuarioController extends Controller
     {
         $search = $request->input('search');
 
+        // ✅ VALIDACIÓN SEGURA DE per_page
+        $perPage = $request->input('per_page', 10);
+        if (!in_array($perPage, [5, 10, 25, 50])) {
+            $perPage = 10;
+        }
+
         $usuarios = Usuario::query()
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
@@ -90,7 +95,6 @@ class RegistroUsuarioController extends Controller
                         ->orWhere('usuarios.dni', 'like', "%{$search}%");
                 });
             })
-            // El join hace que 'email' sea ambiguo, por eso se corrigió arriba.
             ->join('users', 'usuarios.email', '=', 'users.email')
             ->select(
                 'usuarios.*',
@@ -98,28 +102,22 @@ class RegistroUsuarioController extends Controller
                 'users.estado'
             );
 
-        // Filtro por DNI
         if ($request->filled('dni')) {
             $usuarios->where('usuarios.dni', 'like', '%' . $request->dni . '%');
         }
 
-        // Filtro por estado
         if ($request->filled('estado')) {
             $usuarios->where('users.estado', $request->estado);
         }
 
-
-        //  Filtro por fecha de registro (en tabla usuarios)
         if ($request->filled('fecha_registro')) {
             $usuarios->whereDate('usuarios.created_at', $request->fecha_registro);
         }
 
-        //  Paginar y mantener filtros
-        $usuarios = $usuarios->paginate(10)->appends($request->all());
+        $usuarios = $usuarios->paginate($perPage)->appends($request->all());
 
         return view('usuarios.consultar', compact('usuarios'));
     }
-
 
     public function edit(string $id)
     {
@@ -139,30 +137,6 @@ class RegistroUsuarioController extends Controller
             'telefono' => 'required|numeric|digits:8',
             'password' => 'nullable|string|min:8|confirmed',
             'estado' => 'required|in:activo,inactivo',
-        ], [
-            // Mensajes personalizados
-            'nombre_completo.required' => 'El campo nombre completo es obligatorio.',
-            'nombre_completo.regex' => 'El campo nombre completo solo puede contener letras y espacios.',
-            'nombre_completo.max' => 'El nombre completo no puede tener más de 255 caracteres.',
-
-            'dni.required' => 'El campo DNI es obligatorio.',
-            'dni.numeric' => 'El campo DNI debe ser numérico.',
-            'dni.digits' => 'El DNI debe tener :digits dígitos.',
-            'dni.unique' => 'El DNI ya está registrado.',
-
-            'email.required' => 'El campo email es obligatorio.',
-            'email.email' => 'El campo email debe ser una dirección válida.',
-            'email.unique' => 'El email ya está registrado.',
-
-            'telefono.required' => 'El campo teléfono es obligatorio.',
-            'telefono.numeric' => 'El teléfono debe contener solo números.',
-            'telefono.digits' => 'El teléfono debe tener :digits dígitos.',
-
-            'password.min' => 'La contraseña debe tener al menos :min caracteres.',
-            'password.confirmed' => 'La confirmación de la contraseña no coincide.',
-
-            'estado.required' => 'El estado es obligatorio.',
-            'estado.in' => 'El estado seleccionado no es válido.',
         ]);
 
         $usuario->nombre_completo = $request->nombre_completo;
@@ -171,12 +145,11 @@ class RegistroUsuarioController extends Controller
         $usuario->telefono = $request->telefono;
 
         if ($request->filled('password')) {
-            $usuario->password = $request->password; // el modelo lo encripta
+            $usuario->password = $request->password;
         }
 
         $usuario->save();
 
-        // Actualizar tabla users
         $user = User::where('email', $originalEmail)->first();
         if ($user) {
             $user->name = $usuario->nombre_completo;
