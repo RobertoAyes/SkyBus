@@ -13,6 +13,13 @@ class SoporteController extends Controller
     // ===============================
     public function indexChofer(Request $request)
     {
+        $allowedPerPage = [5, 10, 25, 50];
+        $per_page = $request->input('per_page', 10);
+
+        if (!in_array($per_page, $allowedPerPage)) {
+            $per_page = 10;
+        }
+
         $query = SolicitudSoporte::where('chofer_id', Auth::id());
 
         if ($request->filled('buscar')) {
@@ -27,9 +34,12 @@ class SoporteController extends Controller
             $query->where('estado', $request->estado);
         }
 
-        $solicitudes = $query->latest()->paginate(10);
+        $solicitudes = $query->latest()
+            ->paginate($per_page)
+            ->appends($request->all());
 
         return view('chofer.soporte.indexChofer', compact('solicitudes'));
+
     }
 
     // ===============================
@@ -98,5 +108,32 @@ class SoporteController extends Controller
             ->appends($request->all());
 
         return view('admin.soportes', compact('solicitudes'));
+    }
+    public function responderConsulta(Request $request, $id)
+    {
+        $request->validate([
+            'respuesta_admin' => 'required|string',
+        ]);
+
+        $solicitud = SolicitudSoporte::findOrFail($id);
+        $solicitud->respuesta_admin = $request->respuesta_admin;
+        $solicitud->estado = 'resuelto';
+        $solicitud->save();
+
+        return back()->with('success', 'Respuesta enviada correctamente');
+    }
+    public function responder(Request $request, $id)
+    {
+        $request->validate([
+            'respuesta_admin' => 'required'
+        ]);
+
+        $solicitud = SolicitudSoporte::findOrFail($id);
+
+        $solicitud->respuesta_admin = $request->respuesta_admin;
+        $solicitud->estado = 'resuelto';
+        $solicitud->save();
+
+        return back()->with('success', 'Respuesta enviada correctamente');
     }
 }

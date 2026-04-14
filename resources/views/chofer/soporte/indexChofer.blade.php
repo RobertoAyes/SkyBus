@@ -155,7 +155,30 @@
                 <button type="submit" class="sop-btn-search"><i class="fas fa-search"></i> Buscar</button>
                 <a href="{{ route('chofer.soporte.index') }}" class="sop-btn-clear"><i class="fas fa-times"></i> Limpiar</a>
             </div>
+
         </form>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex align-items-center gap-2">
+                <label class="mb-0 fw-semibold" style="font-size:.85rem;">Mostrar:</label>
+
+                <form method="GET" action="{{ route('chofer.soporte.index') }}">
+                    <input type="hidden" name="buscar" value="{{ request('buscar') }}">
+                    <input type="hidden" name="estado" value="{{ request('estado') }}">
+
+                    <select name="per_page"
+                            class="form-select form-select-sm"
+                            style="width:90px;"
+                            onchange="this.form.submit()">
+                        <option value="5"  {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                    </select>
+                </form>
+
+                <span style="font-size:.85rem;">registros</span>
+            </div>
+        </div>
 
         <div class="sop-table-wrap">
             <table>
@@ -166,6 +189,7 @@
                     <th>Estado</th>
                     <th>Fecha</th>
                     <th style="text-align:center;width:80px;">Acción</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -173,7 +197,7 @@
                     <tr>
                         <td>
                             <div class="sop-num">
-                                {{ str_pad($loop->iteration + ($solicitudes->firstItem() - 1), 2, '0', STR_PAD_LEFT) }}
+                                {{ ($solicitudes->currentPage() - 1) * $solicitudes->perPage() + $loop->iteration }}
                             </div>
                         </td>
 
@@ -208,11 +232,17 @@
                     <div class="modal fade sop-modal" id="sopDet{{ $solicitud->id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
+
                                 <div class="modal-header">
-                                    <h5 class="modal-title"><i class="fas fa-headset me-2" style="color:#0284c7;"></i>Solicitud #{{ $solicitud->id }}</h5>
+                                    <h5 class="modal-title">
+                                        <i class="fas fa-headset me-2" style="color:#0284c7;"></i>
+                                        Solicitud #{{ $solicitud->id }}
+                                    </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
+
                                 <div class="modal-body">
+
                                     <strong>Título</strong>
                                     <p>{{ $solicitud->titulo }}</p>
 
@@ -222,16 +252,35 @@
                                     <strong>Estado</strong>
                                     <p>{{ ucfirst(str_replace('_', ' ', $solicitud->estado)) }}</p>
 
-                                    <strong>Fecha de envío</strong>
+                                    <strong>Fecha</strong>
                                     <p>{{ $solicitud->created_at->format('d/m/Y H:i') }}</p>
+
+                                    {{-- 🔥 RESPUESTA DEL SOPORTE --}}
+                                    <strong>Respuesta del soporte</strong>
+
+                                    @if($solicitud->respuesta_admin)
+                                        <div style="background:#f0fdf4;padding:10px;border-radius:8px;margin-top:5px;">
+                                            <i class="fas fa-reply text-success me-1"></i>
+                                            {{ $solicitud->respuesta_admin }}
+                                        </div>
+                                    @else
+                                        <p class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Aún no hay respuesta del soporte
+                                        </p>
+                                    @endif
+
                                 </div>
+
                                 <div class="modal-footer">
-                                    <button type="button" class="sop-btn-mc" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="sop-btn-mc" data-bs-dismiss="modal">
+                                        Cerrar
+                                    </button>
                                 </div>
+
                             </div>
                         </div>
                     </div>
-
                 @empty
                     <tr class="sop-empty">
                         <td colspan="5">

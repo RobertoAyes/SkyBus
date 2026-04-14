@@ -125,10 +125,9 @@
                         </thead>
 
                         <tbody>
-                        @forelse($solicitudes as $key => $solicitud)
+                        @forelse($solicitudes as $solicitud)
                             <tr>
-
-                                <td>{{ ($solicitudes->currentPage()-1)*$solicitudes->perPage()+$key+1 }}</td>
+                                <td>{{ ($solicitudes->currentPage()-1)*$solicitudes->perPage()+$loop->iteration }}</td>
 
                                 <td>{{ $solicitud->titulo }}</td>
 
@@ -146,72 +145,86 @@
                                     @endif
                                 </td>
 
-                                {{-- BOTÓN BONITO --}}
                                 <td class="text-center">
                                     <button class="btn btn-info btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalVer{{ $solicitud->id }}">
                                         <i class="fas fa-eye me-1"></i> Ver
                                     </button>
+
+                                    <button class="btn btn-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#responderModal{{ $solicitud->id }}">
+                                        <i class="fas fa-reply me-1"></i>Responder
+                                    </button>
                                 </td>
                             </tr>
 
-                            {{-- MODAL BONITO --}}
+                            {{-- MODAL VER --}}
                             <div class="modal fade" id="modalVer{{ $solicitud->id }}" tabindex="-1">
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                     <div class="modal-content border-0 rounded-3">
 
-                                        {{-- HEADER --}}
-                                        <div class="modal-header text-white"
-                                             style="background:#1e63b8;">
+                                        <div class="modal-header text-white" style="background:#1e63b8;">
                                             <h5 class="mb-0">
                                                 <i class="fas fa-eye me-2"></i>Detalle de solicitud
                                             </h5>
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
 
-                                        {{-- BODY --}}
                                         <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <strong>Chofer:</strong>
-                                                {{ $solicitud->chofer->name ?? 'Sin chofer' }}
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <strong>Título:</strong>
-                                                {{ $solicitud->titulo }}
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <strong>Descripción:</strong>
-                                                <p class="text-muted">{{ $solicitud->descripcion }}</p>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <strong>Fecha:</strong>
-                                                {{ $solicitud->created_at->format('d/m/Y') }}
-                                            </div>
-
-                                            <div>
-                                                <strong>Estado:</strong>
-                                                @if($solicitud->estado=='pendiente')
-                                                    <span class="badge bg-warning text-dark">Pendiente</span>
-                                                @elseif($solicitud->estado=='en_proceso')
-                                                    <span class="badge bg-info text-dark">En Proceso</span>
-                                                @else
-                                                    <span class="badge bg-success">Resuelto</span>
-                                                @endif
-                                            </div>
-
+                                            <p><strong>Chofer:</strong> {{ $solicitud->chofer->name ?? 'Sin chofer' }}</p>
+                                            <p><strong>Título:</strong> {{ $solicitud->titulo }}</p>
+                                            <p><strong>Descripción:</strong> {{ $solicitud->descripcion }}</p>
+                                            <p><strong>Fecha:</strong> {{ $solicitud->created_at->format('d/m/Y') }}</p>
                                         </div>
 
-                                        {{-- FOOTER --}}
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
-                                                Cerrar
-                                            </button>
-                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- MODAL RESPONDER (IMPORTANTE: AQUÍ ESTÁ EL FIX) --}}
+                            <div class="modal fade" id="responderModal{{ $solicitud->id }}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 rounded-3">
+
+                                        <form action="{{ route('consultas.responderConsulta', $solicitud->id) }}" method="POST">
+                                            @csrf
+
+                                            <div class="modal-header text-white" style="background:#1e63b8;">
+                                                <h5 class="mb-0">
+                                                    <i class="fas fa-reply me-2"></i>Responder solicitud
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Mensaje del chofer</label>
+                                                    <textarea class="form-control" rows="4" readonly>{{ $solicitud->mensaje ?? $solicitud->descripcion }}</textarea>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">Respuesta</label>
+                                                    <textarea name="respuesta_admin" rows="5"
+                                                              class="form-control"
+                                                              required>{{ $solicitud->respuesta_admin }}</textarea>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-paper-plane me-1"></i>Enviar
+                                                </button>
+
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Cancelar
+                                                </button>
+                                            </div>
+
+                                        </form>
 
                                     </div>
                                 </div>
