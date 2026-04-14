@@ -145,17 +145,17 @@
                                     @endif
                                 </td>
 
-                                <td class="text-center">
-                                    <button class="btn btn-info btn-sm"
+                                <td class="text-center d-flex justify-content-center gap-2">
+                                    <button class="btn btn-info btn-sm px-3 d-flex align-items-center gap-1"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalVer{{ $solicitud->id }}">
-                                        <i class="fas fa-eye me-1"></i> Ver
+                                        <i class="fas fa-eye"></i> Ver
                                     </button>
 
-                                    <button class="btn btn-primary btn-sm"
+                                    <button class="btn btn-success btn-sm px-3 d-flex align-items-center gap-1"
                                             data-bs-toggle="modal"
                                             data-bs-target="#responderModal{{ $solicitud->id }}">
-                                        <i class="fas fa-reply me-1"></i>Responder
+                                        <i class="fas fa-reply"></i> Responder
                                     </button>
                                 </td>
                             </tr>
