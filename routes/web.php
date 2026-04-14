@@ -651,3 +651,16 @@ Route::get('/historial-incidentes', [\App\Http\Controllers\IncidenteController::
 // Ruta para responder un incidente
 Route::post('/incidentes/{id}/responder', [\App\Http\Controllers\IncidenteController::class, 'responder'])
     ->name('incidentes.responder');
+
+// RUta para responder desde admin al chofer
+Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'responderConsulta'])
+    ->name('consultas.responderConsulta');
+
+Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'responder'])
+    ->name('consultas.responder');
+
+Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'responder'])
+    ->name('consultas.responderConsulta');
+
+// Ruta para visualizar la respuesta del admin para el usuario
+Route::post('/soporte/enviar', [SoporteController::class, 'store'])->name('soporte.enviar');

@@ -247,7 +247,6 @@
                             <i class="fas fa-headset me-1"></i> Soporte
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/ayuda-soporte">Enviar consulta</a></li>
                             <li><a class="dropdown-item {{ request()->routeIs('consulta.mis') ? 'active' : '' }}" href="{{ route('consulta.mis') }}">Mis consultas</a></li>
                             <li><a class="dropdown-item" href="{{ route('usuario.change-password') }}">Cambiar contraseña</a></li>
                             <li><a class="dropdown-item" href="{{ route('solicitud.empleo.mis-solicitudes') }}">Solicitud de trabajo</a></li>
