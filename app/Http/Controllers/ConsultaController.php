@@ -56,6 +56,7 @@ class ConsultaController extends Controller
     {
         $query = Consulta::query();
 
+        //  BUSQUEDA
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function($q) use ($buscar) {
@@ -64,12 +65,21 @@ class ConsultaController extends Controller
             });
         }
 
+        //  FILTRO ESTADO
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
+        //  FILTRO POR FECHA
+        if ($request->filled('fecha')) {
+            $query->whereDate('created_at', $request->fecha);
+        }
 
-        $consultas = $query->orderBy('created_at', 'desc')
-            ->paginate(10)
+        //  PAGINACIÓN FIJA (5 REGISTROS)
+        $perPage = $request->get('per_page', 5);
+
+        $consultas = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage)
             ->appends($request->all());
 
         return view('ayuda.consultas_admin', compact('consultas'));

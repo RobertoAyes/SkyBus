@@ -28,6 +28,9 @@
 
                     {{-- BUSQUEDA --}}
                     <div class="row g-3 mb-3">
+                        <label class="form-label fw-bold">
+                            </i> Búsqueda General
+                        </label>
                         <div class="col-md-7">
                             <input type="text" name="buscar" class="form-control"
                                    placeholder="Buscar por título o descripción"
