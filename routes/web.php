@@ -662,4 +662,5 @@ Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'respon
 Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'responder'])
     ->name('consultas.responderConsulta');
 
+// Ruta para visualizar la respuesta del admin para el usuario
 Route::post('/soporte/enviar', [SoporteController::class, 'store'])->name('soporte.enviar');
