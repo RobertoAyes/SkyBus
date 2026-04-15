@@ -604,7 +604,8 @@ Route::post('/incidentes/{id}/responder', [\App\Http\Controllers\IncidenteContro
     ->name('incidentes.responder');
 
 
-Route::prefix('admin')->group(function () {
+
+/*Route::prefix('admin')->group(function () {
 
     Route::get('/servicios-adicionales', [ServicioAdicionalController::class, 'index'])
         ->name('servicios_adicionales.index');
@@ -614,11 +615,12 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/servicios-adicionales', [ServicioAdicionalController::class, 'store'])
         ->name('servicios_adicionales.store');
-});
+});*/
 
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
+
 // RUta para responder desde admin al chofer
 Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'responderConsulta'])
     ->name('consultas.responderConsulta');
@@ -631,3 +633,12 @@ Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'respon
 
 // Ruta para visualizar la respuesta del admin para el usuario
 Route::post('/soporte/enviar', [SoporteController::class, 'store'])->name('soporte.enviar');
+
+//Servicios adicionales
+Route::resource('(/servicios_adicionales', ExtraController::class );
+Route::resource('/servicios', ServicioController::class);
+
+// SERVICIOS ADICIONALES - CLIENTE (extras en reserva)
+Route::middleware(['auth', 'user.active'])->group(function () {
+    Route::resource('servicios_reserva', ServicioExtraController::class);
+});
