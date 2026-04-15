@@ -141,11 +141,13 @@
                             <a class="dropdown-item {{ request()->routeIs('cliente.reserva.create') ? 'active' : '' }}"
                                href="{{ route('cliente.reserva.create') }}">Nueva Reserva</a>
                         </li>
-
                         <li>
-                            <a class="dropdown-item {{ request()->routeIs('cliente.facturas*') ? 'active' : '' }}"
-                               href="{{ route('cliente.facturas') }}">Facturas</a>
+                            <a class="dropdown-item {{ request()->routeIs('servicios_reserva.index') ? 'active' : '' }}"
+                               href="{{ route('servicios_reserva.index') }}">Adiciones</a>
                         </li>
+                        <li><a class="dropdown-item {{ request()->routeIs('cliente.historial') ? 'active' : '' }}" href="{{ route('cliente.historial') }}">Historial de Viajes</a></li>
+
+
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('puntos.index') ? 'active' : '' }}"
                                href="{{ route('puntos.index') }}">Ver Puntos</a>
@@ -213,31 +215,7 @@
                  <i class="fas fa-user me-1"></i> Hola {{ auth()->user()->name }}
                     </span>
 
-            <!-- Inicio y Notificaciones -->
-            <ul class="navbar-nav ms-auto align-items-center">
 
-
-
-                <!-- Notificaciones -->
-                @php
-                    $adminNotiCount = \App\Models\Notificacion::where('usuario_id', auth()->id())
-                        ->where('leida', false)
-                        ->count();
-                @endphp
-                <li class="nav-item position-relative me-2">
-                    <a class="btn btn-outline-light btn-sm rounded-circle position-relative"
-                       href="{{ route('usuario.notificaciones') }}"
-                       style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
-                        <i class="fas fa-bell"></i>
-                        @if($adminNotiCount > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ $adminNotiCount }}
-                            </span>
-                        @endif
-                    </a>
-                </li>
-
-            </ul>
 
         </div>
     </div>

@@ -79,9 +79,7 @@
 
                                 <td class="text-center">
                                     @if($reserva->estado === 'confirmada' && !$reserva->viaje->calificacion)
-                                        <a href="{{ route('calificacion.create', $reserva->id) }}" class="btn btn-warning btn-sm me-1">
-                                            <i class="fas fa-star"></i>
-                                        </a>
+
                                         <a href="{{ route('puntos.create', $reserva->id) }}" class="btn btn-info btn-sm">
                                             <i class="fas fa-coins"></i>
                                         </a>
