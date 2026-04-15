@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class HistorialReservasController extends Controller
 {
-    // Solo usuarios autenticados
     public function __construct()
     {
         $this->middleware('auth');
@@ -16,11 +15,11 @@ class HistorialReservasController extends Controller
 
     public function index()
     {
-        $usuario = Auth::user();
-
-        // Traer reservas del usuario con información del viaje y asiento
-        $reservas = Reserva::with(['viaje.origen', 'viaje.destino', 'asiento'])
-            ->where('user_id', $usuario->id)
+        $reservas = Reserva::with([
+            'viaje.ruta',
+            'asiento'
+        ])
+            ->where('user_id', Auth::id())
             ->orderBy('fecha_reserva', 'desc')
             ->paginate(10);
 

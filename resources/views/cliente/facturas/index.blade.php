@@ -153,37 +153,63 @@
                     <th>Destino</th>
                     <th>Fecha Viaje</th>
                     <th>Asiento</th>
-                    <th>Estado</th>
+                    <th>Precio</th>
                 </tr>
                 </thead>
-                <tbody id="ch-body">
+                <tbody>
                 @forelse($facturas as $key => $factura)
-                    <tr data-search="{{ strtolower($factura->numero_factura.' '.$factura->reserva->viaje->origen->nombre ?? '' .' '.$factura->reserva->viaje->destino->nombre ?? '') }}">
+
+                    @php
+                        $viaje = $factura->reserva->viaje ?? null;
+                        $ruta = $viaje->ruta ?? null;
+                        $asiento = $factura->reserva->asiento ?? null;
+                    @endphp
+
+                    <tr>
+
                         <td><div class="ch-num">{{ $key + 1 }}</div></td>
+
                         <td>{{ $factura->numero_factura }}</td>
+
                         <td>{{ \Carbon\Carbon::parse($factura->fecha_emision)->format('d/m/Y') }}</td>
-                        <td>{{ $factura->reserva->viaje->origen->nombre ?? '-' }}</td>
-                        <td>{{ $factura->reserva->viaje->destino->nombre ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($factura->reserva->viaje->fecha_hora_salida)->format('d/m/Y H:i') }}</td>
-                        <td>#{{ $factura->reserva->asiento->numero_asiento ?? '-' }}</td>
-                        <td>L. {{ number_format($factura->monto_total,2) }}</td>
+
+                        <td>{{ $ruta->origen ?? '-' }}</td>
+
+                        <td>{{ $ruta->destino ?? '-' }}</td>
+
                         <td>
-                        <span class="ch-route {{ $factura->estado === 'emitida' ? 'bg-success' : ($factura->estado === 'anulada' ? 'bg-danger' : 'bg-warning') }}">
-                            {{ ucfirst($factura->estado) }}
-                        </span>
+                            {{ $viaje?->fecha_hora_salida
+                                ? \Carbon\Carbon::parse($viaje->fecha_hora_salida)->format('d/m/Y H:i')
+                                : '-' }}
                         </td>
+
                         <td>
-                            <a href="{{ route('cliente.facturas.pdf', $factura->id) }}" target="_blank" class="ch-btn-clear"><i class="fas fa-download"></i></a>
-                            <button onclick="enviarPorCorreo({{ $factura->id }})" class="ch-btn-clear"><i class="fas fa-envelope"></i></button>
-                            <a href="{{ route('cliente.facturas.ver', $factura->id) }}" class="ch-btn-clear"><i class="fas fa-eye"></i></a>
+                            {{ $asiento?->numero ?? '-' }}
                         </td>
+
+                        <td>
+                            L. {{ number_format($factura->monto_total, 2) }}
+                        </td>
+
+                        <td>
+
+                        </td>
+
+                        <td>
+                            <a href="{{ route('cliente.facturas.pdf', $factura->id) }}" class="ch-btn-clear">
+                                <i class="fas fa-download"></i>
+                            </a>
+
+
+                        </td>
+
                     </tr>
+
                 @empty
                     <tr class="ch-empty">
                         <td colspan="10">
                             <div class="ch-empty-ico"><i class="fas fa-inbox"></i></div>
                             <div class="ch-empty-t">No tienes facturas disponibles</div>
-                            <div class="ch-empty-s">Realiza una búsqueda o consulta con tu administrador.</div>
                         </td>
                     </tr>
                 @endforelse

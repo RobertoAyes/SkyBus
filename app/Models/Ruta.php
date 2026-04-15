@@ -16,4 +16,9 @@ class Ruta extends Model
         'duracion_estimada',
         'estado'
     ];
+
+    public function viajes()
+    {
+        return $this->hasMany(Viaje::class, 'ruta_id');
+    }
 }

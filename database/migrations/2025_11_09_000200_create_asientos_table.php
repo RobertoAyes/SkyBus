@@ -10,10 +10,20 @@ return new class extends Migration
     {
         Schema::create('asientos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('viaje_id')->constrained('viajes')->cascadeOnDelete();
-            $table->integer('numero_asiento');
-            $table->boolean('disponible')->default(true);
+
+            $table->foreignId('viaje_id')
+                ->constrained('viajes')
+                ->onDelete('cascade');
+
+            $table->string('numero');
+
+            $table->boolean('ocupado')
+                ->default(false);
+
             $table->timestamps();
+
+            // opcional pero MUY recomendado para evitar duplicados
+            $table->unique(['viaje_id', 'numero']);
         });
     }
 

@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test User',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
-                'role' => 'Empleado', // Rol normal
+                'role' => 'Empleado',
                 'estado' => 'activo',
             ]
         );
 
-        // Usuario administrador predeterminado
+        // Admin
         User::firstOrCreate(
             ['email' => 'admin@bustrak.com'],
             [
@@ -34,8 +34,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-
-        // Usuario cliente predeterminado
+        // Cliente
         User::firstOrCreate(
             ['email' => 'jose@hn.com'],
             [
@@ -47,14 +46,11 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-
-
-
-        //  Otros seeders de datos base
+        // 🔥 ORDEN CORRECTO (CRÍTICO)
         $this->call([
-            CiudadesSeeder::class,
+            RutaSeeder::class,
             ViajesSeeder::class,
+            AsientosSeeder::class,
         ]);
-
     }
 }
