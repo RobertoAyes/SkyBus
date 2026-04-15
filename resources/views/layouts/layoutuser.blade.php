@@ -65,6 +65,31 @@
             margin-left: 20px;
             margin-right: 20px;
         }
+        /* ARREGLA VISIBILIDAD DEL DROPDOWN "SOPORTE" */
+        .navbar-custom .nav-link.dropdown-toggle.show {
+            color: #ffffff !important;
+        }
+
+        /* EVITA QUE SE "PIERDA" EL TEXTO ACTIVO */
+        .navbar-custom .nav-link.active,
+        .navbar-custom .nav-link.dropdown-toggle.active {
+            color: #00b7ff !important;
+        }
+
+        /*  ASEGURA QUE EL DROPDOWN NO CUBRA EL TEXTO */
+        .navbar-custom {
+            z-index: 1050;
+            position: sticky;
+        }
+
+        .dropdown-menu {
+            z-index: 2000;
+        }
+
+        /* MEJORA VISIBILIDAD GENERAL */
+        .navbar-custom .nav-link {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 
@@ -141,22 +166,43 @@
                 </li>
 
                 <!-- Soporte -->
+                @php
+                    $soporteActivo =
+                        request()->routeIs('consulta.*') ||
+                        request()->routeIs('solicitud.empleo.*') ||
+                        request()->routeIs('usuario.change-password');
+                @endphp
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('usuario.soporte*') ? 'active' : '' }}"
+                    <a class="nav-link dropdown-toggle {{ $soporteActivo ? 'active' : '' }}"
                        href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-headset me-1"></i> Soporte
                     </a>
+
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item {{ request()->routeIs('consulta.mis') ? 'active' : '' }}"
-                               href="{{ route('consulta.mis') }}">Consultas</a></li>
 
-                        <li><a class="dropdown-item" href="{{ route('solicitud.empleo.mis-solicitudes') }}">Solicitud de trabajo</a></li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('consulta.mis') ? 'active' : '' }}"
+                               href="{{ route('consulta.mis') }}">
+                                Consultas
+                            </a>
+                        </li>
 
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('solicitud.empleo.mis-solicitudes') ? 'active' : '' }}"
+                               href="{{ route('solicitud.empleo.mis-solicitudes') }}">
+                                Solicitud de trabajo
+                            </a>
+                        </li>
 
-                        <li><a class="dropdown-item" href="{{ route('usuario.change-password') }}">Cambiar contraseña</a></li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('usuario.change-password') ? 'active' : '' }}"
+                               href="{{ route('usuario.change-password') }}">
+                                Cambiar contraseña
+                            </a>
+                        </li>
 
                     </ul>
-
                 </li>
 
 

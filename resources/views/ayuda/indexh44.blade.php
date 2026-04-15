@@ -11,6 +11,10 @@
                 <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
                     <i class="fas fa-headset me-2"></i> Mis Consultas
                 </h2>
+
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaConsulta">
+                    <i class="fas fa-plus me-1"></i> Nueva consulta
+                </button>
             </div>
 
             <div class="card-body">
@@ -43,7 +47,7 @@
                                        value="{{ request('buscar') }}">
                             </div>
                             <div class="col-md-5 d-flex align-items-end gap-2">
-                                <button class="btn btn-primary flex-fill" type="submit">
+                                <button class="btn btn-primary flex-fill" type="submit" name="filtrar" value="1">
                                     <i class="fas fa-search me-2"></i>Buscar
                                 </button>
                                 <button class="btn btn-outline-primary flex-fill" type="button"
@@ -59,28 +63,44 @@
                         </div>
                     </div>
 
-                    {{-- FILTROS AVANZADOS (fechas) --}}
-                    <div class="collapse {{ request()->hasAny(['fecha_inicio','fecha_fin']) ? 'show' : '' }}" id="filtrosAvanzados">
+                    {{-- FILTROS ADICIONALES --}}
+                    <div class="collapse {{ request()->hasAny(['fecha','respuesta']) ? 'show' : '' }}" id="filtrosAvanzados">
                         <div class="card mb-3 bg-light border-primary">
                             <div class="card-header bg-primary bg-opacity-10">
                                 <h6 class="mb-0 text-primary">Filtros Adicionales</h6>
                             </div>
+
                             <div class="card-body">
                                 <div class="row g-3">
+
+                                    {{-- FECHA --}}
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">
-                                            <i class="fas fa-calendar text-primary me-1"></i> Fecha inicio
+                                            <i class="fas fa-calendar text-primary me-1"></i> Fecha
                                         </label>
-                                        <input type="date" name="fecha_inicio" class="form-control"
-                                               value="{{ request('fecha_inicio') }}">
+                                        <input type="date"
+                                               name="fecha"
+                                               class="form-control"
+                                               value="{{ request('fecha') }}">
                                     </div>
+
+                                    {{-- ESTADO RESPUESTA --}}
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">
-                                            <i class="fas fa-calendar text-primary me-1"></i> Fecha fin
+                                            <i class="fas fa-reply text-primary me-1"></i> Respuesta
                                         </label>
-                                        <input type="date" name="fecha_fin" class="form-control"
-                                               value="{{ request('fecha_fin') }}">
+
+                                        <select name="respuesta" class="form-control">
+                                            <option value="">Todos</option>
+                                            <option value="respondido" {{ request('respuesta')=='respondido' ? 'selected' : '' }}>
+                                                Respondido
+                                            </option>
+                                            <option value="pendiente" {{ request('respuesta')=='pendiente' ? 'selected' : '' }}>
+                                                Sin respuesta
+                                            </option>
+                                        </select>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -114,7 +134,8 @@
                             <th style="width:60px;" class="text-center">#</th>
                             <th>Asunto</th>
                             <th>Mensaje</th>
-                            <th class="text-center">Fecha de Envío</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Respuesta</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -124,6 +145,17 @@
                                 <td>{{ $consulta->asunto }}</td>
                                 <td>{{ $consulta->mensaje }}</td>
                                 <td class="text-center">{{ $consulta->created_at->format('d-m-Y') }}</td>
+                                <td class="text-center">
+                                    @if($consulta->respuesta_admin)
+                                        <button class="btn btn-success btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#respuesta{{ $consulta->id }}">
+                                            Ver respuesta
+                                        </button>
+                                    @else
+                                        <span class="text-muted">Sin respuesta</span>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -135,8 +167,111 @@
                         @endforelse
                         </tbody>
                     </table>
-                </div>
+                    @foreach($consultas as $consulta)
 
+                        <div class="modal fade" id="respuesta{{ $consulta->id }}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+
+                                    <div class="modal-header bg-success text-white">
+                                        <h5 class="mb-0">Respuesta del soporte</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <strong>Tu consulta:</strong>
+                                        <p class="mb-3">{{ $consulta->mensaje }}</p>
+
+                                        <strong>Respuesta:</strong>
+
+                                        <p style="background:#f0fdf4;padding:10px;border-radius:8px;">
+                                            {{ $consulta->respuesta_admin }}
+                                        </p>
+
+                                        <small class="text-muted">
+                                            Estado: {{ ucfirst($consulta->estado ?? 'pendiente') }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    @endforeach
+                </div>
+                <div class="modal fade" id="modalNuevaConsulta" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-headset me-2"></i> Nueva Consulta
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <form method="POST" action="{{ route('soporte.enviar') }}">
+                                @csrf
+
+                                <div class="modal-body">
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">Nombre</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="nombre"
+                                                   value="{{ auth()->user()->name }}"
+                                                   required>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold">Correo</label>
+                                            <input type="email"
+                                                   class="form-control"
+                                                   name="correo"
+                                                   value="{{ auth()->user()->email }}"
+                                                   required>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label fw-bold">Asunto</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   name="asunto"
+                                                   required>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label fw-bold">Mensaje</label>
+                                            <textarea class="form-control"
+                                                      name="mensaje"
+                                                      rows="5"
+                                                      required></textarea>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane me-1"></i> Enviar
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
                 {{-- PAGINACIÓN --}}
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-muted small">

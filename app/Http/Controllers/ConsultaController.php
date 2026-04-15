@@ -56,6 +56,7 @@ class ConsultaController extends Controller
     {
         $query = Consulta::query();
 
+        //  BUSQUEDA
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function($q) use ($buscar) {
@@ -64,12 +65,21 @@ class ConsultaController extends Controller
             });
         }
 
+        //  FILTRO ESTADO
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
+        //  FILTRO POR FECHA
+        if ($request->filled('fecha')) {
+            $query->whereDate('created_at', $request->fecha);
+        }
 
-        $consultas = $query->orderBy('created_at', 'desc')
-            ->paginate(10)
+        //  PAGINACIÓN FIJA (5 REGISTROS)
+        $perPage = $request->get('per_page', 5);
+
+        $consultas = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage)
             ->appends($request->all());
 
         return view('ayuda.consultas_admin', compact('consultas'));
@@ -80,16 +90,16 @@ class ConsultaController extends Controller
      */
     public function misConsultas(Request $request)
     {
-        // Permitir solo estos valores de paginación
         $allowedPerPage = [5, 10, 25, 50];
         $per_page = $request->input('per_page', 10);
+
         if (!in_array($per_page, $allowedPerPage)) {
             $per_page = 10;
         }
 
         $query = Consulta::where('user_id', auth()->id());
 
-        // 🔍 Buscador
+        //  BUSCAR
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
             $query->where(function($q) use ($buscar) {
@@ -98,15 +108,20 @@ class ConsultaController extends Controller
             });
         }
 
-        // 📅 Filtro por fechas
-        if ($request->filled('fecha_inicio')) {
-            $query->whereDate('created_at', '>=', $request->fecha_inicio);
-        }
-        if ($request->filled('fecha_fin')) {
-            $query->whereDate('created_at', '<=', $request->fecha_fin);
+        // FILTRO POR FECHA (CORREGIDO)
+        if ($request->filled('fecha')) {
+            $query->whereDate('created_at', $request->fecha);
         }
 
-        // 📄 Ordenar y paginar
+        //  FILTRO RESPUESTA
+        if ($request->filled('respuesta')) {
+            if ($request->respuesta == 'respondido') {
+                $query->whereNotNull('respuesta_admin');
+            } elseif ($request->respuesta == 'pendiente') {
+                $query->whereNull('respuesta_admin');
+            }
+        }
+
         $consultas = $query->orderBy('created_at', 'desc')
             ->paginate($per_page)
             ->appends($request->all());
