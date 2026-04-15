@@ -17,25 +17,34 @@ class ViajesSeeder extends Seeder
 
         foreach ($rutas as $ruta) {
 
-            $viajeId = DB::table('viajes')->insertGetId([
-                'ruta_id' => $ruta->id,
-                'fecha_hora_salida' => now()->addDays(2)->setHour(8),
-                'fecha_llegada' => null,
-                'precio' => 250,
-                'capacidad' => 40,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // 🔥 CREAR VARIOS VIAJES (NO SOLO 1)
+            for ($d = 0; $d < 5; $d++) {
 
-            // 🔥 CREAR ASIENTOS AUTOMÁTICAMENTE (CRÍTICO)
-            for ($i = 1; $i <= 40; $i++) {
-                DB::table('asientos')->insert([
-                    'viaje_id' => $viajeId,
-                    'numero' => 'A' . $i,
-                    'ocupado' => 0,
+                $viajeId = DB::table('viajes')->insertGetId([
+                    'ruta_id' => $ruta->id,
+                    'fecha_hora_salida' => now()->addDays($d)->setTime(8, 0, 0),
+                    'fecha_llegada' => now()->addDays($d)->setTime(12, 0, 0),
+                    'precio' => 250,
+                    'capacidad' => 40,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+                // 🔥 ASIENTOS CORRECTOS (1A, 1B, etc.)
+                $filas = 10;
+                $columnas = ['A','B','C','D'];
+
+                for ($f = 1; $f <= $filas; $f++) {
+                    foreach ($columnas as $c) {
+                        DB::table('asientos')->insert([
+                            'viaje_id' => $viajeId,
+                            'numero' => $f . $c,
+                            'ocupado' => 0,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
             }
         }
     }
