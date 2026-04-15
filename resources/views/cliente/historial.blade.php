@@ -20,7 +20,7 @@
 
                 {{-- ALERTAS --}}
                 @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center">
                         <i class="fas fa-circle-check me-2"></i>
                         <strong class="me-2">¡Éxito!</strong> {{ session('success') }}
                         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
@@ -28,14 +28,14 @@
                 @endif
 
                 @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center">
                         <i class="fas fa-circle-exclamation me-2"></i>
                         <strong class="me-2">Error:</strong> {{ session('error') }}
                         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
 
-                {{-- TABLA DE RESERVAS --}}
+                {{-- TABLA --}}
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered align-middle">
                         <thead class="table-primary">
@@ -44,38 +44,39 @@
                             <th>Origen</th>
                             <th>Destino</th>
                             <th class="text-center">Salida</th>
-                            <th class="text-center">Llegada</th>
                             <th class="text-center">Asiento</th>
                             <th class="text-center">Estado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                         </thead>
+
                         <tbody>
                         @forelse($reservas as $reserva)
                             <tr>
                                 <td class="text-center">
                                     {{ \Carbon\Carbon::parse($reserva->fecha_reserva)->format('d/m/Y H:i') }}
                                 </td>
-                                <td>{{ $reserva->viaje->origen->nombre ?? '-' }}</td>
-                                <td>{{ $reserva->viaje->destino->nombre ?? '-' }}</td>
+
+                                <td>{{ $reserva->viaje->ruta->origen ?? '-' }}</td>
+
+                                <td>{{ $reserva->viaje->ruta->destino ?? '-' }}</td>
+
                                 <td class="text-center">
                                     {{ \Carbon\Carbon::parse($reserva->viaje->fecha_hora_salida)->format('d/m/Y H:i') }}
                                 </td>
+
                                 <td class="text-center">
-                                    {{ $reserva->viaje->fecha_llegada
-                                        ? \Carbon\Carbon::parse($reserva->viaje->fecha_llegada)->format('d/m/Y H:i')
-                                        : '-' }}
+                                    {{ $reserva->asiento->numero ?? '-' }}
                                 </td>
+
                                 <td class="text-center">
-                                    {{ $reserva->asiento ? '#'.$reserva->asiento->numero_asiento : '-' }}
+                                <span class="badge
+                                    {{ $reserva->estado === 'confirmada' ? 'bg-success' :
+                                       ($reserva->estado === 'cancelada' ? 'bg-danger' : 'bg-warning') }}">
+                                    {{ ucfirst($reserva->estado) }}
+                                </span>
                                 </td>
-                                <td class="text-center">
-                                    <span class="badge
-                                        {{ $reserva->estado === 'confirmada' ? 'bg-success' :
-                                           ($reserva->estado === 'cancelada' ? 'bg-danger' : 'bg-warning') }}">
-                                        {{ ucfirst($reserva->estado) }}
-                                    </span>
-                                </td>
+
                                 <td class="text-center">
                                     @if($reserva->estado === 'confirmada' && !$reserva->viaje->calificacion)
                                         <a href="{{ route('calificacion.create', $reserva->id) }}" class="btn btn-warning btn-sm me-1">
@@ -84,11 +85,13 @@
                                         <a href="{{ route('puntos.create', $reserva->id) }}" class="btn btn-info btn-sm">
                                             <i class="fas fa-coins"></i>
                                         </a>
+
                                     @elseif($reserva->estado === 'confirmada' && $reserva->viaje->calificacion)
                                         <span class="text-success fw-bold">Calificado</span>
                                         <a href="{{ route('puntos.create', $reserva->id) }}" class="btn btn-info btn-sm ms-2">
-                                            <i class="fas fa-coins"></i> Registrar
+                                            <i class="fas fa-coins"></i>
                                         </a>
+
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif
@@ -96,7 +99,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-5 text-muted">
+                                <td colspan="7" class="text-center py-5 text-muted">
                                     <i class="fas fa-inbox fa-2x mb-3 d-block"></i>
                                     No tienes reservas realizadas.
                                 </td>
@@ -112,27 +115,24 @@
             @if($reservas->hasPages())
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-muted small">
-                        Mostrando
-                        <span class="fw-semibold text-dark">{{ $reservas->firstItem() ?? 0 }}</span>
-                        –
-                        <span class="fw-semibold text-dark">{{ $reservas->lastItem() ?? 0 }}</span>
-                        de
-                        <span class="fw-semibold text-dark">{{ $reservas->total() }}</span>
-                        registros
+                        Mostrando {{ $reservas->firstItem() ?? 0 }} –
+                        {{ $reservas->lastItem() ?? 0 }} de {{ $reservas->total() }}
                     </div>
 
                     <nav>
                         <ul class="pagination pagination-sm mb-0">
                             <li class="page-item {{ $reservas->onFirstPage() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $reservas->appends(request()->all())->previousPageUrl() }}">Anterior</a>
+                                <a class="page-link" href="{{ $reservas->previousPageUrl() }}">Anterior</a>
                             </li>
+
                             @for($page = 1; $page <= $reservas->lastPage(); $page++)
                                 <li class="page-item {{ $page == $reservas->currentPage() ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $reservas->appends(request()->all())->url($page) }}">{{ $page }}</a>
+                                    <a class="page-link" href="{{ $reservas->url($page) }}">{{ $page }}</a>
                                 </li>
                             @endfor
+
                             <li class="page-item {{ $reservas->hasMorePages() ? '' : 'disabled' }}">
-                                <a class="page-link" href="{{ $reservas->appends(request()->all())->nextPageUrl() }}">Siguiente</a>
+                                <a class="page-link" href="{{ $reservas->nextPageUrl() }}">Siguiente</a>
                             </li>
                         </ul>
                     </nav>
@@ -141,19 +141,4 @@
 
         </div>
     </div>
-
-    <style>
-        .table { table-layout: fixed; width: 100%; }
-        tbody { min-height: 300px; display: table-row-group; }
-        .table-responsive { min-height: 320px; }
-        .pagination .page-link {
-            color: #1e63b8;
-            border-radius: 0.375rem;
-            border: 1px solid #dee2e6;
-            margin: 0 2px;
-        }
-        .pagination .page-link:hover { background-color: #1e63b8; color: #fff; }
-        .pagination .page-item.active .page-link { background-color: #1e63b8; border-color: #1e63b8; color: #fff; }
-        .pagination .page-item.disabled .page-link { color: #9ca3af; background: #f3f4f6; border-color: #e5e7eb; }
-    </style>
 @endsection

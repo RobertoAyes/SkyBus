@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 
 class RutaController extends Controller
 {
-
     public function create()
     {
         return view('rutas.create');
     }
-
 
     public function store(Request $request)
     {
@@ -37,12 +35,17 @@ class RutaController extends Controller
                 ->withInput();
         }
 
-        Ruta::create($request->all());
+        Ruta::create([
+            'origen' => $request->origen,
+            'destino' => $request->destino,
+            'distancia' => $request->distancia,
+            'duracion_estimada' => $request->duracion_estimada,
+            'estado' => $request->estado ?? 1,
+        ]);
 
         return redirect()->back()
             ->with('success', 'Ruta registrada correctamente');
     }
-
 
     public function index(Request $request)
     {
@@ -58,9 +61,9 @@ class RutaController extends Controller
 
         if ($request->filled('estado')) {
             if ($request->estado === 'activa') {
-                $query->where('estado', true);
+                $query->where('estado', 1);
             } elseif ($request->estado === 'bloqueada') {
-                $query->where('estado', false);
+                $query->where('estado', 0);
             }
         }
 
@@ -83,13 +86,13 @@ class RutaController extends Controller
                 $query->where('duracion_estimada', '>', 180);
             }
         }
+
         $perPage = $request->input('per_page', 5);
 
         $rutas = $query->paginate($perPage)->withQueryString();
 
         return view('rutas.index', compact('rutas'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -116,7 +119,14 @@ class RutaController extends Controller
         }
 
         $ruta = Ruta::findOrFail($id);
-        $ruta->update($request->all());
+
+        $ruta->update([
+            'origen' => $request->origen,
+            'destino' => $request->destino,
+            'distancia' => $request->distancia,
+            'duracion_estimada' => $request->duracion_estimada,
+            'estado' => $request->estado ?? $ruta->estado,
+        ]);
 
         return redirect()->route('rutas.index')
             ->with('success', 'Ruta actualizada correctamente');
@@ -126,7 +136,7 @@ class RutaController extends Controller
     {
         $ruta = Ruta::findOrFail($id);
 
-        $ruta->estado = !$ruta->estado; // cambia true a false y viceversa
+        $ruta->estado = !$ruta->estado;
         $ruta->save();
 
         return redirect()->route('rutas.index')

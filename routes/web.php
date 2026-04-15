@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\RegistroRentaController;
 use App\Http\Controllers\RegistroTeminalController;
-use App\Http\Controllers\ReservaController;
+use App\Http\Controllers\Cliente\ReservaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +18,6 @@ use App\Http\Controllers\RegistroPuntosController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\EstadisticasController;
 use App\Http\Controllers\ValidarEmpresaController2;
-use App\Http\Controllers\EmpresaHU11Controller;
 use App\Http\Controllers\EmpleadoHU5Controller;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\EmpresaBusController;
@@ -143,11 +142,6 @@ Route::get('/admin/pagina', [EstadisticasController::class, 'index'])
 // ======================================================
 Route::get('/empleados-hu5', [EmpleadoHU5Controller::class, 'index'])->name('empleados.hu5');
 
-// ======================================================
-// EMPRESAS HU11 (EDITAR)
-// ======================================================
-Route::get('/empresa-hu11/{id}/editar', [EmpresaHU11Controller::class, 'edit'])->name('empresa.edit.hu11');
-Route::put('/empresa-hu11/{id}', [EmpresaHU11Controller::class, 'update'])->name('empresa.update.hu11');
 
 // ======================================================
 // TERMINALES
@@ -264,16 +258,23 @@ Route::get('/admin/estadisticas', [EstadisticasController::class, 'mostrar'])->n
 // Actualizar empresas
 Route::put('empresas/{id}', [EmpresaController::class, 'update'])->name('empresas.update');
 
-Route::resource('rentas', RegistroRentaController::class);
 
-// ======================================================
-// Reservas
-// ======================================================
+
+//reservas
+
 Route::middleware(['auth'])->prefix('cliente')->name('cliente.')->group(function () {
-    Route::get('reserva/create', [ReservaController::class, 'create'])->name('reserva.create');
-    Route::post('reserva/buscar', [ReservaController::class, 'buscar'])->name('reserva.buscar');
-    Route::get('reserva/{viaje_id}/asientos', [ReservaController::class, 'seleccionarAsiento'])->name('reserva.asientos');
-    Route::post('reserva/store', [ReservaController::class, 'store'])->name('reserva.store');
+
+    Route::get('reserva/create', [ReservaController::class, 'create'])
+        ->name('reserva.create');
+
+    Route::post('reserva/buscar', [ReservaController::class, 'buscar'])
+        ->name('reserva.buscar');
+
+    Route::get('reserva/{viaje_id}/asientos', [ReservaController::class, 'asientos'])
+        ->name('reserva.asientos');
+
+    Route::post('reserva/store', [ReservaController::class, 'store'])
+        ->name('reserva.store');   // 👈 ESTA ES LA QUE TE FALTA
 });
 
 // Admin predeterminado
@@ -324,7 +325,6 @@ Route::get('usuario/cambiar-password', [AuthController::class, 'showUserChangePa
 Route::post('usuario/update-password', [AuthController::class, 'updateUserPassword'])->name('usuario.update-password');
 
 //Servicios adicionales
-Route::resource('(/servicios_adicionales', ExtraController::class );
 Route::resource('/servicios', ServicioController::class);
 
 // SERVICIOS ADICIONALES - CLIENTE (extras en reserva)
@@ -392,7 +392,6 @@ Route::middleware(['auth'])->prefix('documentos-buses')->name('documentos-buses.
 });
 //Rutas Shirley
 Route::resource('rentas', RegistroRentaController::class);
-Route::put('/reservas/{reserva}', [ReservaController::class, 'update'])->name('reserva.update');
 
 //Ruta chofer
 Route::middleware(['auth', 'user.active'])->get('/chofer/panel', function () {
@@ -477,41 +476,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/principal', function () {
-    return view('interfaces.principal', [
-        'ciudades' => Ciudad::all()
-    ]);
-});
-
-Route::get('/cliente/reserva', [ReservaController::class, 'create'])
-    ->name('cliente.reserva.create');
-
-Route::post('/cliente/reserva/buscar', [ReservaController::class, 'buscar'])
-    ->name('cliente.reserva.buscar');
-
-Route::get('/cliente/reserva/asientos/{id}', [ReservaController::class, 'asientos'])
-    ->name('cliente.reserva.asientos');
-
-Route::post('/cliente/reserva/store', [ReservaController::class, 'store'])
-    ->name('cliente.reserva.store');
 
 
 Route::get('/', function () {
-    return view('interfaces.principal');
-})->name('interfaces.principal');
+    return view('cliente');
+})->name('cliente');
 
-
-Route::middleware('auth')->group(function () {
-    Route::get('/reserva', [ReservaController::class, 'create'])->name('cliente.reserva.create');
-    Route::post('/reserva/buscar', [ReservaController::class, 'buscar'])->name('cliente.reserva.buscar');
-    Route::post('/reserva/store', [ReservaController::class, 'store'])->name('cliente.reserva.store');
-    Route::get('/historial', [ReservaController::class, 'historial'])->name('cliente.historial'); // si tienes historial
-});
-
-
-Route::get('/register', [RegisteredUserController::class, 'create'])
-    ->name('register');
-Route::post('/register', [RegisteredUserController::class, 'store']);
 
 
 Route::post('/empleado/incidentes', [\App\Http\Controllers\IncidenteController::class, 'store'])
@@ -593,25 +563,6 @@ Route::resource('indicador_en_curso', IndicadorEnCursoController::class);
 Route::put('/rutas/{id}/bloquear', [RutaController::class, 'bloquear'])->name('rutas.bloquear');
 
 
-// ----------------- Soporte Técnico Chofer -----------------
-// ===============================
-// CHOFER
-// ===============================
-/*Route::prefix('chofer')->middleware('auth')->group(function () {
-
-    // Historial de solicitudes propias
-    Route::get('soporte', [SoporteController::class,'indexChofer'])
-        ->name('chofer.soporte.index');
-
-    // Crear nueva solicitud
-    Route::get('soporte/crear', [SoporteController::class,'crear'])
-        ->name('chofer.soporte.crear');
-
-    // Guardar nueva solicitud (el form del chofer usa esta ruta)
-    Route::post('soporte', [SoporteController::class,'store'])
-        ->name('chofer.soporte.store');
-
-});*/
 
 Route::prefix('chofer')->middleware('auth')->group(function () {
 
@@ -652,6 +603,24 @@ Route::get('/historial-incidentes', [\App\Http\Controllers\IncidenteController::
 Route::post('/incidentes/{id}/responder', [\App\Http\Controllers\IncidenteController::class, 'responder'])
     ->name('incidentes.responder');
 
+<<<<<<< HEAD
+
+Route::prefix('admin')->group(function () {
+
+    Route::get('/servicios-adicionales', [ServicioAdicionalController::class, 'index'])
+        ->name('servicios_adicionales.index');
+
+    Route::get('/servicios-adicionales/create', [ServicioAdicionalController::class, 'create'])
+        ->name('servicios_adicionales.create');
+
+    Route::post('/servicios-adicionales', [ServicioAdicionalController::class, 'store'])
+        ->name('servicios_adicionales.store');
+});
+
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+=======
 // RUta para responder desde admin al chofer
 Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'responderConsulta'])
     ->name('consultas.responderConsulta');
@@ -664,3 +633,4 @@ Route::post('/admin/soportes/{id}/responder', [SoporteController::class, 'respon
 
 // Ruta para visualizar la respuesta del admin para el usuario
 Route::post('/soporte/enviar', [SoporteController::class, 'store'])->name('soporte.enviar');
+>>>>>>> main

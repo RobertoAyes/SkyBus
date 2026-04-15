@@ -8,114 +8,99 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-
-        .travel-section {
-            background: linear-gradient(135deg, #e3f2fd, #f8fbff);
-        } hola
-
-        .travel-card {
-            background: #ffffff;
-            border-radius: 150px;
-            padding: 25px;
-            height: 100%;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .travel-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-        }
-
-        .icon-circle {
-            width: 70px;
-            height: 70px;
-            background: #e3f2fd;
-            border-radius: 50%;
+        .seat {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 2px solid #999;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-        }
-
-        .benefits-section {
-            background: #f8f9fa;
-        }
-
-        .info-card {
-            background: white;
-            border-radius: 150px;
-            padding: 25px 15px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        .info-card i {
-            color: #1976d2;
-        }
-        #btnScrollTop {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #ff6a00, #ff3d00);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
+            font-weight: 600;
             cursor: pointer;
-            display: none; /* oculto por defecto */
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-            z-index: 999;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
-        #btnScrollTop:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        /* seleccionado */
+        .seat.selected {
+            background: #FF5722;
+            color: #fff;
+            border-color: #FF5722;
+            transform: scale(1.05);
         }
-        .service-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 14px;
-            padding: 30px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        body { font-family: 'Poppins', sans-serif; background: url('https://media.istockphoto.com/id/1457298168/es/foto/hombre-abordando-autob%C3%BAs-enfoque-selectivo-en-el-lado-del-parachoques-del-transporte-p%C3%BAblico.jpg?s=612x612&w=0&k=20&c=zl6SrTq50CuHHJ8V8L13EwQP4TNcsXRvKeyvIEtZd1c=') no-repeat center center fixed; background-size: cover; min-height: 100vh; }
-        .booking-card { background: rgba(255,255,255,0.95); border-radius: 12px; padding: 30px; max-width: 1200px; width: 95%; margin: 60px auto; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-        .btn-orange { background-color: #FF5722; color: #fff; }
-        .btn-orange:hover { background-color: #E64A19; color: #fff; }
-        .step { display: none; }
-        .step.active { display: block; }
-        .navbar { background-color: rgba(16,24,39,0.9); }
-        .navbar-brand img { height: 60px; }
-        .bus-container { position: relative; margin: 20px auto; width: 100%; max-width: 250px; height: 600px; background: #f2f2f2; border-radius: 40px; padding: 20px 10px; box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
-        .bus-cabin { width: 100%; height: 40px; background: #dcdcdc; border-radius: 20px 20px 0 0; display: flex; justify-content: center; align-items: center; margin-bottom: 15px; }
-        .bus-cabin i { font-size: 24px; color: #555; }
-        .seat-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .seat { width: 50px; height: 50px; background: #fff; border: 2px solid #999; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .seat:hover { background: #e0e0e0; }
-        .seat.selected { background: #0d6efd; color: #fff; border-color: #0d6efd; }
-        .aisle { width: 40px; }
-        @media(max-width:768px){ .seat { width: 40px; height: 40px; font-size: 14px; } .aisle { width: 20px; } }
 
-        /* QR grande */
-        .barcode svg { width: 350px !important; height: 350px !important; }
-        @media (max-width: 576px) {
-            .barcode svg { width: 280px !important; height: 280px !important; }
+        /* ocupado */
+        .seat.disabled {
+            background: #bdbdbd;
+            color: #fff;
+            cursor: not-allowed;
+            pointer-events: none;
         }
+
+        /* hover */
+        .seat:not(.disabled):hover {
+            border-color: #FF5722;
+        }
+        /* =========================
+           BASE / BODY
+        ========================= */
         body {
             font-family: "Segoe UI", Roboto, sans-serif;
-            background-color: #f5f7fa;
+            background: url('https://media.istockphoto.com/id/1457298168/es/foto/hombre-abordando-autob%C3%BAs-enfoque-selectivo-en-el-lado-del-parachoques-del-transporte-p%C3%BAblico.jpg?s=612x612&w=0&k=20&c=zl6SrTq50CuHHJ8V8L13EwQP4TNcsXRvKeyvIEtZd1c=') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
         }
 
+        /* =========================
+           BOOKING CARD
+        ========================= */
+        .booking-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 1200px;
+            width: 95%;
+            margin: 60px auto;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+        .btn-orange {
+            background-color: #FF5722;
+            color: #fff;
+        }
+
+        .btn-orange:hover {
+            background-color: #E64A19;
+            color: #fff;
+        }
+
+        /* =========================
+           STEPS (MULTIPASO)
+        ========================= */
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+        .navbar {
+            background-color: rgba(16,24,39,0.9);
+        }
+
+        .navbar-brand img {
+            height: 60px;
+        }
+
+        /* NAVBAR CUSTOM (DASHBOARD STYLE) */
         .navbar-custom {
             background-color: #101827;
         }
@@ -146,6 +131,192 @@
             color: #00b7ff;
         }
 
+        /* =========================
+           BUS LAYOUT
+        ========================= */
+        .bus-container {
+            margin: 20px auto;
+            width: fit-content;
+            background: #f2f2f2;
+            border-radius: 60px 60px 30px 30px;
+            padding: 30px 20px 20px 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .bus-cabin {
+            width: 100%;
+            height: 50px;
+            background: #dcdcdc;
+            border-radius: 40px 40px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .bus-cabin i {
+            font-size: 22px;
+            color: #555;
+        }
+
+        /* =========================
+           ASIENTOS
+        ========================= */
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .seat {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 2px solid #999;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* seleccionado */
+        .seat.selected {
+            background: #28a745;
+            color: #fff;
+            border-color: #1e7e34;
+        }
+
+        /* ocupado */
+        .seat.disabled {
+            background: #c0c0c0;
+            color: #666;
+            border-color: #999;
+            cursor: not-allowed;
+        }
+
+        /* hover */
+        .seat:not(.disabled):hover {
+            transform: scale(1.05);
+        }
+
+        .aisle {
+            width: 20px;
+        }
+
+        @media(max-width:768px){
+            .seat {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .aisle {
+                width: 20px;
+            }
+        }
+
+        /* =========================
+           TRAVEL SECTION
+        ========================= */
+        .travel-section {
+            background: linear-gradient(135deg, #e3f2fd, #f8fbff);
+        }
+
+        .travel-card {
+            background: #ffffff;
+            border-radius: 150px;
+            padding: 25px;
+            height: 100%;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .travel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        /* =========================
+           BENEFITS
+        ========================= */
+        .benefits-section {
+            background: #f8f9fa;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 150px;
+            padding: 25px 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .info-card i {
+            color: #1976d2;
+        }
+
+        /* =========================
+           SCROLL TOP BUTTON
+        ========================= */
+        #btnScrollTop {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6a00, #ff3d00);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        #btnScrollTop:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        }
+
+        /* =========================
+           SERVICE CARD
+        ========================= */
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =========================
+           BADGE NOTIFY
+        ========================= */
         .badge-notify {
             position: absolute;
             top: 5px;
@@ -153,6 +324,9 @@
             font-size: 0.6rem;
         }
 
+        /* =========================
+           LAYOUT SPACING
+        ========================= */
         main {
             padding: 20px;
         }
@@ -161,6 +335,7 @@
             margin-left: 20px;
             margin-right: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -285,10 +460,15 @@
         </div>
     </div>
 </nav>
+
+
+
 <div class="booking-card">
     <h2 class="text-center mb-4 fw-bold">¡Tu destino catracho online!</h2>
 
-    <!-- PASO 1: BUSCADOR -->
+    <div id="errorBox" class="alert alert-danger d-none"></div>
+
+    <!-- PASO 1 -->
     <div id="step1" class="step active">
         <form id="buscarForm">
             <div class="row g-3">
@@ -303,24 +483,27 @@
                         @endisset
                     </select>
                 </div>
+
                 <div class="col-md-4">
                     <label class="form-label">A</label>
                     <select id="destinoSelect" class="form-select" required>
                         <option value="">Seleccione</option>
                     </select>
                 </div>
+
                 <div class="col-md-4">
                     <label class="form-label">Fecha del Viaje</label>
                     <input type="date" name="fecha" class="form-control" required>
                 </div>
             </div>
+
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-orange btn-lg"><i class="fas fa-search me-2"></i>Buscar</button>
+                <button type="submit" class="btn btn-orange btn-lg">Buscar</button>
             </div>
         </form>
     </div>
 
-    <!-- PASO 2: LISTA DE VIAJES -->
+    <!-- PASO 2 -->
     <div id="step2" class="step">
         <h4 class="mb-3">Viajes Disponibles</h4>
         <div class="list-group" id="viajesBox"></div>
@@ -329,53 +512,57 @@
         </div>
     </div>
 
-    <!-- PASO 3: SELECCIÓN DE ASIENTO -->
+    <!-- PASO 3 -->
     <div id="step3" class="step">
-        <h4 class="mb-3">Seleccione su Asiento</h4>
+        <h4 class="mb-3">
+            Seleccione sus Asientos (máx. 5)
+            <small id="counter" class="text-muted ms-2">(0/5)</small>
+        </h4>
+
         <div class="bus-container">
-            <div class="bus-cabin"><i class="fas fa-steering-wheel"></i></div>
-            @for($i=1;$i<=7;$i++)
+            <div class="bus-cabin">
+                <i class="fas fa-steering-wheel"></i>
+            </div>
+
+            @for($i=1;$i<=8;$i++)
                 <div class="seat-row">
-                    <div class="seat">{{ $i }}A</div>
-                    <div class="seat">{{ $i }}B</div>
+                    <div class="seat" data-seat="{{ $i }}A">{{ $i }}A</div>
+                    <div class="seat" data-seat="{{ $i }}B">{{ $i }}B</div>
                     <div class="aisle"></div>
-                    <div class="seat">{{ $i }}C</div>
-                    <div class="seat">{{ $i }}D</div>
+                    <div class="seat" data-seat="{{ $i }}C">{{ $i }}C</div>
+                    <div class="seat" data-seat="{{ $i }}D">{{ $i }}D</div>
                 </div>
             @endfor
         </div>
+
         <div class="text-center mt-4">
-            <button id="confirmarBtn" class="btn btn-orange" disabled>Confirmar Reserva</button>
-            <button class="btn btn-secondary" onclick="showStep(2)">Volver</button>
+            <button id="confirmarBtn" class="btn btn-orange" disabled>
+                Confirmar Reserva
+            </button>
+            <button class="btn btn-secondary" onclick="showStep(2)">
+                Volver
+            </button>
         </div>
     </div>
 
-    <!-- PASO 4: CONFIRMACIÓN -->
+    <!-- PASO 4 -->
     <div id="step4" class="step">
         <div class="card shadow border-0 mx-auto" style="max-width:600px;">
             <div class="card-header bg-success text-white text-center py-3">
-                <h4 class="mb-0"><i class="fas fa-check-circle fa-lg me-2"></i> ¡Reserva Confirmada!</h4>
+                <h4 class="mb-0">¡Reserva Confirmada!</h4>
             </div>
+
             <div class="card-body p-4 text-center">
-                <div class="alert alert-success mb-3 py-2"><strong>¡Listo!</strong> Tu reserva ha sido guardada.</div>
-                <div class="alert alert-warning mb-4 py-2"><i class="fas fa-exclamation-triangle me-1"></i><strong>Recuerda:</strong> Llega antes de la hora de salida.</div>
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <small>Código</small>
+                        <h5 id="codigoReservaStep4">---</h5>
+                    </div>
 
-                <div class="row g-3 mb-4 text-center">
-                    <div class="col-12"><small class="text-muted d-block">Código de Reserva</small><h5 class="fw-bold text-primary" id="codigoReservaStep4">---</h5></div>
-                    <div class="col-6"><small class="text-muted d-block">Origen</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-map-marker-alt text-primary me-2"></i><span id="origenStep4">-</span></div></div>
-                    <div class="col-6"><small class="text-muted d-block">Destino</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-map-marker-check text-success me-2"></i><span id="destinoStep4">-</span></div></div>
-                    <div class="col-6"><small class="text-muted d-block">Salida</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-clock text-info me-2"></i><span id="fechaStep4">-</span></div></div>
-                    <div class="col-6"><small class="text-muted d-block">Asiento</small><div class="d-flex align-items-center justify-content-center"><i class="fas fa-chair text-secondary me-2"></i><span id="asientoStep4">-</span></div></div>
-                </div>
-
-                <div class="text-center mb-4">
-                    <div class="bg-white p-3 d-inline-block rounded shadow-sm border barcode" id="qrStep4"><svg></svg></div>
-                    <p class="text-muted mt-2 mb-0"><small>Escanea en la terminal</small></p>
-                </div>
-
-                <div class="d-grid d-md-flex justify-content-center gap-2">
-                    <a href="{{ route('cliente.historial') }}" class="btn btn-primary px-4"><i class="fas fa-history me-1"></i> Historial</a>
-                    <a href="{{ route('cliente.reserva.create') }}" class="btn btn-outline-success px-4"><i class="fas fa-plus me-1"></i> Nueva</a>
+                    <div class="col-12">
+                        <small>Asientos</small>
+                        <div id="asientoStep4">-</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -383,76 +570,229 @@
 </div>
 
 <script>
-    const rutas = @json($rutas ?? []);
+    const IS_AUTH = @json(auth()->check());
 
-    const origenSelect = document.getElementById('origenSelect');
-    const destinoSelect = document.getElementById('destinoSelect');
-    const viajesBox = document.getElementById('viajesBox');
+    document.addEventListener('DOMContentLoaded', () => {
 
-    origenSelect.addEventListener('change', function() {
-        const origen = this.value;
-        destinoSelect.innerHTML = '<option value="">Seleccione</option>';
-        rutas.filter(r => r.origen === origen).forEach(r => {
-            destinoSelect.innerHTML += `<option value="${r.destino}">${r.destino}</option>`;
+        const rutas = @json($rutas ?? []);
+
+        let viajeSeleccionado = null;
+        let asientosSeleccionados = [];
+        const MAX = 5;
+
+        const origen = document.getElementById('origenSelect');
+        const destino = document.getElementById('destinoSelect');
+        const form = document.getElementById('buscarForm');
+        const viajesBox = document.getElementById('viajesBox');
+        const btn = document.getElementById('confirmarBtn');
+        const counter = document.getElementById('counter');
+        const errorBox = document.getElementById('errorBox');
+
+        const showError = (msg) => {
+            errorBox.textContent = msg;
+            errorBox.classList.remove('d-none');
+        };
+
+        const clearError = () => {
+            errorBox.textContent = '';
+            errorBox.classList.add('d-none');
+        };
+
+        const updateCounter = () => {
+            if (counter) {
+                counter.textContent = `(${asientosSeleccionados.length}/${MAX})`;
+            }
+        };
+
+        window.showStep = (n) => {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            const step = document.getElementById('step' + n);
+            if (step) step.classList.add('active');
+        };
+
+        // ORIGEN → DESTINO
+        origen.addEventListener('change', () => {
+            destino.innerHTML = '<option value="">Seleccione</option>';
+
+            rutas
+                .filter(r => r.origen === origen.value)
+                .forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r.destino;
+                    opt.textContent = r.destino;
+                    opt.dataset.id = r.id;
+                    destino.appendChild(opt);
+                });
         });
-    });
 
-    document.getElementById('buscarForm').addEventListener('submit', function(e){
-        e.preventDefault();
-        const origen = origenSelect.value;
-        const destino = destinoSelect.value;
-        const fecha = this.fecha.value;
+        // BUSCAR VIAJES
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
 
-        viajesBox.innerHTML = '';
-        rutas.filter(r => r.origen === origen && r.destino === destino)
-            .forEach(r => {
-                viajesBox.innerHTML += `
+            const opt = destino.options[destino.selectedIndex];
+            const ruta_id = opt?.dataset?.id || null;
+            const fecha = form.querySelector('input[name="fecha"]').value;
+
+            if (!ruta_id) return showError('Selecciona una ruta válida');
+            if (!fecha) return showError('Selecciona una fecha');
+
+            try {
+                const res = await fetch("{{ route('cliente.reserva.buscar') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ ruta_id: Number(ruta_id), fecha })
+                });
+
+                const data = await res.json();
+
+                viajesBox.innerHTML = '';
+
+                if (!res.ok) {
+                    return showError(data.message || data.error || 'Error en búsqueda');
+                }
+
+                if (!data.length) {
+                    viajesBox.innerHTML = `<div class="text-center text-muted">No hay viajes disponibles</div>`;
+                    return showStep(2);
+                }
+
+                data.forEach(v => {
+                    viajesBox.innerHTML += `
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
-                            <strong>${r.origen} → ${r.destino}</strong><br>
-                            <small>Salida: No Disponible aun</small><br>
-                            <small>Asientos Disponibles: 28</small>
+                            <b>${v.ruta.origen} → ${v.ruta.destino}</b><br>
+                            <small>${v.fecha_hora_salida}</small>
                         </div>
-                        <button class="btn btn-orange select-asiento">Seleccionar</button>
-                    </div>`;
-            });
+                        <button class="btn btn-primary" onclick="cargarAsientos(${v.id})">
+                            Seleccionar
+                        </button>
+                    </div>
+                `;
+                });
 
-        document.querySelectorAll('.select-asiento').forEach(btn => btn.addEventListener('click', ()=>{
-            showStep(3);
-        }));
+                showStep(2);
 
-        showStep(2);
-    });
-
-    function showStep(step){
-        document.querySelectorAll('.step').forEach(el=>el.classList.remove('active'));
-        document.getElementById('step'+step).classList.add('active');
-    }
-
-    const seats = document.querySelectorAll('.seat');
-    const confirmarBtn = document.getElementById('confirmarBtn');
-    seats.forEach(seat=>{
-        seat.addEventListener('click', function(){
-            seat.classList.toggle('selected');
-            confirmarBtn.disabled = document.querySelectorAll('.seat.selected').length === 0;
+            } catch (e) {
+                console.error(e);
+                showError('Error de conexión al buscar viajes');
+            }
         });
-    });
 
-    confirmarBtn.addEventListener('click', function(){
-        const seleccionados = Array.from(document.querySelectorAll('.seat.selected'))
-            .map(s => s.textContent)
-            .join(', ');
+        // CARGAR ASIENTOS
+        window.cargarAsientos = async (id) => {
 
-        // Llenar Step4 dinámicamente
-        document.getElementById('asientoStep4').textContent = seleccionados;
-        document.getElementById('origenStep4').textContent = origenSelect.value;
-        document.getElementById('destinoStep4').textContent = destinoSelect.value;
-        document.getElementById('fechaStep4').textContent = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
-        document.getElementById('codigoReservaStep4').textContent = 'ABC123'; // aquí puedes generar un código real
+            viajeSeleccionado = id;
+            asientosSeleccionados = [];
+            updateCounter();
 
-        showStep(4);
+            if (btn) btn.disabled = true;
+
+            try {
+                const res = await fetch(`{{ url('cliente/reserva') }}/${id}/asientos`);
+                const data = await res.json();
+
+                document.querySelectorAll('.seat').forEach(s => {
+                    s.classList.remove('selected', 'disabled');
+                    s.onclick = null;
+                });
+
+                data.asientos.forEach(a => {
+                    const seat = document.querySelector(`[data-seat="${a.numero}"]`);
+                    if (!seat) return;
+
+                    if (a.ocupado) {
+                        seat.classList.add('disabled');
+                        return;
+                    }
+
+                    seat.onclick = () => {
+
+                        const num = seat.dataset.seat;
+
+                        if (asientosSeleccionados.includes(num)) {
+                            asientosSeleccionados = asientosSeleccionados.filter(x => x !== num);
+                            seat.classList.remove('selected');
+                        } else {
+
+                            if (asientosSeleccionados.length >= MAX) {
+                                return showError('Máximo 5 asientos');
+                            }
+
+                            asientosSeleccionados.push(num);
+                            seat.classList.add('selected');
+                            clearError();
+                        }
+
+                        updateCounter();
+                        if (btn) btn.disabled = asientosSeleccionados.length === 0;
+                    };
+                });
+
+                showStep(3);
+
+            } catch (e) {
+                console.error(e);
+                showError('Error al cargar asientos');
+            }
+        };
+
+        // CONFIRMAR RESERVA
+        if (btn) {
+            btn.addEventListener('click', async () => {
+
+                clearError();
+
+                if (!IS_AUTH) {
+                    showError("Debes iniciar sesión para continuar");
+                    setTimeout(() => window.location.href = "{{ route('login') }}", 1000);
+                    return;
+                }
+
+                if (!viajeSeleccionado || asientosSeleccionados.length === 0) {
+                    return showError("Selecciona viaje y asientos");
+                }
+
+                try {
+                    const res = await fetch("{{ route('cliente.reserva.store') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            viaje_id: viajeSeleccionado,
+                            asientos: asientosSeleccionados
+                        })
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok || data.error) {
+                        return showError(data.error || 'Error en reserva');
+                    }
+
+                    document.getElementById('codigoReservaStep4').textContent = data.codigo_reserva;
+                    document.getElementById('asientoStep4').textContent = asientosSeleccionados.join(', ');
+
+                    showStep(4);
+
+                } catch (e) {
+                    console.error(e);
+                    showError('Error al confirmar reserva');
+                }
+            });
+        }
+
     });
 </script>
+
+
 <!-- Sección de Servicios -->
 <section class="services-section py-5">
     <div class="container">
