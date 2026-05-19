@@ -389,30 +389,23 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item {{ request()->routeIs('cliente.reserva.create') ? 'active' : '' }}" href="{{ route('cliente.reserva.create') }}">Nueva Reserva</a></li>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {{ request()->routeIs('servicios_reserva.index') ? 'active' : '' }}"
+                           href="{{ route('servicios_reserva.index') }}">Adiciones</a>
+                    </li>
                             <li><a class="dropdown-item {{ request()->routeIs('cliente.historial') ? 'active' : '' }}" href="{{ route('cliente.historial') }}">Historial de Viajes</a></li>
-                            <li><a class="dropdown-item {{ request()->routeIs('itinerario.index') ? 'active' : '' }}" href="{{ route('itinerario.index') }}">Itinerario</a></li>
-                            <li><a class="dropdown-item {{ request()->routeIs('cliente.facturas*') ? 'active' : '' }}" href="{{ route('cliente.facturas') }}">Facturas</a></li>
                             <li><a class="dropdown-item {{ request()->routeIs('puntos.index') ? 'active' : '' }}" href="{{ route('puntos.index') }}">Ver Puntos</a></li>
                             <li><a class="dropdown-item {{ request()->routeIs('calificaciones.form') ? 'active' : '' }}" href="{{ route('calificaciones.form') }}">Calificar Conductor</a></li>
                         </ul>
                     </li>
 
                     <!-- Servicios Adicionales -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {{ request()->routeIs('servicios_reserva.*') ? 'active' : '' }}"
-                           href="#" role="button" data-bs-toggle="dropdown">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('servicios_reserva.*') ? 'active' : '' }}"
+                           href="{{ route('servicios_reserva.index') }}">
                             <i class="fas fa-star me-1"></i> Servicios Adicionales
                         </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item {{ request()->routeIs('servicios_reserva.index') ? 'active' : '' }}"
-                                   href="{{ route('servicios_reserva.index') }}">Historial</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {{ request()->routeIs('servicios_reserva.create') ? 'active' : '' }}"
-                                   href="{{ route('servicios_reserva.create') }}">Agregar servicio</a>
-                            </li>
-                        </ul>
                     </li>
 
                     <!-- Soporte -->
@@ -460,6 +453,11 @@
         </div>
     </div>
 </nav>
+
+
+
+
+
 
 
 
