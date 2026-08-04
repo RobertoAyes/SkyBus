@@ -27,10 +27,6 @@ class RegistroPuntosController extends Controller
     // MÉTODO EXISTENTE - NO MODIFICAR
     public function store(Request $request, $reserva_id)
     {
-        $request->validate([
-            'puntos' => 'required|integer|min:1|max:10',
-        ]);
-
         if (RegistrarPuntos::where('reserva_id', $reserva_id)->exists()) {
             return redirect()->back()->with('error', 'Los puntos ya fueron registrados para este viaje.');
         }
@@ -38,7 +34,7 @@ class RegistroPuntosController extends Controller
         RegistrarPuntos::create([
             'reserva_id' => $reserva_id,
             'usuario_id' => Auth::id(),
-            'puntos' => $request->puntos,
+            'puntos' => 10,
         ]);
 
         return redirect()->route('cliente.historial')
@@ -46,16 +42,44 @@ class RegistroPuntosController extends Controller
     }
 
     // NUEVO MÉTODO: Mostrar puntos y beneficios
+    // NUEVO MÉTODO: Mostrar puntos y beneficios
     public function index()
     {
-        $puntosTotales = RegistrarPuntos::where('usuario_id', Auth::id())->sum('puntos');
-        $beneficios = CanjeBeneficio::where('activo', true)->get();
+        $viajes = Reserva::with('viaje')
+            ->where('user_id', Auth::id())
+            ->where('estado', 'confirmada')
+            ->orderBy('fecha_reserva', 'desc')
+            ->get();
+
+        // Crear puntos automáticamente para viajes confirmados sin puntos registrados
+        foreach ($viajes as $reserva) {
+
+            if (!RegistrarPuntos::where('reserva_id', $reserva->id)->exists()) {
+
+                RegistrarPuntos::create([
+                    'reserva_id' => $reserva->id,
+                    'usuario_id' => Auth::id(),
+                    'puntos' => 10,
+                ]);
+
+            }
+        }
+
         $puntosRegistros = RegistrarPuntos::with('reserva.viaje')
             ->where('usuario_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('puntos.index', compact('puntosTotales', 'beneficios', 'puntosRegistros'));
+        $puntosTotales = $puntosRegistros->sum('puntos');
+
+        $beneficios = CanjeBeneficio::where('activo', true)->get();
+
+        return view('puntos.index', compact(
+            'puntosTotales',
+            'beneficios',
+            'puntosRegistros',
+            'viajes'
+        ));
     }
 
     // NUEVO MÉTODO: Procesar canje de puntos
