@@ -128,24 +128,6 @@
             </div>
         </div>
 
-        {{-- Acciones rápidas --}}
-        <div class="card shadow-sm">
-            <div class="card-header text-white" style="background-color:#004d99;">
-                <h6 class="mb-0"><i class="fas fa-bolt"></i> Acciones Rápidas</h6>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    {{-- Botón editar: cierra este modal y abre el de edición --}}
-                    <button type="button" class="btn btn-info text-white"
-                            data-bs-dismiss="modal"
-                            onclick="abrirModalEditar({{ $documento->id }})">
-                        <i class="fas fa-edit"></i> Modificar Documento
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
     .timeline { position: relative; padding: 0; list-style: none; }
