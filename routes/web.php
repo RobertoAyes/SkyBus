@@ -642,3 +642,8 @@ Route::resource('/servicios', ServicioController::class);
 Route::middleware(['auth', 'user.active'])->group(function () {
     Route::resource('servicios_reserva', ServicioExtraController::class);
 });
+
+
+Route::get('/cliente', function () {
+    return view('cliente');
+})->name('cliente');

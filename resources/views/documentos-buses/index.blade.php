@@ -144,11 +144,15 @@
                                 <td>{!! $doc->estado_badge !!}</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-id="{{ $doc->id }}">
+                                        <button class="btn btn-info btn-sm btn-ver"
+                                                data-bs-toggle="modal" data-bs-target="#modalVer"
+                                                data-id="{{ $doc->id }}">
                                             <i class="fas fa-eye me-1"></i> Ver
                                         </button>
 
-                                        <button class="btn btn-primary btn-sm btn-editar" data-id="{{ $doc->id }}">
+                                        <button class="btn btn-primary btn-sm btn-editar"
+                                                data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                                data-id="{{ $doc->id }}">
                                             <i class="fas fa-edit"></i> Editar
                                         </button>
                                     </div>
@@ -309,6 +313,61 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL VER DOCUMENTO -->
+    <div class="modal fade" id="modalVer" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-3 shadow" style="overflow: hidden;">
+                <div class="modal-header text-white border-0" style="background: #1e63b8; padding: 1.25rem 1.5rem;">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:34px; height:34px; background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-eye" style="font-size:13px;"></i>
+                        </div>
+                        <span style="font-size:15px; font-weight:500;">Detalle del Documento</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="contenidoVer" style="padding: 1.5rem; min-height: 180px;">
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR DOCUMENTO -->
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 rounded-3 shadow" style="overflow: hidden;">
+                <div class="modal-header text-white border-0" style="background: #1e63b8; padding: 1.25rem 1.5rem;">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:34px; height:34px; background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-edit" style="font-size:13px;"></i>
+                        </div>
+                        <span style="font-size:15px; font-weight:500;">Editar Documento</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="contenidoEditar" style="padding: 1.5rem; min-height: 180px;">
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    </div>
+                </div>
+                <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-color: #e5e7eb !important; padding: 1rem 1.5rem;">
+                    <button type="button" class="btn btn-sm btn-secondary d-flex align-items-center gap-2" data-bs-dismiss="modal">
+                        <i class="fas fa-times" style="font-size:12px;"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary d-flex align-items-center gap-2" id="btnGuardarEdicion">
+                        <i class="fas fa-save" style="font-size:12px;"></i> Guardar cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function () {
             // Inicializar todos los selects con clase .select2
@@ -319,6 +378,35 @@
                     placeholder: $(this).data('placeholder') || 'Seleccionar...',
                     allowClear: true,
                 });
+            });
+
+            // VER documento: carga el partial vía AJAX dentro del modal
+            $(document).on('click', '.btn-ver', function () {
+                const id = $(this).data('id');
+                $('#contenidoVer').html('<div class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>');
+
+                $.get(`/documentos-buses/${id}/detalle-modal`, function (html) {
+                    $('#contenidoVer').html(html);
+                }).fail(function () {
+                    $('#contenidoVer').html('<div class="alert alert-danger mb-0">No se pudo cargar el documento.</div>');
+                });
+            });
+
+            // EDITAR documento: carga el partial vía AJAX dentro del modal
+            $(document).on('click', '.btn-editar', function () {
+                const id = $(this).data('id');
+                $('#contenidoEditar').html('<div class="text-center text-muted py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>');
+
+                $.get(`/documentos-buses/${id}/editar-modal`, function (html) {
+                    $('#contenidoEditar').html(html);
+                }).fail(function () {
+                    $('#contenidoEditar').html('<div class="alert alert-danger mb-0">No se pudo cargar el formulario de edición.</div>');
+                });
+            });
+
+            // Enviar el formulario de edición cargado dentro del modal
+            $(document).on('click', '#btnGuardarEdicion', function () {
+                $('#formEditar').submit();
             });
         });
     </script>
