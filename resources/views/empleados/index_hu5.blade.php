@@ -344,14 +344,23 @@
                 <form method="POST" action="{{ route('empleados.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body" style="padding:1.5rem;">
+
+
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="text-muted small">Nombre</label>
                                 <input type="text" name="nombre" class="form-control" required>
+                                @error('nombre')
+                                <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">Apellido</label>
                                 <input type="text" name="apellido" class="form-control" required>
+                                @error('apellido')
+                                <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">DNI</label>
@@ -360,6 +369,9 @@
                             <div class="col-md-6">
                                 <label class="text-muted small">Cargo</label>
                                 <input type="text" name="cargo" class="form-control" required>
+                                @error('cargo')
+                                <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">Fecha ingreso</label>
