@@ -86,8 +86,14 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card">
-                <div class="card-header text-white">
-                    <h3><i class="fas fa-user-plus me-2"></i>Registro de Usuario</h3>
+                <div class="card-header text-white text-center">
+                    <a href="{{ route('cliente') }}" class="d-inline-block mb-3">
+                        <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
+                             alt="Logo"
+                             style="width: 90px; height: auto;">
+                    </a>
+
+                    <h3><i class></i>Registro de Usuario</h3>
                     <p class="mb-0 mt-2">Completa el formulario para crear tu cuenta</p>
                 </div>
                 <div class="card-body p-4">

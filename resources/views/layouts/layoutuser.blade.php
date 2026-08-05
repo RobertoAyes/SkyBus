@@ -98,7 +98,7 @@
 <nav class="navbar navbar-expand-lg navbar-custom shadow-sm sticky-top">
     <div class="container-fluid">
 
-        <a class="navbar-brand d-flex align-items-center" href="{{ route('interfaces.principal') }}">
+        <a class="navbar-brand d-flex align-items-center" href="{{ route('cliente.reserva.create') }}">
             <img src="{{ asset('Imagenes/bustrak-logo.png') }}"
                  alt="Logo"
                  style="width: 90px; height:auto; margin-right:10px;">

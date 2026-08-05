@@ -74,7 +74,7 @@ class RegistroUsuarioController extends Controller
             ]);
         });
 
-        return redirect()->back()
+        return redirect()->route('login')
             ->with('success', 'Usuario registrado correctamente. Ya puedes iniciar sesión.');
     }
 

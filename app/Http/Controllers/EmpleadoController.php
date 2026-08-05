@@ -69,8 +69,11 @@ class EmpleadoController extends Controller
             'foto' => 'nullable|image|max:2048',
         ]);
 
-        $foto = $request->file('foto')->store('empleados', 'public');
+        $foto = null;
 
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto')->store('empleados', 'public');
+        }
         $baseEmail = strtolower($request->nombre.'.'.$request->apellido);
         $email = $baseEmail.'@bustrak.com';
         $i = 1;
