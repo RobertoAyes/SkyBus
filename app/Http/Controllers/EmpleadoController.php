@@ -60,13 +60,17 @@ class EmpleadoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required',
-            'apellido' => 'required',
+            'nombre' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'dni' => 'required|digits:13|unique:empleados',
-            'cargo' => 'required',
+            'cargo' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'fecha_ingreso' => 'required|date',
             'rol' => 'required|in:Empleado,Administrador,Chofer',
             'foto' => 'nullable|image|max:2048',
+        ],[
+            'nombre.regex' => 'El nombre solo puede contener letras.',
+            'apellido.regex' => 'El apellido solo puede contener letras.',
+            'cargo.regex' => 'El cargo solo puede contener letras.',
         ]);
 
         $foto = null;
@@ -156,14 +160,18 @@ class EmpleadoController extends Controller
     {
         $empleado = Empleado::findOrFail($id);
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
+            'nombre' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
+            'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'dni' => 'required|string|unique:empleados,dni,' . $empleado->id,
-            'cargo' => 'required|string|max:255',
+            'cargo' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
             'fecha_ingreso' => 'required|date',
             'rol' => 'required|string',
             'estado' => 'required|string',
             'foto' => 'nullable|image|max:2048',
+        ],[
+            'nombre.regex' => 'El nombre solo puede contener letras.',
+            'apellido.regex' => 'El apellido solo puede contener letras.',
+            'cargo.regex' => 'El cargo solo puede contener letras.',
         ]);
 
         $empleado->nombre = $request->nombre;
