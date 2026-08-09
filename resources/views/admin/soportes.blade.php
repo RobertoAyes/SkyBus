@@ -33,7 +33,7 @@
                         </label>
                         <div class="col-md-7">
                             <input type="text" name="buscar" class="form-control"
-                                   placeholder="Buscar por título o descripción"
+                                   placeholder="Buscar por título ,chofer o descripción"
                                    value="{{ request('buscar') }}">
                         </div>
 

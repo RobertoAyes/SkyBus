@@ -17,13 +17,20 @@ class EmpleadoController extends Controller
     public function dashboardEmpleado()
     {
         $user = auth()->user();
-        if ($user->role !== 'Empleado') abort(403);
+
+        if ($user->role !== 'Empleado') {
+            abort(403);
+        }
+
         return view('empleados.dashboard');
     }
 
     public function dashboardChofer()
     {
-        if (auth()->user()->role !== 'Chofer') abort(403);
+        if (auth()->user()->role !== 'Chofer') {
+            abort(403);
+        }
+
         return view('chofer.dashboard');
     }
 
@@ -35,6 +42,7 @@ class EmpleadoController extends Controller
 
         if ($request->filled('buscar')) {
             $buscar = $request->buscar;
+
             $query->where(fn($q) =>
             $q->where('nombre', 'like', "%$buscar%")
                 ->orWhere('apellido', 'like', "%$buscar%")
@@ -47,6 +55,7 @@ class EmpleadoController extends Controller
         }
 
         $empleados = $query->orderBy('nombre')->paginate(10);
+
         return view('empleados.index_hu5', compact('empleados'));
     }
 
@@ -60,17 +69,79 @@ class EmpleadoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'dni' => 'required|digits:13|unique:empleados',
-            'cargo' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'fecha_ingreso' => 'required|date',
-            'rol' => 'required|in:Empleado,Administrador,Chofer',
-            'foto' => 'nullable|image|max:2048',
-        ],[
-            'nombre.regex' => 'El nombre solo puede contener letras.',
-            'apellido.regex' => 'El apellido solo puede contener letras.',
-            'cargo.regex' => 'El cargo solo puede contener letras.',
+            'nombre' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u'
+            ],
+
+            'apellido' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u'
+            ],
+
+            'dni' => [
+                'required',
+                'digits:13',
+                'unique:empleados,dni'
+            ],
+
+            'cargo' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u'
+            ],
+
+            'fecha_ingreso' => [
+                'required',
+                'date'
+            ],
+
+            'rol' => [
+                'required',
+                'in:Empleado,Administrador,Chofer'
+            ],
+
+            // Opcional, pero máximo 2 MB
+            'foto' => [
+                'nullable',
+                'image',
+                'max:2048'
+            ],
+
+        ], [
+
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser texto.',
+            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
+
+            'apellido.required' => 'El apellido es obligatorio.',
+            'apellido.string' => 'El apellido debe ser texto.',
+            'apellido.max' => 'El apellido no puede superar los 255 caracteres.',
+            'apellido.regex' => 'El apellido solo puede contener letras y espacios.',
+
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.digits' => 'El DNI debe contener exactamente 13 números.',
+            'dni.unique' => 'El DNI ingresado ya está registrado.',
+
+            'cargo.required' => 'El cargo es obligatorio.',
+            'cargo.string' => 'El cargo debe ser texto.',
+            'cargo.max' => 'El cargo no puede superar los 255 caracteres.',
+            'cargo.regex' => 'El cargo solo puede contener letras y espacios.',
+
+            'fecha_ingreso.required' => 'La fecha de ingreso es obligatoria.',
+            'fecha_ingreso.date' => 'La fecha de ingreso no es válida.',
+
+            'rol.required' => 'Debe seleccionar un rol.',
+            'rol.in' => 'El rol seleccionado no es válido.',
+
+            'foto.image' => 'El archivo seleccionado debe ser una imagen.',
+            'foto.max' => 'La imagen no debe pesar más de 2 MB.',
         ]);
 
         $foto = null;
@@ -78,11 +149,15 @@ class EmpleadoController extends Controller
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto')->store('empleados', 'public');
         }
-        $baseEmail = strtolower($request->nombre.'.'.$request->apellido);
-        $email = $baseEmail.'@bustrak.com';
+
+        $baseEmail = strtolower($request->nombre . '.' . $request->apellido);
+
+        $email = $baseEmail . '@bustrak.com';
+
         $i = 1;
+
         while (User::where('email', $email)->exists()) {
-            $email = $baseEmail.$i.'@bustrak.com';
+            $email = $baseEmail . $i . '@bustrak.com';
             $i++;
         }
 
@@ -110,7 +185,10 @@ class EmpleadoController extends Controller
         ]);
 
         return redirect()->route('empleados.hu5')
-            ->with('success', "Empleado registrado | Email: $email | Contraseña: $password");
+            ->with(
+                'success',
+                "Empleado registrado | Email: $email | Contraseña: $password"
+            );
     }
 
     /* ===================== ACTIVAR / DESACTIVAR ===================== */
@@ -119,7 +197,9 @@ class EmpleadoController extends Controller
     {
         $empleado = Empleado::findOrFail($id);
 
-        $request->validate(['motivo_baja' => 'required']);
+        $request->validate([
+            'motivo_baja' => 'required'
+        ]);
 
         $empleado->update([
             'estado' => 'Inactivo',
@@ -147,31 +227,101 @@ class EmpleadoController extends Controller
             ->update(['estado' => 'activo']);
 
         return back()->with('success', 'Empleado activado');
-
     }
 
     public function perfil()
     {
         $user = auth()->user();
+
         return view('empleados.perfil', compact('user'));
     }
+
+    /* ===================== ACTUALIZAR ===================== */
 
     public function update(Request $request, $id)
     {
         $empleado = Empleado::findOrFail($id);
+
         $request->validate([
-            'nombre' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'apellido' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'dni' => 'required|string|unique:empleados,dni,' . $empleado->id,
-            'cargo' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
-            'fecha_ingreso' => 'required|date',
-            'rol' => 'required|string',
-            'estado' => 'required|string',
-            'foto' => 'nullable|image|max:2048',
-        ],[
-            'nombre.regex' => 'El nombre solo puede contener letras.',
-            'apellido.regex' => 'El apellido solo puede contener letras.',
-            'cargo.regex' => 'El cargo solo puede contener letras.',
+            'nombre' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u'
+            ],
+
+            'apellido' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u'
+            ],
+
+            'dni' => [
+                'required',
+                'digits:13',
+                'unique:empleados,dni,' . $empleado->id
+            ],
+
+            'cargo' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u'
+            ],
+
+            'fecha_ingreso' => [
+                'required',
+                'date'
+            ],
+
+            'rol' => [
+                'required',
+                'string'
+            ],
+
+            'estado' => [
+                'required',
+                'string'
+            ],
+
+            // Opcional, pero máximo 2 MB
+            'foto' => [
+                'nullable',
+                'image',
+                'max:2048'
+            ],
+
+        ], [
+
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.string' => 'El nombre debe ser texto.',
+            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
+
+            'apellido.required' => 'El apellido es obligatorio.',
+            'apellido.string' => 'El apellido debe ser texto.',
+            'apellido.max' => 'El apellido no puede superar los 255 caracteres.',
+            'apellido.regex' => 'El apellido solo puede contener letras y espacios.',
+
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.digits' => 'El DNI debe contener exactamente 13 números.',
+            'dni.unique' => 'El DNI ingresado ya está registrado.',
+
+            'cargo.required' => 'El cargo es obligatorio.',
+            'cargo.string' => 'El cargo debe ser texto.',
+            'cargo.max' => 'El cargo no puede superar los 255 caracteres.',
+            'cargo.regex' => 'El cargo solo puede contener letras y espacios.',
+
+            'fecha_ingreso.required' => 'La fecha de ingreso es obligatoria.',
+            'fecha_ingreso.date' => 'La fecha de ingreso no es válida.',
+
+            'rol.required' => 'Debe seleccionar un rol.',
+
+            'estado.required' => 'El estado es obligatorio.',
+
+            'foto.image' => 'El archivo seleccionado debe ser una imagen.',
+            'foto.max' => 'La imagen no debe pesar más de 2 MB.',
         ]);
 
         $empleado->nombre = $request->nombre;
@@ -193,3 +343,4 @@ class EmpleadoController extends Controller
             ->with('success', 'Empleado actualizado correctamente.');
     }
 }
+
