@@ -36,9 +36,6 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-7">
                                 <div class="input-group">
-
-
-                                    </span>
                                     <input type="text" name="buscar" class="form-control"
                                            placeholder="Buscar por nombre, apellido o cargo"
                                            value="{{ request('buscar') }}">
@@ -182,7 +179,8 @@
                                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
 
-                                        <form method="POST" action="{{ route('empleados.hu5.update', $empleado->id) }}" enctype="multipart/form-data">
+                                        <form method="POST" action="{{ route('empleados.hu5.update', $empleado->id) }}"
+                                              enctype="multipart/form-data" novalidate class="form-validar-empleado">
                                             @csrf
                                             @method('PUT')
 
@@ -190,25 +188,48 @@
                                                 <div class="row g-3">
                                                     <div class="col-md-6">
                                                         <label class="text-muted small">Nombre</label>
-                                                        <input type="text" name="nombre" value="{{ $empleado->nombre }}" class="form-control" required>
+                                                        <input type="text" name="nombre" value="{{ $empleado->nombre }}"
+                                                               class="form-control"
+                                                               data-pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                                                               data-mensaje="El nombre solo puede contener letras y espacios."
+                                                               required>
+                                                        <div class="invalid-feedback"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="text-muted small">Apellido</label>
-                                                        <input type="text" name="apellido" value="{{ $empleado->apellido }}" class="form-control" required>
+                                                        <input type="text" name="apellido" value="{{ $empleado->apellido }}"
+                                                               class="form-control"
+                                                               data-pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                                                               data-mensaje="El apellido solo puede contener letras y espacios."
+                                                               required>
+                                                        <div class="invalid-feedback"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="text-muted small">DNI</label>
-                                                        <input type="text" name="dni" value="{{ $empleado->dni }}" class="form-control" required>
+                                                        <input type="text" name="dni" value="{{ $empleado->dni }}"
+                                                               class="form-control"
+                                                               inputmode="numeric"
+                                                               data-pattern="^[0-9]{13}$"
+                                                               maxlength="13"
+                                                               data-mensaje="El DNI debe contener exactamente 13 números."
+                                                               required>
+                                                        <div class="invalid-feedback"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="text-muted small">Cargo</label>
-                                                        <input type="text" name="cargo" value="{{ $empleado->cargo }}" class="form-control" required>
+                                                        <input type="text" name="cargo" value="{{ $empleado->cargo }}"
+                                                               class="form-control"
+                                                               data-pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                                                               data-mensaje="El cargo solo puede contener letras y espacios."
+                                                               required>
+                                                        <div class="invalid-feedback"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="text-muted small">Fecha ingreso</label>
                                                         <input type="date" name="fecha_ingreso"
                                                                value="{{ \Carbon\Carbon::parse($empleado->fecha_ingreso)->format('Y-m-d') }}"
                                                                class="form-control" required>
+                                                        <div class="invalid-feedback"></div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="text-muted small">Rol</label>
@@ -255,20 +276,6 @@
                                 </td>
                             </tr>
                         @endforelse
-                        <!-- Select2 JS -->
-                        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-                        <script>
-                            $(document).ready(function() {
-                                // Inicializa Select2 en filtros y per_page
-                                $('select[name="rol"], select[name="estado"], select[name="per_page"]').select2({
-                                    theme: 'bootstrap-5',
-                                    width: '100%',
-                                    placeholder: 'Seleccione una opción',
-                                    allowClear: true
-                                });
-                            });
-                        </script>
                         </tbody>
                     </table>
                 </div>
@@ -341,41 +348,70 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
-                <form method="POST" action="{{ route('empleados.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('empleados.store') }}" enctype="multipart/form-data"
+                      novalidate class="form-validar-empleado">
                     @csrf
                     <div class="modal-body" style="padding:1.5rem;">
-
-
 
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="text-muted small">Nombre</label>
-                                <input type="text" name="nombre" class="form-control" required>
-                                @error('nombre')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                <input type="text"
+                                       name="nombre"
+                                       value="{{ old('nombre') }}"
+                                       class="form-control @error('nombre') is-invalid @enderror"
+                                       data-pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                                       data-mensaje="El nombre solo puede contener letras y espacios."
+                                       required>
+                                <div class="invalid-feedback">
+                                    @error('nombre') {{ $message }} @enderror
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">Apellido</label>
-                                <input type="text" name="apellido" class="form-control" required>
-                                @error('apellido')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                <input type="text"
+                                       name="apellido"
+                                       value="{{ old('apellido') }}"
+                                       class="form-control @error('apellido') is-invalid @enderror"
+                                       data-pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                                       data-mensaje="El apellido solo puede contener letras y espacios."
+                                       required>
+                                <div class="invalid-feedback">
+                                    @error('apellido') {{ $message }} @enderror
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">DNI</label>
-                                <input type="text" name="dni" class="form-control" required>
+                                <input type="text"
+                                       name="dni"
+                                       value="{{ old('dni') }}"
+                                       class="form-control @error('dni') is-invalid @enderror"
+                                       inputmode="numeric"
+                                       data-pattern="^[0-9]{13}$"
+                                       maxlength="13"
+                                       data-mensaje="El DNI debe contener exactamente 13 números."
+                                       required>
+                                <div class="invalid-feedback">
+                                    @error('dni') {{ $message }} @enderror
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">Cargo</label>
-                                <input type="text" name="cargo" class="form-control" required>
-                                @error('cargo')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                <input type="text"
+                                       name="cargo"
+                                       value="{{ old('cargo') }}"
+                                       class="form-control @error('cargo') is-invalid @enderror"
+                                       data-pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                                       data-mensaje="El cargo solo puede contener letras y espacios."
+                                       required>
+                                <div class="invalid-feedback">
+                                    @error('cargo') {{ $message }} @enderror
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">Fecha ingreso</label>
                                 <input type="date" name="fecha_ingreso" class="form-control" required>
+                                <div class="invalid-feedback"></div>
                             </div>
                             <div class="col-md-6">
                                 <label class="text-muted small">Rol</label>
@@ -425,8 +461,10 @@
 
     @if ($errors->any())
         <script>
-            var crearModal = new bootstrap.Modal(document.getElementById('crearEmpleadoModal'));
-            crearModal.show();
+            document.addEventListener('DOMContentLoaded', function () {
+                let modal = new bootstrap.Modal(document.getElementById('crearEmpleadoModal'));
+                modal.show();
+            });
         </script>
     @endif
 
@@ -441,6 +479,110 @@
                     allowClear: true,
                 });
             });
+
+            // Inicializa Select2 en filtros y per_page
+            $('select[name="rol"], select[name="estado"], select[name="per_page"]').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Seleccione una opción',
+                allowClear: true
+            });
+        });
+
+        /* =========================================================
+           VALIDACIÓN PROPIA (sin tooltips nativos del navegador)
+           -------------------------------------------------------
+           Se usa novalidate en los <form> para evitar que el
+           navegador muestre su popup de validación dentro del
+           modal. Ese popup, combinado con el foco atrapado del
+           modal (tabindex="-1"), es lo que dejaba la página
+           bloqueada al cerrar con la X. Aquí se valida a mano y
+           se muestra el error con las clases de Bootstrap
+           (is-invalid / invalid-feedback), que sí funcionan bien
+           dentro de un modal.
+           ========================================================= */
+        function validarCampo(input) {
+            const patron = input.dataset.pattern;
+            const valor = input.value.trim();
+
+            // Campo requerido vacío
+            if (input.hasAttribute('required') && valor === '') {
+                marcarInvalido(input, 'Este campo es obligatorio.');
+                return false;
+            }
+
+            // Patrón de caracteres (nombre, apellido, cargo, dni)
+            if (patron && valor !== '') {
+                const regex = new RegExp(patron);
+                if (!regex.test(valor)) {
+                    marcarInvalido(input, input.dataset.mensaje || 'Valor inválido.');
+                    return false;
+                }
+            }
+
+            marcarValido(input);
+            return true;
+        }
+
+        function marcarInvalido(input, mensaje) {
+            input.classList.remove('is-valid');
+            input.classList.add('is-invalid');
+            const feedback = input.parentElement.querySelector('.invalid-feedback');
+            if (feedback) feedback.textContent = mensaje;
+        }
+
+        function marcarValido(input) {
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+        }
+
+        document.querySelectorAll('.form-validar-empleado').forEach(function (form) {
+            const campos = form.querySelectorAll('[data-pattern], input[required]:not([data-pattern])');
+
+            // Validar mientras el usuario escribe, sin bloquear nada
+            campos.forEach(function (input) {
+                input.addEventListener('input', function () {
+                    validarCampo(input);
+                });
+            });
+
+            // Validar al enviar
+            form.addEventListener('submit', function (e) {
+                let formValido = true;
+                campos.forEach(function (input) {
+                    if (!validarCampo(input)) formValido = false;
+                });
+
+                if (!formValido) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Enfocar el primer campo inválido sin usar el
+                    // tooltip nativo del navegador
+                    const primerInvalido = form.querySelector('.is-invalid');
+                    if (primerInvalido) primerInvalido.focus();
+                }
+            });
+        });
+
+        /* =========================================================
+           RED DE SEGURIDAD PARA MODALES
+           -------------------------------------------------------
+           Si por cualquier motivo (validación, error de red, etc.)
+           un modal se cierra y deja un backdrop o clases residuales
+           en el <body>, esto las limpia automáticamente para que la
+           página nunca quede bloqueada y no haga falta refrescar.
+           ========================================================= */
+        document.addEventListener('hidden.bs.modal', function () {
+            // Si ya no queda ningún modal abierto, limpiar todo rastro
+            const hayModalAbierto = document.querySelector('.modal.show');
+            if (!hayModalAbierto) {
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('overflow');
+                document.body.style.removeProperty('padding-right');
+                document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+                    backdrop.remove();
+                });
+            }
         });
     </script>
 
