@@ -85,7 +85,10 @@ class SoporteController extends Controller
             $buscar = $request->buscar;
             $query->where(function ($q) use ($buscar) {
                 $q->where('titulo', 'like', "%{$buscar}%")
-                    ->orWhere('descripcion', 'like', "%{$buscar}%");
+                    ->orWhere('descripcion', 'like', "%{$buscar}%")
+                    ->orWhereHas('chofer', function ($choferQuery) use ($buscar) {
+                        $choferQuery->where('name', 'like', "%{$buscar}%");
+                    });
             });
         }
 
