@@ -24,6 +24,13 @@
                         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                     </div>
                 @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <strong class="me-2">Atención:</strong> {{ session('error') }}
+                            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                        </div>
+                    @endif
 
                 <form method="GET" action="{{ route('rutas.index') }}" id="formFiltros">
                     <div class="mb-3">

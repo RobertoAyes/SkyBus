@@ -7,7 +7,6 @@
         <div class="card shadow-sm border-0">
 
             {{-- HEADER --}}
-            {{-- HEADER --}}
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h2 class="mb-0" style="color:#1e63b8; font-weight:600; font-size:2rem;">
                     <i class="fas fa-bus me-2"></i>Listado de Rentas de Viaje Express
@@ -251,15 +250,50 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Nombre del cliente</label>
-                                <input type="text" name="nombre_cliente" id="nombre_cliente" class="form-control" placeholder="Escriba el nombre" required>
+                                <input
+                                    type="text"
+                                    name="nombre_cliente"
+                                    id="nombre_cliente"
+                                    class="form-control @error('nombre_cliente') is-invalid @enderror"
+                                    placeholder="Escriba el nombre"
+                                    value="{{ old('nombre_cliente') }}"
+                                    required
+                                >
+
+                                @error('nombre_cliente')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Correo electrónico</label>
-                                <input type="email" name="email_cliente" id="email_cliente" class="form-control" placeholder="Escriba el correo">
+                                <input
+                                    type="email"
+                                    name="email_cliente"
+                                    id="email_cliente"
+                                    class="form-control @error('email_cliente') is-invalid @enderror"
+                                    placeholder="Escriba el correo"
+                                    value="{{ old('email_cliente') }}"
+                                >
+
+                                @error('email_cliente')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">DNI / Identificación</label>
-                                <input type="text" name="dni_cliente" id="dni_cliente_select" class="form-control" required list="clientes_disponibles">
+                                <input
+                                    type="text"
+                                    name="dni_cliente"
+                                    id="dni_cliente_select"
+                                    class="form-control @error('dni_cliente') is-invalid @enderror"
+                                    value="{{ old('dni_cliente') }}"
+                                    required
+                                    list="clientes_disponibles"
+                                >
+
+                                @error('dni_cliente')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                                 <datalist id="clientes_disponibles">
                                     @isset($clientes)
                                         @foreach ($clientes as $cliente)
@@ -276,14 +310,18 @@
                                 <select name="punto_partida" class="form-select" required>
                                     <option value="">Seleccione origen...</option>
                                     @foreach ($departamentos as $depto)
-                                        <option value="{{ $depto }}">{{ $depto }}</option>
+                                        <option value="{{ $depto }}" {{ old('punto_partida') == $depto ? 'selected' : '' }}>
+                                            {{ $depto }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Destino</label>
                                 <select name="destino" class="form-select" required>
-                                    <option value="">Seleccione destino...</option>
+                                    <option value="{{ $depto }}" {{ old('destino') == $depto ? 'selected' : '' }}>
+                                        {{ $depto }}
+                                    </option>
                                     @foreach ($departamentos as $depto)
                                         <option value="{{ $depto }}">{{ $depto }}</option>
                                     @endforeach
@@ -296,26 +334,61 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-3">
                                 <label class="form-label fw-bold">Fecha de inicio</label>
-                                <input type="date" name="fecha_inicio" class="form-control" required>
+
+                                <input
+                                    type="date"
+                                    name="fecha_inicio"
+                                    class="form-control @error('fecha_inicio') is-invalid @enderror"
+                                    value="{{ old('fecha_inicio') }}"
+                                    required
+                                >
+
+                                @error('fecha_inicio')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-bold">Fecha de fin</label>
-                                <input type="date" name="fecha_fin" class="form-control" required>
+
+                                <input
+                                    type="date"
+                                    name="fecha_fin"
+                                    class="form-control @error('fecha_fin') is-invalid @enderror"
+                                    value="{{ old('fecha_fin') }}"
+                                    required
+                                >
+
+                                @error('fecha_fin')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-bold">Tipo de evento</label>
                                 <select name="tipo_evento" class="form-select" required>
                                     <option value="">Seleccione...</option>
-                                    <option value="Familiar">Familiar</option>
-                                    <option value="Campamento">Campamento</option>
-                                    <option value="Excursión">Excursión</option>
-                                    <option value="Educativo">Educativo</option>
-                                    <option value="Empresarial">Empresarial</option>
+                                    <option value="Familiar" {{ old('tipo_evento') == 'Familiar' ? 'selected' : '' }}>Familiar</option>
+                                    <option value="Campamento" {{ old('tipo_evento') == 'Campamento' ? 'selected' : '' }}>Campamento</option>
+                                    <option value="Excursión" {{ old('tipo_evento') == 'Excursión' ? 'selected' : '' }}>Excursión</option>
+                                    <option value="Educativo" {{ old('tipo_evento') == 'Educativo' ? 'selected' : '' }}>Educativo</option>
+                                    <option value="Empresarial" {{ old('tipo_evento') == 'Empresarial' ? 'selected' : '' }}>Empresarial</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-bold">Pasajeros Confirmados</label>
-                                <input type="number" name="num_pasajeros_confirmados" class="form-control">
+                                <input
+                                    type="number"
+                                    name="num_pasajeros_confirmados"
+                                    class="form-control @error('num_pasajeros_confirmados') is-invalid @enderror"
+                                    value="{{ old('num_pasajeros_confirmados') }}"
+                                >
+
+                                @error('num_pasajeros_confirmados')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -336,11 +409,30 @@
                             <div class="row mb-4">
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Tarifa Base (Lps)</label>
-                                    <input type="number" step="0.01" name="tarifa" id="tarifa" class="form-control" required>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        name="tarifa"
+                                        id="tarifa"
+                                        class="form-control @error('tarifa') is-invalid @enderror"
+                                        value="{{ old('tarifa') }}"
+                                        required
+                                    >
+
+                                    @error('tarifa')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Anticipo (Lps)</label>
-                                    <input type="number" step="0.01" name="anticipo" id="anticipo" class="form-control">
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        name="anticipo"
+                                        id="anticipo"
+                                        class="form-control @error('anticipo') is-invalid @enderror"
+                                        value="{{ old('anticipo') }}"
+                                    >
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold">Total (Lps)</label>
@@ -383,4 +475,26 @@
         tarifaInput.addEventListener('input', calcularTotal);
         anticipoInput.addEventListener('input', calcularTotal);
     </script>
+    @if ($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const modalElement = document.getElementById('modalNuevaRenta');
+
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                }
+            });
+        </script>
+    @endif<div class="modal-body">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Hay errores en el formulario:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+    @endif
 @endsection
