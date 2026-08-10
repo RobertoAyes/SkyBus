@@ -17,7 +17,10 @@ class ViajesSeeder extends Seeder
 
         foreach ($rutas as $ruta) {
 
+
+// 🔥 CREAR VARIOS VIAJES (NO SOLO 1)
             // 🔥 CREAR VARIOS VIAJES (NO SOLO 1)
+
             for ($d = 0; $d < 5; $d++) {
 
                 $viajeId = DB::table('viajes')->insertGetId([
@@ -30,7 +33,11 @@ class ViajesSeeder extends Seeder
                     'updated_at' => now(),
                 ]);
 
+
+// 🔥 ASIENTOS CORRECTOS (1A, 1B, etc.)
+
                 // 🔥 ASIENTOS CORRECTOS (1A, 1B, etc.)
+
                 $filas = 10;
                 $columnas = ['A','B','C','D'];
 

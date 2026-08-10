@@ -193,12 +193,12 @@
                                         </button>
 
                                         {{-- ELIMINAR --}}
-                                        <form action="{{ route('itinerarioChofer.destroy', $itinerario->id) }}" method="POST">
-                                            @csrf @method('DELETE')
-                                            <button class="btn btn-sm btn-danger">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                class="btn btn-sm btn-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#itnDel{{ $itinerario->id }}">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
 
                                     </div>
                                 </td>
@@ -235,59 +235,153 @@
                             </div>
 
                             {{-- MODAL EDITAR --}}
-                            <div class="modal fade" id="modalEditarItinerario{{ $itinerario->id }}" tabindex="-1">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content border-0 shadow-sm">
+                            <div class="modal fade" id="modalEditarItinerario{{ $itinerario->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content border-0 rounded-3" style="overflow:hidden;">
 
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Editar Itinerario</h5>
-                                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
+                                        <form action="{{ route('itinerarioChofer.update', $itinerario->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
 
-                                        <div class="modal-body">
-                                            <form action="{{ route('itinerarioChofer.update', $itinerario->id) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
+                                            {{-- HEADER --}}
+                                            <div class="modal-header text-white border-0"
+                                                 style="background:#1e63b8; padding:1.25rem 1.5rem;">
 
-                                                <div class="mb-3">
-                                                    <label>Chofer</label>
-                                                    <select name="chofer_id" class="form-select">
-                                                        @foreach($choferes as $chofer)
-                                                            <option value="{{ $chofer->id }}" {{ $itinerario->chofer_id == $chofer->id ? 'selected' : '' }}>
-                                                                {{ $chofer->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                                         style="width:34px; height:34px; background:rgba(255,255,255,0.2);">
+                                                        <i class="fas fa-pen-to-square" style="font-size:13px;"></i>
+                                                    </div>
+
+                                                    <span style="font-size:15px; font-weight:500;">
+                            Editar Itinerario
+                        </span>
                                                 </div>
 
-                                                <div class="mb-3">
-                                                    <label>Ruta</label>
-                                                    <select name="ruta_id" class="form-select">
-                                                        @foreach($rutas as $ruta)
-                                                            <option value="{{ $ruta->id }}" {{ $itinerario->ruta_id == $ruta->id ? 'selected' : '' }}>
-                                                                {{ $ruta->origen }} → {{ $ruta->destino }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            {{-- BODY --}}
+                                            <div class="modal-body" style="padding:1.5rem;">
+
+                                                <div class="row g-3">
+
+                                                    {{-- CHOFER --}}
+                                                    <div class="col-md-6">
+                                                        <label class="form-label text-muted small mb-1">
+                                                            <i class="fas fa-user me-1"></i> Chofer
+                                                        </label>
+                                                        <select name="chofer_id" class="form-select" required>
+                                                            @foreach($choferes as $chofer)
+                                                                <option value="{{ $chofer->id }}"
+                                                                    {{ $itinerario->chofer_id == $chofer->id ? 'selected' : '' }}>
+                                                                    {{ $chofer->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    {{-- RUTA --}}
+                                                    <div class="col-md-6">
+                                                        <label class="form-label text-muted small mb-1">
+                                                            <i class="fas fa-route me-1"></i> Ruta
+                                                        </label>
+                                                        <select name="ruta_id" class="form-select" required>
+                                                            @foreach($rutas as $ruta)
+                                                                <option value="{{ $ruta->id }}"
+                                                                    {{ $itinerario->ruta_id == $ruta->id ? 'selected' : '' }}>
+                                                                    {{ $ruta->origen }} → {{ $ruta->destino }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    {{-- FECHA --}}
+                                                    <div class="col-md-12">
+                                                        <label class="form-label text-muted small mb-1">
+                                                            <i class="fas fa-calendar-alt me-1"></i> Fecha y Hora
+                                                        </label>
+                                                        <input type="datetime-local"
+                                                               name="fecha"
+                                                               class="form-control"
+                                                               value="{{ \Carbon\Carbon::parse($itinerario->fecha)->format('Y-m-d\TH:i') }}"
+                                                               required>
+                                                    </div>
+                                                    <div class="mt-4 p-3 rounded"
+                                                         style="background:#f8faff; border:1px solid #e5e7eb;">
+
+                                                        <h6 class="fw-bold mb-3"
+                                                            style="color:#0284c7; font-size:.75rem; text-transform:uppercase;">
+                                                            <i class="fas fa-map-marker-alt me-1"></i> Paradas intermedias
+                                                            <span class="text-muted fw-normal">(opcional)</span>
+                                                        </h6>
+
+                                                        <div id="frm-paradas-container-asignar"
+                                                             class="d-flex flex-column gap-2">
+
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input type="text" name="paradas[lugar][]"
+                                                                       class="form-control form-control-sm"
+                                                                       placeholder="Ej: Terminal Norte">
+
+                                                                <input type="number" name="paradas[tiempo][]"
+                                                                       class="form-control form-control-sm"
+                                                                       placeholder="Min"
+                                                                       style="width:120px;">
+
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger frm-btn-remove"
+                                                                        style="width:34px; height:34px; padding:0;">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <button type="button"
+                                                                class="btn btn-sm mt-3 btn-add-parada"
+                                                                data-target="#frm-paradas-container-asignar"
+                                                                style="background:#e0f2fe; color:#0284c7; border:1px dashed #bae6fd;">
+                                                            <i class="fas fa-plus me-1"></i> Agregar parada
+                                                        </button>
+
+                                                    </div>
+
                                                 </div>
 
-                                                <div class="mb-3">
-                                                    <label>Fecha</label>
-                                                    <input type="datetime-local" name="fecha" class="form-control"
-                                                           value="{{ \Carbon\Carbon::parse($itinerario->fecha)->format('Y-m-d\TH:i') }}">
                                                 </div>
 
-                                                <div class="text-end">
-                                                    <button class="btn btn-primary">Actualizar</button>
-                                                </div>
 
-                                            </form>
-                                        </div>
+
+
+
+                                            {{-- FOOTER --}}
+                                            <div class="modal-footer border-top d-flex justify-content-end gap-2"
+                                                 style="border-color:#e5e7eb !important; padding:1rem 1.5rem;">
+
+                                                <button type="button"
+                                                        class="btn btn-sm btn-secondary d-flex align-items-center gap-2"
+                                                        data-bs-dismiss="modal"
+                                                        style="min-width:100px; justify-content:center;">
+                                                    <i class="fas fa-times" style="font-size:12px;"></i>
+                                                    Cancelar
+                                                </button>
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-primary d-flex align-items-center gap-2"
+                                                        style="min-width:100px; justify-content:center;">
+                                                    <i class="fas fa-save" style="font-size:12px;"></i>
+                                                    Actualizar
+                                                </button>
+
+                                            </div>
+
+                                        </form>
 
                                     </div>
                                 </div>
                             </div>
-
                         @empty
                             <tr>
                                 <td colspan="6" class="text-center text-muted py-4">
@@ -318,71 +412,144 @@
 
     {{-- MODAL ASIGNAR ITINERARIO --}}
     <div class="modal fade" id="modalAsignarItinerario" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content shadow-sm border-0">
-                <div class="modal-header bg-white d-flex align-items-center justify-content-between">
-                    <h5 class="modal-title" style="color:#1e63b8; font-weight:600;">
-                        <i class="fas fa-calendar-plus me-2"></i>Asignar Itinerario
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('itinerarioChofer.store') }}" method="POST">
-                        @csrf
-                        <div class="card border-0 shadow-sm mb-4" style="background:#f8faff;">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold text-muted small"><i class="fas fa-user me-1"></i>Chofer</label>
-                                    <select name="chofer_id" class="form-select" required>
-                                        @foreach($choferes as $chofer)
-                                            <option value="{{ $chofer->id }}">{{ $chofer->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label fw-semibold text-muted small"><i class="fas fa-route me-1"></i>Ruta</label>
-                                    <select name="ruta_id" class="form-select" required>
-                                        <option value="">Selecciona una ruta</option>
-                                        @foreach($rutas as $ruta)
-                                            <option value="{{ $ruta->id }}">{{ $ruta->origen }} → {{ $ruta->destino }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mb-0">
-                                    <label class="form-label fw-semibold text-muted small"><i class="fas fa-calendar-alt me-1"></i>Fecha y Hora</label>
-                                    <input type="datetime-local" name="fecha" class="form-control" required>
-                                </div>
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 rounded-3" style="overflow:hidden;">
+
+                <form action="{{ route('itinerarioChofer.store') }}" method="POST">
+                    @csrf
+
+                    {{-- HEADER --}}
+                    <div class="modal-header text-white border-0"
+                         style="background:#1e63b8; padding:1.25rem 1.5rem;">
+
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width:34px; height:34px; background:rgba(255,255,255,0.2);">
+                                <i class="fas fa-calendar-plus" style="font-size:13px;"></i>
                             </div>
+                            <span style="font-size:15px; font-weight:500;">
+                            Asignar Itinerario
+                        </span>
+                        </div>
+
+                        <button type="button" class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+
+                    {{-- BODY --}}
+                    <div class="modal-body" style="padding:1.5rem;">
+
+                        <div class="row g-3">
+
+                            {{-- CHOFER --}}
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">
+                                    <i class="fas fa-user me-1"></i> Chofer
+                                </label>
+                                <select name="chofer_id" class="form-select" required>
+                                    <option value="" disabled selected>Seleccione un chofer</option>
+                                    @foreach($choferes as $chofer)
+                                        <option value="{{ $chofer->id }}">
+                                            {{ $chofer->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- RUTA --}}
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small mb-1">
+                                    <i class="fas fa-route me-1"></i> Ruta
+                                </label>
+                                <select name="ruta_id" class="form-select" required>
+                                    <option value="" disabled selected>Seleccione una ruta</option>
+                                    @foreach($rutas as $ruta)
+                                        <option value="{{ $ruta->id }}">
+                                            {{ $ruta->origen }} → {{ $ruta->destino }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- FECHA --}}
+                            <div class="col-md-12">
+                                <label class="form-label text-muted small mb-1">
+                                    <i class="fas fa-calendar-alt me-1"></i> Fecha y Hora
+                                </label>
+                                <input type="datetime-local" name="fecha"
+                                       class="form-control" required>
+                            </div>
+
                         </div>
 
                         {{-- PARADAS --}}
-                        <div class="card border-0 shadow-sm mb-4" style="background:#f8faff;">
-                            <div class="card-body">
-                                <h6 class="fw-bold mb-3" style="color:#0284c7;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em;">
-                                    <i class="fas fa-map-marker-alt me-1"></i>Paradas intermedias
-                                    <span class="text-muted fw-normal ms-1" style="font-size:.7rem;text-transform:none;">(opcional)</span>
-                                </h6>
-                                <div id="frm-paradas-container-asignar" class="d-flex flex-column gap-2">
-                                    <div class="frm-parada-item d-flex align-items-center gap-2 p-2 rounded" style="background:#fff;border:1px solid #e2edf8;">
-                                        <input type="text" name="paradas[lugar][]" placeholder="Ej: Terminal Norte" class="form-control form-control-sm">
-                                        <input type="number" name="paradas[tiempo][]" placeholder="0" class="form-control form-control-sm" style="width:120px;flex-shrink:0;">
-                                        <button type="button" class="btn btn-sm btn-outline-danger frm-btn-remove" style="width:34px;height:34px;flex-shrink:0;padding:0;"><i class="fas fa-times"></i></button>
-                                    </div>
+                        <div class="mt-4 p-3 rounded"
+                             style="background:#f8faff; border:1px solid #e5e7eb;">
+
+                            <h6 class="fw-bold mb-3"
+                                style="color:#0284c7; font-size:.75rem; text-transform:uppercase;">
+                                <i class="fas fa-map-marker-alt me-1"></i> Paradas intermedias
+                                <span class="text-muted fw-normal">(opcional)</span>
+                            </h6>
+
+                            <div id="frm-paradas-container-asignar"
+                                 class="d-flex flex-column gap-2">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="text" name="paradas[lugar][]"
+                                           class="form-control form-control-sm"
+                                           placeholder="Ej: Terminal Norte">
+
+                                    <input type="number" name="paradas[tiempo][]"
+                                           class="form-control form-control-sm"
+                                           placeholder="Min"
+                                           style="width:120px;">
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger frm-btn-remove"
+                                            style="width:34px; height:34px; padding:0;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
-                                <button type="button" class="btn btn-sm mt-3 btn-add-parada" data-target="#frm-paradas-container-asignar" style="background:#e0f2fe;color:#0284c7;border:1px dashed #bae6fd;font-weight:600;"><i class="fas fa-plus me-1"></i>Agregar parada</button>
+
                             </div>
+
+                            <button type="button"
+                                    class="btn btn-sm mt-3 btn-add-parada"
+                                    data-target="#frm-paradas-container-asignar"
+                                    style="background:#e0f2fe; color:#0284c7; border:1px dashed #bae6fd;">
+                                <i class="fas fa-plus me-1"></i> Agregar parada
+                            </button>
+
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i>Cancelar</button>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Asignar</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+
+                    {{-- FOOTER --}}
+                    <div class="modal-footer border-top d-flex justify-content-end gap-2"
+                         style="border-color:#e5e7eb !important; padding:1rem 1.5rem;">
+
+                        <button type="button"
+                                class="btn btn-sm btn-secondary d-flex align-items-center gap-2"
+                                data-bs-dismiss="modal"
+                                style="min-width:100px; justify-content:center;">
+                            <i class="fas fa-times" style="font-size:12px;"></i>
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-sm btn-primary d-flex align-items-center gap-2"
+                                style="min-width:100px; justify-content:center;">
+                            <i class="fas fa-save" style="font-size:12px;"></i>
+                            Asignar
+                        </button>
+
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
-
     {{-- SELECT2 --}}
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

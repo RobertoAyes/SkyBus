@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ruta;
+use App\Models\Viaje;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RutaController extends Controller
 {
@@ -132,14 +134,33 @@ class RutaController extends Controller
             ->with('success', 'Ruta actualizada correctamente');
     }
 
-    public function bloquear($id)
-    {
-        $ruta = Ruta::findOrFail($id);
+public function bloquear($id)
+{
+    $ruta = Ruta::findOrFail($id);
 
-        $ruta->estado = !$ruta->estado;
-        $ruta->save();
+    // Solo validar cuando se intenta bloquear una ruta activa
+    if ($ruta->estado) {
 
-        return redirect()->route('rutas.index')
-            ->with('success', 'Estado de la ruta actualizado');
+        $tieneViajesPendientes = Viaje::where('ruta_id', $ruta->id)
+            ->where('fecha_hora_salida', '>=', Carbon::now())
+            ->exists();
+
+        if ($tieneViajesPendientes) {
+            return redirect()->route('rutas.index')
+                ->with('error', 'No se puede bloquear la ruta porque tiene viajes pendientes registrados.');
+        }
     }
+
+    // Cambiar estado de la ruta
+    $ruta->estado = !$ruta->estado;
+    $ruta->save();
+
+    return redirect()->route('rutas.index')
+        ->with('success', $ruta->estado
+            ? 'La ruta ha sido activada correctamente.'
+            : 'La ruta ha sido bloqueada correctamente.'
+        );
+}
+
+
 }

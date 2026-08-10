@@ -54,7 +54,7 @@
             @guest
                 <div class="ms-auto d-flex gap-2">
                     <a href="{{ route('login') }}" class="btn btn-primary">Iniciar Sesión</a>
-                    <a href="{{ route('register') }}" class="btn btn-success">Regístrate</a>
+                    <a href="{{ route('registro') }}" class="register-link">Regístrate aquí</a>
                 </div>
             @endguest
 
