@@ -17,21 +17,6 @@
 
             <div class="card-body">
 
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
-                        <i class="fas fa-circle-check me-2"></i>
-                        <strong class="me-2">¡Éxito!</strong> {{ session('success') }}
-                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                    </div>
-                @endif
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            <strong class="me-2">Atención:</strong> {{ session('error') }}
-                            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-                        </div>
-                    @endif
-
                 <form method="GET" action="{{ route('rutas.index') }}" id="formFiltros">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Búsqueda General</label>
@@ -143,33 +128,58 @@
                                 <td>{{ $ruta->duracion_estimada }} min</td>
                                 <td>
                                     @if($ruta->estado)
-                                        <span class="badge bg-success" style="font-size:0.85rem;">Activa</span>
+                                        <span class="badge bg-success" style="font-size:0.85rem;">
+            Activa
+        </span>
                                     @else
-                                        <span class="badge bg-danger" style="font-size:0.85rem;">Bloqueada</span>
+                                        <span class="badge bg-danger" style="font-size:0.85rem;">
+            Bloqueada
+        </span>
                                     @endif
                                 </td>
+
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+
+                                        {{-- BOTÓN EDITAR --}}
+                                        <button class="btn btn-primary btn-sm"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{ $ruta->id }}">
                                             <i class="fas fa-edit me-1"></i> Editar
                                         </button>
 
-                                        <form action="{{ route('rutas.bloquear', $ruta->id) }}" method="POST" style="display:inline;">
+                                        {{-- FORMULARIO BLOQUEAR / ACTIVAR --}}
+                                        <form action="{{ route('rutas.bloquear', $ruta->id) }}"
+                                              method="POST"
+                                              style="display:inline;">
                                             @csrf
                                             @method('PUT')
+
                                             @if($ruta->estado)
-                                                <button class="btn btn-sm btn-bloquear">
+
+                                                {{-- BOTÓN BLOQUEAR --}}
+                                                <button type="button"
+                                                        class="btn btn-sm btn-bloquear"
+                                                        onclick="confirmarBloqueo(this.closest('form'), '{{ $ruta->origen }}', '{{ $ruta->destino }}')">
                                                     <i class="fas fa-ban me-1"></i> Bloquear
                                                 </button>
+
                                             @else
-                                                <button class="btn btn-success btn-sm btn-activar">
+
+                                                {{-- BOTÓN ACTIVAR --}}
+                                                <button type="button"
+                                                        class="btn btn-success btn-sm btn-activar"
+                                                        onclick="confirmarActivacion(this.closest('form'), '{{ $ruta->origen }}', '{{ $ruta->destino }}')">
                                                     <i class="fas fa-check me-1"></i> Activar
                                                 </button>
+
                                             @endif
+
                                         </form>
+
                                     </div>
                                 </td>
+
                             </tr>
                         @empty
                             <tr>
@@ -407,6 +417,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    {{-- SweetAlert2: reemplaza los confirm()/alert() nativos --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function () {
             $('.select2').each(function () {
@@ -418,6 +431,75 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        function confirmarBloqueo(form, origen, destino) {
+            Swal.fire({
+                title: '¿Bloquear esta ruta?',
+                html: `<strong>${origen} → ${destino}</strong><br>
+                       <span class="text-muted" style="font-size:0.9rem;">
+                           Se verificará si existen viajes pendientes registrados.
+                       </span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f59e0b',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-ban"></i> Sí, bloquear',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true,
+                focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
+        function confirmarActivacion(form, origen, destino) {
+            Swal.fire({
+                title: '¿Activar esta ruta?',
+                html: `<strong>${origen} → ${destino}</strong>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-check"></i> Sí, activar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+
+    {{-- Notificaciones de sesión como toasts, en vez de banners --}}
+    <script>
+        @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: @json(session('success')),
+            timer: 2500,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+        @endif
+
+        @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Atención',
+            text: @json(session('error')),
+            timer: 3000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+        @endif
     </script>
 
 @endsection
