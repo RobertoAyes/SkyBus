@@ -166,7 +166,7 @@
                         </div>
 
                         <div class="text-center mt-3">
-                            <small class="text-muted">¿Ya tienes cuenta? <a href="/login" class="text-decoration-none">Inicia sesión aquí</a></small>
+                            <small class="text-muted">¿Ya tienes cuenta? <a href="/login" class="text-decoration-none">Inicia sesión </a></small>
                         </div>
                     </form>
                 </div>
@@ -179,3 +179,4 @@
 </body>
 </html>
 
+//noooooooooooooooooooooooooooooooooooooooooooooo

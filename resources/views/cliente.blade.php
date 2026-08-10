@@ -357,7 +357,8 @@
                 <!-- Si NO está logueado -->
                 <div class="ms-auto d-flex gap-2">
                     <a href="{{ route('login') }}" class="btn btn-primary btn-login">Iniciar Sesión</a>
-                    <a href="{{ route('register') }}" class="btn btn-success btn-registro">Regístrate</a>
+                    <a href="{{ route('registro') }}" class="btn btn-success btn-registro">Regístrate</a>
+
                 </div>
             @endguest
 
