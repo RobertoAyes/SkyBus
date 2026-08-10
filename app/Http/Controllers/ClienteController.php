@@ -39,7 +39,12 @@ class ClienteController extends Controller
         $usuario = Auth::user();
 
         $rules = [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:100',
+                'regex:/^[\pL\s]+$/u',
+            ],
             'email' => [
                 'required',
                 'string',
@@ -47,10 +52,19 @@ class ClienteController extends Controller
                 'max:255',
                 Rule::unique('users')->ignore($usuario->id),
             ],
+
+            'dni' => [
+                'required',
+                'digits:13',
+            ],
             'password' => 'nullable|string|min:8|confirmed',
         ];
 
-        $validatedData = $request->validate($rules);
+        $validatedData = $request->validate($rules, [
+            'dni.digits' => 'El DNI debe tener exactamente 13 dígitos.',
+        ]);
+        $validatedData['email'] = strtolower($validatedData['email']);
+        $usuario->dni = $validatedData['dni'];
 
         $usuario->name = $validatedData['name'];
         $usuario->email = $validatedData['email'];
