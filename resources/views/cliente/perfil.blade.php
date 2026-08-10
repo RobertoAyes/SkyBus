@@ -109,6 +109,8 @@
             font-weight: 600;
             color: #222;
             margin-top: 5px;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
 
         .badge {
@@ -252,13 +254,18 @@
                             <div class="col-md-6">
                                 <label for="name" class="form-label">Nombre Completo</label>
                                 <input type="text" name="name" id="name" class="form-control"
-                                       value="{{ old('name', $usuario->name) }}">
+                                       value="{{ old('name', $usuario->name) }}"
+                                       maxlength="100"
+                                       title="El nombre solo puede contener letras y espacios."
+                                       oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]/g, '')">
                             </div>
 
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Correo Electrónico</label>
                                 <input type="email" name="email" id="email" class="form-control"
-                                       value="{{ old('email', $usuario->email) }}">
+                                       value="{{ old('email', $usuario->email) }}"
+                                       oninput="this.value = this.value.toLowerCase()"
+                                       style="text-transform: lowercase;">
                             </div>
 
                             <div class="col-md-6">
@@ -270,7 +277,17 @@
                             <div class="col-md-6">
                                 <label for="dni" class="form-label">DNI</label>
                                 <input type="text" name="dni" id="dni" class="form-control"
-                                       value="{{ old('dni', $usuario->dni) }}">
+                                       value="{{ old('dni', $usuario->dni) }}"
+                                       maxlength="13"
+                                       inputmode="numeric"
+                                       title="El DNI debe contener únicamente números y tener 13 dígitos."
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                                @error('dni')
+                                <div class="text-danger mt-1">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
 
                             <div class="col-md-6">
@@ -293,5 +310,13 @@
             </div>
         </div>
     </div>
+    @if ($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var modal = new bootstrap.Modal(document.getElementById('editarPerfil'));
+                modal.show();
+            });
+        </script>
+    @endif
 
 @endsection
