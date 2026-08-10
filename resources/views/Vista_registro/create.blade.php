@@ -367,8 +367,8 @@
     <div class="register-card">
         <div class="logo-container">
             <div class="top-logo-wrapper">
-                <a href="{{ route('interfaces.principal') }}" class="logo-container">
-                    <img src="/Imagenes/bustrak-logo.png" alt="BusTrak">
+                <a href="{{ url('/cliente') }}" class="logo-container">
+                    <img src="/Imagenes/bustrak-logo.jpg" alt="BusTrak">
                 </a>
             </div>
         </div>
