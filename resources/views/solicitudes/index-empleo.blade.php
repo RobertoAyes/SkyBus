@@ -139,7 +139,7 @@
                         </div>
                         <div class="modal-body">
 
-                            <form action="{{ route('solicitud.empleo.store') }}" method="POST" enctype="multipart/form-data">
+                            <form id="formSolicitudEmpleo" action="{{ route('solicitud.empleo.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
                                 {{-- NOMBRE COMPLETO --}}
@@ -190,25 +190,54 @@
 
                                 {{-- CV --}}
                                 <div class="mb-3">
-                                    <label for="cv" class="form-label fw-bold">Adjuntar CV <span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control @error('cv') is-invalid @enderror"
-                                           id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                                    <label for="cv" class="form-label fw-bold">
+                                        Adjuntar CV <span class="text-danger">*</span>
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        class="form-control @error('cv') is-invalid @enderror"
+                                        id="cv"
+                                        name="cv"
+                                        accept=".pdf,.doc,.docx"
+                                        required
+                                    >
+
                                     @error('cv')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">
+                                        {{ $message }}
+                                    </div>
                                     @enderror
-                                    <small class="text-muted">Formatos aceptados: PDF, DOC, DOCX (máximo 2MB)</small>
+
+                                    {{-- Mensaje de validación JS para tamaño de archivo --}}
+                                    <div id="cvSizeError" class="text-danger small mt-1" style="display:none;">
+                                        <i class="fas fa-exclamation-circle me-1"></i>
+                                        <span id="cvSizeErrorText"></span>
+                                    </div>
+
+                                    <small class="text-muted">
+                                        Formatos aceptados: PDF, DOC, DOCX (máximo 10 MB)
+                                    </small>
                                 </div>
 
+                                {{-- BOTONES --}}
                                 <div class="d-flex gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary flex-grow-1">
-                                        <i class="fas fa-paper-plane me-1"></i> Enviar Solicitud
+                                    <button type="submit" id="btnEnviarSolicitud" class="btn btn-primary flex-grow-1">
+                                        <i class="fas fa-paper-plane me-1"></i>
+                                        Enviar Solicitud
                                     </button>
-                                    <button type="button" class="btn btn-secondary flex-grow-1" data-bs-dismiss="modal">
-                                        <i class="fas fa-times me-1"></i> Cancelar
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary flex-grow-1"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        <i class="fas fa-times me-1"></i>
+                                        Cancelar
                                     </button>
                                 </div>
-                            </form>
 
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -230,6 +259,73 @@
         .badge { font-size: 0.85rem; }
     </style>
 
+<<<<<<< HEAD
+    {{-- Validación de tamaño máximo del CV (bloquea el envío si excede el límite) --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cvInput = document.getElementById('cv');
+            const cvSizeError = document.getElementById('cvSizeError');
+            const cvSizeErrorText = document.getElementById('cvSizeErrorText');
+            const btnEnviar = document.getElementById('btnEnviarSolicitud');
+            const form = document.getElementById('formSolicitudEmpleo');
+
+            const MAX_SIZE_MB = 10; // debe coincidir con "cv.max" en el controlador (10240 KB = 10 MB)
+            const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+
+            function validarTamanoCV() {
+                if (!cvInput.files || cvInput.files.length === 0) {
+                    cvSizeError.style.display = 'none';
+                    cvInput.classList.remove('is-invalid');
+                    btnEnviar.disabled = false;
+                    return true;
+                }
+
+                const file = cvInput.files[0];
+
+                if (file.size > MAX_SIZE_BYTES) {
+                    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    cvSizeErrorText.textContent =
+                        `El archivo pesa ${sizeMB} MB y supera el límite permitido de ${MAX_SIZE_MB} MB. Por favor seleccione un archivo más pequeño.`;
+                    cvSizeError.style.display = 'block';
+                    cvInput.classList.add('is-invalid');
+                    btnEnviar.disabled = true;
+                    cvInput.value = ''; // limpia el input para forzar nueva selección
+                    return false;
+                }
+
+                cvSizeError.style.display = 'none';
+                cvInput.classList.remove('is-invalid');
+                btnEnviar.disabled = false;
+                return true;
+            }
+
+            if (cvInput) {
+                cvInput.addEventListener('change', validarTamanoCV);
+            }
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!validarTamanoCV()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
+            }
+        });
+    </script>
+
+    @if($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const modal = new bootstrap.Modal(
+                    document.getElementById('modalNuevaSolicitud')
+                );
+
+                modal.show();
+            });
+        </script>
+    @endif
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             @if($errors->any())
@@ -241,4 +337,5 @@
             @endif
         });
     </script>
+
 @endsection

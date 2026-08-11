@@ -190,12 +190,51 @@
                 </div>
 
                 <div class="frm-actions">
-                    <button type="submit" class="frm-btn-save">
-                        <i class="fas fa-floppy-disk"></i> Guardar incidente
-                    </button>
+                    <div class="frm-actions">
+                        <button type="submit" class="frm-btn-save" id="btnGuardar">
+                            <i class="fas fa-floppy-disk"></i>
+                            <span>Guardar incidente</span>
+                        </button>
+                    </div>
                 </div>
 
             </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+
+                    const formulario = document.querySelector('form');
+                    const botonGuardar = document.getElementById('btnGuardar');
+
+                    if (!formulario || !botonGuardar) {
+                        return;
+                    }
+
+                    formulario.addEventListener('submit', function (e) {
+
+                        // Si ya se está enviando, bloquear cualquier segundo envío
+                        if (formulario.dataset.enviado === 'true') {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        // Marcar inmediatamente como enviado
+                        formulario.dataset.enviado = 'true';
+
+                        // Desactivar botón
+                        botonGuardar.disabled = true;
+
+                        // Evitar que vuelva a recibir clics
+                        botonGuardar.style.pointerEvents = 'none';
+
+                        // Cambiar apariencia
+                        botonGuardar.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Guardando...</span>
+        `;
+                    });
+
+                });
+            </script>
         </div>
     </div>
 

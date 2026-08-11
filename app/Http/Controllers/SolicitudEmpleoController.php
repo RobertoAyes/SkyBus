@@ -12,42 +12,51 @@ class SolicitudEmpleoController extends Controller
         return view('solicitudes.empleo');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre_completo' => 'required|string|min:3|max:255',
-            'contacto' => 'required|email',
-            'puesto_deseado' => 'required|string|max:255',
-            'experiencia_laboral' => 'required|string|min:10',
-            'cv' => 'required|mimes:pdf,doc,docx|max:2048',
-        ], [
-            'nombre_completo.required' => 'El nombre completo es obligatorio.',
-            'contacto.required' => 'El correo es obligatorio.',
-            'contacto.email' => 'Debe ser un correo válido.',
-            'puesto_deseado.required' => 'El puesto deseado es obligatorio.',
-            'experiencia_laboral.required' => 'La experiencia laboral es obligatoria.',
-            'experiencia_laboral.min' => 'La experiencia laboral debe contener al menos 10 caracteres.',
-            'cv.required' => 'Debe adjuntar un CV.',
-            'cv.mimes' => 'El CV debe ser PDF, DOC o DOCX.',
-        ]);
 
-        $cvPath = null;
-        if ($request->hasFile('cv')) {
-            $cvPath = $request->file('cv')->store('solicitudes-empleo', 'public');
-        }
+public function store(Request $request)
+{
+    $request->validate([
+        'nombre_completo' => 'required|string|min:3|max:255',
+        'contacto' => 'required|email',
+        'puesto_deseado' => 'required|string|max:255',
+        'experiencia_laboral' => 'required|string|min:10',
+        'cv' => 'required|file|mimes:pdf,doc,docx|max:10240',
+    ], [
+        'nombre_completo.required' => 'El nombre completo es obligatorio.',
+        'contacto.required' => 'El correo es obligatorio.',
+        'contacto.email' => 'Debe ser un correo válido.',
+        'puesto_deseado.required' => 'El puesto deseado es obligatorio.',
+        'experiencia_laboral.required' => 'La experiencia laboral es obligatoria.',
+        'cv.required' => 'Debe adjuntar un CV.',
+        'cv.file' => 'El archivo seleccionado no es válido.',
+        'cv.mimes' => 'El CV debe ser PDF, DOC o DOCX.',
+        'cv.max' => 'El CV no puede superar los 10 MB.',
+        'cv.uploaded' => 'No se pudo cargar el CV. Verifique que el archivo no supere los 10 MB.',
+    ]);
 
-        SolicitudEmpleo::create([
-            'user_id' => auth()->id(),
-            'nombre_completo' => $request->nombre_completo,
-            'contacto' => $request->contacto,
-            'puesto_deseado' => $request->puesto_deseado,
-            'experiencia_laboral' => $request->experiencia_laboral,
-            'cv' => $cvPath,
-        ]);
+    $cvPath = null;
 
-        return redirect()->route('solicitud.empleo.mis-solicitudes')
-            ->with('success', '✅ ¡Solicitud de empleo enviada correctamente! Pronto nos pondremos en contacto contigo.');
+    if ($request->hasFile('cv')) {
+        $cvPath = $request->file('cv')->store('solicitudes-empleo', 'public');
     }
+
+    SolicitudEmpleo::create([
+        'user_id' => auth()->id(),
+        'nombre_completo' => $request->nombre_completo,
+        'contacto' => $request->contacto,
+        'puesto_deseado' => $request->puesto_deseado,
+        'experiencia_laboral' => $request->experiencia_laboral,
+        'cv' => $cvPath,
+    ]);
+
+    return redirect()->route('solicitud.empleo.mis-solicitudes')
+        ->with(
+            'success',
+            '✅ ¡Solicitud de empleo enviada correctamente! Pronto nos pondremos en contacto contigo.'
+        );
+}
+
+
 
     public function misSolicitudes()
     {
