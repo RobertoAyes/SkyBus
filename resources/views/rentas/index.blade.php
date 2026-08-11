@@ -258,6 +258,8 @@
                                     placeholder="Escriba el nombre"
                                     value="{{ old('nombre_cliente') }}"
                                     required
+                                    pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+"
+                                    title="El nombre solo puede contener letras y espacios."
                                 >
 
                                 @error('nombre_cliente')
@@ -273,6 +275,8 @@
                                     class="form-control @error('email_cliente') is-invalid @enderror"
                                     placeholder="Escriba el correo"
                                     value="{{ old('email_cliente') }}"
+                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                    title="El correo debe escribirse únicamente en minúsculas."
                                 >
 
                                 @error('email_cliente')
@@ -288,9 +292,12 @@
                                     class="form-control @error('dni_cliente') is-invalid @enderror"
                                     value="{{ old('dni_cliente') }}"
                                     required
+                                    maxlength="13"
+                                    inputmode="numeric"
+                                    pattern="[0-9]+"
+                                    title="El DNI solo puede contener números."
                                     list="clientes_disponibles"
                                 >
-
                                 @error('dni_cliente')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -384,6 +391,8 @@
                                     name="num_pasajeros_confirmados"
                                     class="form-control @error('num_pasajeros_confirmados') is-invalid @enderror"
                                     value="{{ old('num_pasajeros_confirmados') }}"
+                                    min="1"
+                                    step="1"
                                 >
 
                                 @error('num_pasajeros_confirmados')
@@ -412,6 +421,7 @@
                                     <input
                                         type="number"
                                         step="0.01"
+                                        min="0"
                                         name="tarifa"
                                         id="tarifa"
                                         class="form-control @error('tarifa') is-invalid @enderror"
@@ -428,6 +438,7 @@
                                     <input
                                         type="number"
                                         step="0.01"
+                                        min="0"
                                         name="anticipo"
                                         id="anticipo"
                                         class="form-control @error('anticipo') is-invalid @enderror"
@@ -497,4 +508,19 @@
                 </ul>
             </div>
     @endif
+            <script>
+                document.getElementById('nombre_cliente').addEventListener('input', function () {
+                    this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]/g, '');
+                });
+            </script>
+            <script>
+                document.getElementById('dni_cliente_select').addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            </script>
+            <script>
+                document.getElementById('email_cliente').addEventListener('input', function () {
+                    this.value = this.value.toLowerCase();
+                });
+            </script>
 @endsection

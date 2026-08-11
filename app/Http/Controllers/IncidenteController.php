@@ -42,42 +42,47 @@ class IncidenteController extends Controller
     // (cuando el conductor presiona el botón Guardar).
     public function store(Request $request)
     {
-        // Aquí se revisa que los campos vengan llenos.
-        // Si alguno falta, Laravel regresa al formulario
-        // y muestra los errores.
         $request->validate([
             'conductor_nombre' => 'required',
             'bus_numero'       => 'required',
             'ruta'             => 'required',
             'tipo_incidente'   => 'required',
             'descripcion'      => 'required',
-
-            // Campos nuevos HU73
             'ubicacion'        => 'required',
             'nivel_gravedad'   => 'required',
         ]);
 
-        // Aquí se guarda el incidente en la base de datos.
-        Incidente::create([
-            'empleado_id' => auth()->id(),
+        $empleadoId = auth()->id();
 
-            // Datos del formulario
+        // Evitar registros duplicados enviados casi al mismo tiempo
+        $incidenteReciente = Incidente::where('empleado_id', $empleadoId)
+            ->where('bus_numero', $request->bus_numero)
+            ->where('ruta', $request->ruta)
+            ->where('tipo_incidente', $request->tipo_incidente)
+            ->where('descripcion', $request->descripcion)
+            ->where('ubicacion', $request->ubicacion)
+            ->where('nivel_gravedad', $request->nivel_gravedad)
+            ->where('created_at', '>=', now()->subSeconds(10))
+            ->first();
+
+        if ($incidenteReciente) {
+            return redirect()
+                ->route('empleado.misIncidentes')
+                ->with('success', 'El incidente ya fue registrado.');
+        }
+
+        Incidente::create([
+            'empleado_id'      => $empleadoId,
             'conductor_nombre' => $request->conductor_nombre,
             'bus_numero'       => $request->bus_numero,
             'ruta'             => $request->ruta,
             'tipo_incidente'   => $request->tipo_incidente,
             'descripcion'      => $request->descripcion,
-
-            // Campos nuevos HU73
             'ubicacion'        => $request->ubicacion,
             'nivel_gravedad'   => $request->nivel_gravedad,
-
-            // Estado inicial del reporte
             'estado'           => 'pendiente',
         ]);
 
-        // Después de guardar, regresamos al formulario
-        // y mostramos un mensaje de éxito.
         return redirect()
             ->route('empleado.misIncidentes')
             ->with('success', 'Incidente reportado con éxito.');
