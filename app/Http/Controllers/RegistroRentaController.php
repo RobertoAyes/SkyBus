@@ -50,8 +50,16 @@ class RegistroRentaController extends Controller
     {
         $data = $request->validate([
             'nombre_cliente' => 'required|string|max:255',
-            'email_cliente' => 'nullable|email|max:255',
+
+            'email_cliente' => [
+                'nullable',
+                'email',
+                'max:255',
+                'regex:/^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/',
+            ],
+
             'dni_cliente' => 'required|string|max:20|regex:/^[a-zA-Z0-9]+$/',
+
             'tipo_evento' => 'required|string|max:50',
             'destino' => 'required|string|max:255',
             'punto_partida' => 'required|string|max:255',
@@ -64,6 +72,10 @@ class RegistroRentaController extends Controller
             'num_pasajeros_estimados' => 'nullable|integer|min:1|max:500',
             'hora_salida' => 'nullable|date_format:H:i',
             'hora_retorno' => 'nullable|date_format:H:i',
+        ], [
+            'email_cliente.email' => 'Ingrese un correo electrónico válido.',
+            'email_cliente.regex' => 'El correo electrónico debe estar escrito únicamente en minúsculas.',
+            'email_cliente.max' => 'El correo electrónico no puede superar los 255 caracteres.',
         ]);
 
         try {
