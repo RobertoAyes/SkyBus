@@ -48,6 +48,7 @@ class ServicioExtraController extends Controller
         if ($fecha_desde = $request->input('fecha_desde')) {
             $query->whereDate('fecha', '>=', $fecha_desde);
         }
+
         if ($fecha_hasta = $request->input('fecha_hasta')) {
             $query->whereDate('fecha', '<=', $fecha_hasta);
         }
@@ -66,24 +67,41 @@ class ServicioExtraController extends Controller
         $usuario = Auth::user();
         $fecha_hoy = date("Y-m-d");
 
-        // 🔹 Reservas activas del usuario
+        /*
+         * 🔹 Reservas activas del usuario
+         * 🔹 SOLO se muestran reservas que NO tengan
+         *    servicios adicionales registrados anteriormente.
+         */
+        $reservasConServicios = ServiciosExtra::pluck('reserva_id');
+
         $reservas = $usuario->reservas()
             ->where('fecha_reserva', '>=', $fecha_hoy)
+            ->whereNotIn('id', $reservasConServicios)
             ->get();
 
         $allowed = [5, 10, 25, 50];
         $perPage = $request->input('perPage', 5);
-        if (!in_array($perPage, $allowed)) $perPage = 5;
+
+        if (!in_array($perPage, $allowed)) {
+            $perPage = 5;
+        }
 
         $buscar = $request->input('buscar');
+
         $query = Extra::where('estado', 1);
+
         if (!empty($buscar)) {
             $query->where('nombre', 'like', '%' . $buscar . '%');
         }
 
         $extras = $query->paginate($perPage)->appends($request->all());
 
-        return view('extras.extra_create', compact('reservas', 'extras', 'perPage', 'buscar'));
+        return view('extras.extra_create', compact(
+            'reservas',
+            'extras',
+            'perPage',
+            'buscar'
+        ));
     }
 
     /**
@@ -100,16 +118,33 @@ class ServicioExtraController extends Controller
         ], [
             'reserva_id.required' => 'Debe seleccionar una reserva.',
             'extras_seleccionados.required' => 'Debe seleccionar al menos un servicio.',
-            'extras_seleccionados.max' => 'Solo puedes seleccionar máximo 3 servicios.',
+            'extras_seleccionados.max' => 'Solo puede seleccionar 3 servicios adicionales por reserva.',
         ]);
 
-        // EVITAR DUPLICADOS
+        /*
+         * 🔹 Verificar que la reserva pertenezca al usuario actual.
+         */
+        $reservaPertenece = $usuario->reservas()
+            ->where('id', $request->reserva_id)
+            ->exists();
+
+        if (!$reservaPertenece) {
+            return back()
+                ->withInput()
+                ->with('error', 'La reserva seleccionada no pertenece a su usuario.');
+        }
+
+        /*
+         * 🔹 Verificar que la reserva NO tenga servicios adicionales
+         *    registrados anteriormente.
+         */
         $existe = ServiciosExtra::where('reserva_id', $request->reserva_id)
-            ->where('user_id', $usuario->id)
             ->exists();
 
         if ($existe) {
-            return back()->with('error', 'Esta reserva ya tiene servicios adicionales asignados.');
+            return back()
+                ->withInput()
+                ->with('error', 'Esta reserva ya tiene servicios adicionales asignados.');
         }
 
         // 🔹 CREAR
@@ -128,7 +163,11 @@ class ServicioExtraController extends Controller
     }
 
     public function show(string $id) { }
+
     public function edit(string $id) { }
+
     public function update(Request $request, string $id) { }
+
     public function destroy(string $id) { }
 }
+

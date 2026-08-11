@@ -81,10 +81,9 @@ class CheckinController extends Controller
                 ]);
             }
 
-            $codigoLimpio = preg_replace('/[^a-zA-Z0-9_]/', '', $codigo);
 
             $reserva = Reserva::with(['user', 'viaje', 'asiento'])
-                ->where('codigo_reserva', $codigoLimpio)
+                ->where('codigo_reserva', $codigo)
                 ->first();
 
             if (!$reserva) {
