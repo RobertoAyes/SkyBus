@@ -259,6 +259,7 @@
         .badge { font-size: 0.85rem; }
     </style>
 
+<<<<<<< HEAD
     {{-- Validación de tamaño máximo del CV (bloquea el envío si excede el límite) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -324,4 +325,17 @@
             });
         </script>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if($errors->any())
+            const modal = new bootstrap.Modal(
+                document.getElementById('modalNuevaSolicitud')
+            );
+
+            modal.show();
+            @endif
+        });
+    </script>
+
 @endsection
