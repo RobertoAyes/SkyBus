@@ -229,4 +229,16 @@
         .pagination .page-item.disabled .page-link { color: #9ca3af; background: #f3f4f6; border-color: #e5e7eb; }
         .badge { font-size: 0.85rem; }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if($errors->any())
+            const modal = new bootstrap.Modal(
+                document.getElementById('modalNuevaSolicitud')
+            );
+
+            modal.show();
+            @endif
+        });
+    </script>
 @endsection

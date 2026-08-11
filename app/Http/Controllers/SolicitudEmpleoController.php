@@ -26,6 +26,7 @@ class SolicitudEmpleoController extends Controller
             'contacto.email' => 'Debe ser un correo válido.',
             'puesto_deseado.required' => 'El puesto deseado es obligatorio.',
             'experiencia_laboral.required' => 'La experiencia laboral es obligatoria.',
+            'experiencia_laboral.min' => 'La experiencia laboral debe contener al menos 10 caracteres.',
             'cv.required' => 'Debe adjuntar un CV.',
             'cv.mimes' => 'El CV debe ser PDF, DOC o DOCX.',
         ]);
